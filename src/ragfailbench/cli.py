@@ -72,6 +72,29 @@ def export_schemas(
         console.print(f"Wrote {path}")
 
 
+@app.command("ping-llm")
+def ping_llm(
+    config: Path = typer.Option(
+        Path("configs/smoke.yaml"),
+        "--config",
+        "-c",
+        help="YAML config (for model / timeout defaults)",
+    ),
+    prompt: str = typer.Option("Say hello in one short sentence.", "--prompt", "-p"),
+) -> None:
+    """Smoke-test the OpenAI-compatible chat endpoint from ``.env``."""
+    from ragfailbench.generation.llm_client import LLMClient, load_env, resolve_base_url
+
+    load_env()
+    cfg = _load(config)
+    base = resolve_base_url(env_name=cfg.llm.base_url_env)
+    client = LLMClient.from_config(cfg.llm)
+    console.print(f"Endpoint: {base}/v1/chat/completions")
+    console.print(f"Model:    {client.model}")
+    text = client.complete(prompt, max_tokens=64)
+    console.print(f"[green]OK[/green] → {text!r}")
+
+
 @app.command()
 def fetch(
     config: Path = typer.Option(..., "--config", "-c", help="Path to YAML config"),

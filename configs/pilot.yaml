@@ -66,7 +66,7 @@ qa_generation:
   target_candidates: 500
   questions_per_chunk: 1
   endpoint_type: openai_compatible
-  model: Qwen2.5-7B-Instruct
+  model: Qwen/Qwen2.5-7B-Instruct
   temperature: 0.2
 
 validation:
@@ -91,7 +91,7 @@ llm:
   base_url_env: CHAT_BASE_URL
   api_key_env: CHAT_API_KEY
   model_env: CHAT_MODEL
-  default_model: Qwen2.5-7B-Instruct
+  default_model: Qwen/Qwen2.5-7B-Instruct
   timeout_seconds: 120
   max_tokens: 512
 

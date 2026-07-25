@@ -10,6 +10,7 @@ build/
 venv/
 .env
 .env.*
+!.env.example
 
 # Data artifacts (keep directory structure via .gitkeep)
 data/raw/*

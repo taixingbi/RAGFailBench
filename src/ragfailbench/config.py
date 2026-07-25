@@ -52,7 +52,7 @@ class QAGenerationConfig(BaseModel):
     target_candidates: int = 500
     questions_per_chunk: int = 1
     endpoint_type: str = "openai_compatible"
-    model: str = "Qwen2.5-7B-Instruct"
+    model: str = "Qwen/Qwen2.5-7B-Instruct"
     temperature: float = 0.2
 
 
@@ -82,7 +82,7 @@ class LLMConfig(BaseModel):
     base_url_env: str = "CHAT_BASE_URL"
     api_key_env: str = "CHAT_API_KEY"
     model_env: str = "CHAT_MODEL"
-    default_model: str = "Qwen2.5-7B-Instruct"
+    default_model: str = "Qwen/Qwen2.5-7B-Instruct"
     timeout_seconds: float = 120.0
     max_tokens: int = 512
 
@@ -158,7 +158,10 @@ class AppConfig(BaseModel):
 
 
 def load_config(path: str | Path) -> AppConfig:
-    """Load and validate a YAML config file."""
+    """Load and validate a YAML config file (also loads project ``.env``)."""
+    from ragfailbench.generation.llm_client import load_env
+
+    load_env()
     cfg_path = Path(path)
     if not cfg_path.exists():
         raise FileNotFoundError(f"Config not found: {cfg_path}")

@@ -1,4 +1,4 @@
-.PHONY: setup smoke pilot test lint export-schemas clean
+.PHONY: setup smoke pilot ping-llm test lint export-schemas clean
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -20,6 +20,9 @@ smoke:
 
 pilot:
 	$(BIN)/python -m ragfailbench pipeline --config configs/pilot.yaml
+
+ping-llm:
+	$(BIN)/python -m ragfailbench ping-llm --config configs/smoke.yaml
 
 test:
 	$(BIN)/pytest -q

@@ -55,13 +55,22 @@ Key knobs:
 
 ## LLM endpoint (Milestone 2+)
 
-The generation client expects an OpenAI-compatible `/v1/chat/completions` endpoint:
+Copy [`.env.example`](.env.example) to `.env` (already gitignored) and set the
+OpenAI-compatible chat endpoint:
 
 ```bash
-export CHAT_BASE_URL=http://localhost:8000
-# optional
-export CHAT_API_KEY=...
-export CHAT_MODEL=Qwen2.5-7B-Instruct
+# .env
+CHAT_BASE_URL=http://192.168.86.179:30180
+CHAT_MODEL=Qwen/Qwen2.5-7B-Instruct
+# CHAT_API_KEY=
+```
+
+The client POSTs to `{CHAT_BASE_URL}/v1/chat/completions` with `stream: false`.
+
+Smoke-test connectivity:
+
+```bash
+python -m ragfailbench ping-llm --config configs/smoke.yaml
 ```
 
 ## Project layout
