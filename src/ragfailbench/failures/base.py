@@ -6,7 +6,12 @@ import random
 from abc import ABC, abstractmethod
 
 from ragfailbench.schemas.chunk import Chunk
-from ragfailbench.schemas.failure import FailureCase, Severity
+from ragfailbench.schemas.failure import (
+    OPERATOR_STAGE,
+    SEVERITY_DIFFICULTY,
+    FailureCase,
+    Severity,
+)
 from ragfailbench.schemas.qa import CleanSeed
 
 
@@ -68,9 +73,10 @@ class ChunkIndex:
 
 
 class FailureInjector(ABC):
-    """Injects one failure type across all severities for a seed."""
+    """Failure Operator: maps a clean seed → controlled failure cases."""
 
     failure_type: str
+    stage: str = "context"
 
     def __init__(self, index: ChunkIndex, rng: random.Random, *, context_budget: int = 8) -> None:
         self.index = index
@@ -97,13 +103,28 @@ class FailureInjector(ABC):
         *,
         answer_available: bool,
         expected_behavior: str,
+        parameters: dict | None = None,
+        difficulty: float | None = None,
         metadata: dict | None = None,
     ) -> FailureCase:
+        params = dict(parameters or {})
+        # Keep legacy metadata keys for older report code; prefer ``parameters``.
+        meta = dict(metadata or {})
+        meta.update({k: v for k, v in params.items() if k not in meta})
+        diff = (
+            float(difficulty)
+            if difficulty is not None
+            else float(SEVERITY_DIFFICULTY.get(severity, 0.5))
+        )
+        stage = getattr(self, "stage", None) or OPERATOR_STAGE.get(self.failure_type, "context")
         return FailureCase(
             failure_id=f"{seed.sample_id}__{self.failure_type}__{severity}",
             parent_seed_id=seed.sample_id,
             failure_type=self.failure_type,  # type: ignore[arg-type]
+            operator=self.failure_type,
+            stage=stage,
             severity=severity,
+            difficulty=diff,
             question=seed.question,
             gold_answer=seed.gold_answer,
             supporting_sentence=seed.supporting_sentence,
@@ -112,5 +133,6 @@ class FailureInjector(ABC):
             expected_behavior=expected_behavior,  # type: ignore[arg-type]
             source=seed.source,
             category_group=seed.category_group,
-            metadata=metadata or {},
+            parameters=params,
+            metadata=meta,
         )

@@ -19,6 +19,7 @@ def _sentence_matches_support(sentence: str, support: str) -> bool:
 
 class MissingEvidenceInjector(FailureInjector):
     failure_type = "missing_evidence"
+    stage = "evidence"
 
     def inject(self, seed, severity: Severity) -> FailureCase | None:  # type: ignore[override]
         gold = self.index.gold_chunk(seed)
@@ -42,10 +43,12 @@ class MissingEvidenceInjector(FailureInjector):
             for n in neighbors[:1]:
                 if not contains_answer(n.text, answer):
                     contexts.append(n.text)
+            removed = "supporting_sentence"
         elif severity == "medium":
             # Drop the whole gold chunk; keep neighbors that do not leak the answer.
             neighbors = self.index.neighbors(gold)
             contexts = [n.text for n in neighbors if not contains_answer(n.text, answer)][:2]
+            removed = "gold_chunk"
         else:  # high
             # No gold paragraph: only distractors that do not contain the answer.
             raw = self.index.distractors(
@@ -54,6 +57,7 @@ class MissingEvidenceInjector(FailureInjector):
             contexts = [
                 d.text for d in raw if not contains_answer(d.text, answer)
             ][: min(3, self.context_budget)]
+            removed = "all_related_evidence"
 
         contexts = [c for c in contexts if c.strip()]
         return self._make_case(
@@ -62,5 +66,5 @@ class MissingEvidenceInjector(FailureInjector):
             contexts,
             answer_available=False,
             expected_behavior="abstain",
-            metadata={"removed": "supporting_sentence" if severity == "low" else "gold_chunk"},
+            parameters={"removed": removed, "num_contexts": len(contexts)},
         )

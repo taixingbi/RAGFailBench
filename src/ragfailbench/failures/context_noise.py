@@ -8,6 +8,7 @@ from ragfailbench.schemas.failure import FailureCase, Severity
 
 class ContextNoiseInjector(FailureInjector):
     failure_type = "context_noise"
+    stage = "context"
 
     def __init__(self, *args, noise_ratios: dict[str, float] | None = None, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -40,7 +41,8 @@ class ContextNoiseInjector(FailureInjector):
             contexts,
             answer_available=True,
             expected_behavior="answer",
-            metadata={
+            difficulty=float(ratio),
+            parameters={
                 "noise_ratio": ratio,
                 "num_distractors": len(distractors),
                 "distractor_hardness": "hard" if hard else "easy",

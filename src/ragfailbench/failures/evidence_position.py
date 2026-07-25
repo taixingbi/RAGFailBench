@@ -12,6 +12,7 @@ from ragfailbench.schemas.failure import FailureCase, Severity
 
 class EvidencePositionInjector(FailureInjector):
     failure_type = "evidence_position"
+    stage = "context"
 
     def inject(self, seed, severity: Severity) -> FailureCase | None:  # type: ignore[override]
         gold = self.index.gold_chunk(seed)
@@ -42,7 +43,8 @@ class EvidencePositionInjector(FailureInjector):
             contexts,
             answer_available=True,
             expected_behavior="answer",
-            metadata={
+            difficulty=round(rel, 3),
+            parameters={
                 "gold_position": pos,
                 "num_contexts": len(contexts),
                 "relative_position": round(rel, 3),

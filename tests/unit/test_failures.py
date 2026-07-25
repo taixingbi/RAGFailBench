@@ -92,6 +92,12 @@ def test_inject_all_types_and_severities():
     }
     total = sum(len(v) for v in by_type.values())
     assert total == 12  # 4 types x 3 severities x 1 seed
+    for name, cases in by_type.items():
+        for case in cases:
+            assert case.operator == name
+            assert case.stage
+            assert 0.0 <= case.difficulty <= 1.0
+            assert isinstance(case.parameters, dict)
 
 
 def test_missing_evidence_marks_unanswerable():
@@ -147,7 +153,9 @@ def test_context_noise_contains_gold():
 def test_evidence_position_moves_gold():
     cfg = AppConfig()
     by_type = inject_failures([_seed()], _chunks(), cfg)
-    positions = {c.severity: c.metadata["gold_position"] for c in by_type["evidence_position"]}
+    positions = {
+        c.severity: c.parameters["gold_position"] for c in by_type["evidence_position"]
+    }
     assert positions["low"] < positions["high"]
 
 

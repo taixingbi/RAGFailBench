@@ -19,6 +19,7 @@ def _split_text_in_two(text: str) -> tuple[str, str]:
 
 class ChunkBoundaryInjector(FailureInjector):
     failure_type = "chunk_boundary"
+    stage = "chunking"
 
     def inject(self, seed, severity: Severity) -> FailureCase | None:  # type: ignore[override]
         gold = self.index.gold_chunk(seed)
@@ -77,8 +78,9 @@ class ChunkBoundaryInjector(FailureInjector):
             contexts,
             answer_available=True,
             expected_behavior="answer",
-            metadata={
+            parameters={
                 "num_contexts": len(contexts),
                 "split_sentence": support,
+                "num_splits": 2 if severity == "low" else (3 if severity == "medium" else 5),
             },
         )

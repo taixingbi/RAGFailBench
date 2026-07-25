@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ragfailbench"
 version = "0.1.0"
-description = "Wikipedia RAG Failure Benchmark data generation pipeline"
+description = "Open framework for building reproducible RAG failure benchmarks"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }

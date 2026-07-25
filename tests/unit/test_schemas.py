@@ -58,7 +58,10 @@ def test_all_schemas_have_version():
         failure_id="fail_000001",
         parent_seed_id=seed.sample_id,
         failure_type="missing_evidence",
+        operator="missing_evidence",
+        stage="evidence",
         severity="high",
+        difficulty=0.75,
         question=seed.question,
         gold_answer=seed.gold_answer,
         supporting_sentence=seed.supporting_sentence,
@@ -66,6 +69,7 @@ def test_all_schemas_have_version():
         answer_available=False,
         expected_behavior="abstain",
         source=src,
+        parameters={"removed": "all_related_evidence"},
     )
     ev = EvaluationResult(
         eval_id="eval_001",
