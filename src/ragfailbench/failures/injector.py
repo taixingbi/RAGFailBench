@@ -10,6 +10,7 @@ from ragfailbench.failures.chunk_boundary import ChunkBoundaryInjector
 from ragfailbench.failures.context_noise import ContextNoiseInjector
 from ragfailbench.failures.evidence_position import EvidencePositionInjector
 from ragfailbench.failures.missing_evidence import MissingEvidenceInjector
+from ragfailbench.failures.verify import verify_answer_absence
 from ragfailbench.schemas.chunk import Chunk
 from ragfailbench.schemas.failure import FailureCase
 from ragfailbench.schemas.qa import CleanSeed
@@ -41,7 +42,8 @@ def inject_failures(
 ) -> dict[str, list[FailureCase]]:
     """Generate failure cases grouped by failure type.
 
-    Each seed yields ``len(types) * len(severities)`` cases (default 4 x 3 = 12).
+    Each seed yields ``len(types) * len(severities)`` cases (default 4 x 3 = 12),
+    minus any ``missing_evidence`` cases dropped for answer leakage.
     """
     seed_val = (
         cfg.failure_generation.random_seed
@@ -51,9 +53,16 @@ def inject_failures(
     rng = random.Random(seed_val)
     index = ChunkIndex(chunks)
     injectors = build_injectors(index, cfg, rng)
+    require_absence = cfg.failure_generation.require_answer_absence
 
     by_type: dict[str, list[FailureCase]] = {name: [] for name in injectors}
     for seed in seeds:
         for name, injector in injectors.items():
-            by_type[name].extend(injector.inject_all(seed))
+            for case in injector.inject_all(seed):
+                if require_absence and not case.answer_available:
+                    verified = verify_answer_absence(case)
+                    if verified is None:
+                        continue
+                    case = verified
+                by_type[name].append(case)
     return by_type

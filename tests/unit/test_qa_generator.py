@@ -73,6 +73,17 @@ def test_normalize_qa_fields_missing():
     assert _normalize_qa_fields({"question": "q"}) is None
 
 
+def test_stable_candidate_id():
+    from ragfailbench.generation.qa_generator import stable_candidate_id
+
+    a = stable_candidate_id("1_1_0_0", "Who designed Kubernetes?")
+    b = stable_candidate_id("1_1_0_0", "Who designed Kubernetes?")
+    c = stable_candidate_id("1_1_0_0", "Different question?")
+    assert a == b
+    assert a.startswith("cand_")
+    assert a != c
+
+
 def test_select_qa_chunks_filters_and_orders():
     cfg = AppConfig()
     good = _chunk(

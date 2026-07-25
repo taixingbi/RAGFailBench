@@ -47,6 +47,8 @@ class MediaWikiSource(PageSource):
         self._last_request = 0.0
         self._rate_lock = threading.Lock()
         self._rng = random.Random(config.project.random_seed)
+        self.fetch_errors: list[dict[str, Any]] = []
+        self._errors_lock = threading.Lock()
 
     def close(self) -> None:
         if self._owns_client:
@@ -202,13 +204,16 @@ class MediaWikiSource(PageSource):
         lang = self.config.source.language
         source_url = f"https://{lang}.wikipedia.org/wiki/{page_title.replace(' ', '_')}"
 
+        retrieved_at = datetime.now(timezone.utc)
+        retrieval_date = self.config.source.retrieval_date or retrieved_at.date().isoformat()
+
         return WikipediaPage(
             page_id=page_id,
             revision_id=revision_id,
             page_title=page_title,
             categories=cats,
             category_group=category_group,
-            retrieved_at=datetime.now(timezone.utc),
+            retrieved_at=retrieved_at,
             source_url=source_url,
             raw_text=extract,
             is_redirect=redirect_target is not None
@@ -218,7 +223,10 @@ class MediaWikiSource(PageSource):
             char_count=len(extract),
             metadata={
                 "requested_title": title,
-                "snapshot_date": self.config.source.snapshot_date,
+                "source_mode": self.config.source.source_mode,
+                "retrieval_date": retrieval_date,
+                "requested_snapshot_date": self.config.source.requested_snapshot_date,
+                "revision_timestamp": revisions[0].get("timestamp") if revisions else None,
             },
         )
 
@@ -235,6 +243,17 @@ class MediaWikiSource(PageSource):
                 jobs.append((title, group))
         return jobs
 
+    def _record_fetch_error(self, title: str, category_group: str, error: str) -> None:
+        with self._errors_lock:
+            self.fetch_errors.append(
+                {
+                    "title": title,
+                    "category_group": category_group,
+                    "error": error,
+                    "recorded_at": datetime.now(timezone.utc).isoformat(),
+                }
+            )
+
     def fetch_pages(self) -> Iterator[WikipediaPage]:
         """Sample titles, then fetch page bodies concurrently under the rate limit."""
         jobs = self._collect_jobs()
@@ -243,8 +262,12 @@ class MediaWikiSource(PageSource):
         def _worker(job: tuple[str, str]) -> WikipediaPage | None:
             title, group = job
             try:
-                return self.fetch_page(title, group)
-            except Exception:  # noqa: BLE001 - skip failed titles, keep pipeline going
+                page = self.fetch_page(title, group)
+                if page is None:
+                    self._record_fetch_error(title, group, "missing_or_empty")
+                return page
+            except Exception as exc:  # noqa: BLE001 - skip failed titles, keep pipeline going
+                self._record_fetch_error(title, group, f"{type(exc).__name__}: {exc}")
                 return None
 
         pages = map_concurrent(jobs, _worker, max_concurrency=concurrency)

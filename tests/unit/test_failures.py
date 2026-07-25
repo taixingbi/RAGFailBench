@@ -100,9 +100,39 @@ def test_missing_evidence_marks_unanswerable():
     for case in by_type["missing_evidence"]:
         assert case.answer_available is False
         assert case.expected_behavior == "abstain"
+        assert case.metadata.get("answer_absence_verified") is True
+        assert case.metadata.get("answer_still_available") is False
         # Supporting sentence should not be fully present in contexts
         joined = " ".join(case.contexts)
         assert SUPPORT not in joined
+        # Gold answer must not leak into any context
+        from ragfailbench.evaluation.generation_metrics import contains_answer
+
+        assert not contains_answer(joined, "Google")
+
+
+def test_missing_evidence_drops_leaking_neighbor():
+    """Neighbor that still contains the gold answer must not keep the case answerable."""
+    from ragfailbench.failures.verify import verify_answer_absence
+    from ragfailbench.schemas.failure import FailureCase
+
+    case = FailureCase(
+        failure_id="x",
+        parent_seed_id="seed_000000",
+        failure_type="missing_evidence",
+        severity="medium",
+        question="q",
+        gold_answer="Google",
+        supporting_sentence=SUPPORT,
+        contexts=["Unrelated text.", "History of Google and Kubernetes."],
+        answer_available=False,
+        expected_behavior="abstain",
+        source=SourceRef(
+            page_id=1, revision_id=1, page_title="Kubernetes",
+            section_title="History", chunk_id="1_1_0_0",
+        ),
+    )
+    assert verify_answer_absence(case) is None
 
 
 def test_context_noise_contains_gold():

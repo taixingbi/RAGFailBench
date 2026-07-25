@@ -5,12 +5,14 @@ project:
 
 source:
   provider: mediawiki_api
+  source_mode: live_mediawiki_api
   language: en
   api_base: "https://en.wikipedia.org/w/api.php"
-  snapshot_date: "2026-07-01"
-  user_agent: "RAGFailBench/0.1 (research; contact=ragfailbench@example.com)"
-  requests_per_second: 2.0
-  fetch_concurrency: 4
+  retrieval_date: "2026-07-25"
+  requested_snapshot_date: null
+  user_agent: "RAGFailBench/0.1 (research; https://github.com/taixingbi/RAGFailBench)"
+  requests_per_second: 8.0
+  fetch_concurrency: 16
   max_retries: 3
   timeout_seconds: 30
   candidates_per_category: 40
@@ -50,7 +52,7 @@ filtering:
 
 chunking:
   chunk_size_tokens: 300
-  chunk_overlap_tokens: 50
+  chunk_overlap_tokens: 0
   encoding: cl100k_base
   split_order:
     - section
@@ -109,7 +111,7 @@ llm:
   default_model: Qwen/Qwen2.5-7B-Instruct
   timeout_seconds: 120
   max_tokens: 512
-  max_concurrency: 8
+  max_concurrency: 16
 
 paths:
   data_dir: data

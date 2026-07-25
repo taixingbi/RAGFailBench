@@ -44,3 +44,5 @@ def test_select_respects_target_and_ids():
     ids = [s.sample_id for s in seeds]
     assert ids == sorted(set(ids))  # unique + ordered
     assert all(s.sample_id.startswith("seed_") for s in seeds)
+    # Without chunks, clean_contexts falls back to supporting_sentence
+    assert all(s.clean_contexts == [s.supporting_sentence] for s in seeds)

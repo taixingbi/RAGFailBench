@@ -7,6 +7,7 @@ from ragfailbench.evaluation.retrieval_metrics import (
     precision_at_k,
     recall_at_k,
 )
+from ragfailbench.evaluation.runner import normalize_model_id
 from ragfailbench.schemas.evaluation import EvaluationResult
 
 
@@ -25,6 +26,11 @@ def _res(condition, correct, *, severity=None, abstained=False, hallucinated=Fal
         abstained=abstained,
         hallucinated=hallucinated,
     )
+
+
+def test_normalize_model_id():
+    assert normalize_model_id("Qwen/Qwen2.5-7B-Instruct") == "Qwen_Qwen2.5-7B-Instruct"
+    assert "/" not in normalize_model_id("org/model/v1")
 
 
 def test_retrieval_metrics():

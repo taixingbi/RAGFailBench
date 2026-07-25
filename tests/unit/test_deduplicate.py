@@ -35,6 +35,23 @@ def test_select_per_category():
         make_page(page_id=3, title="C", category_group="person"),
         make_page(page_id=4, title="D", category_group="location"),
     ]
-    selected = select_per_category(pages, {"person": 2, "location": 1})
+    selected = select_per_category(pages, {"person": 2, "location": 1}, random_seed=42)
     assert len(selected) == 3
     assert sum(1 for p in selected if p.category_group == "person") == 2
+
+
+def test_select_per_category_reproducible_not_alphabetic():
+    """Seeded shuffle is stable and not equivalent to title-sorted take-first."""
+    pages = [
+        make_page(page_id=i, title=title, category_group="person")
+        for i, title in enumerate(
+            ["Zebra", "Alpha", "Beta", "Gamma", "Delta", "Echo"], start=1
+        )
+    ]
+    a = select_per_category(pages, {"person": 3}, random_seed=42)
+    b = select_per_category(pages, {"person": 3}, random_seed=42)
+    c = select_per_category(pages, {"person": 3}, random_seed=99)
+    assert [p.page_title for p in a] == [p.page_title for p in b]
+    alphabetic = sorted(pages, key=lambda p: p.page_title.casefold())[:3]
+    assert [p.page_title for p in a] != [p.page_title for p in alphabetic]
+    assert [p.page_title for p in a] != [p.page_title for p in c]

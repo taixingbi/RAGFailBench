@@ -88,5 +88,5 @@ def test_fetch_concurrency_config_loaded():
     from ragfailbench.config import load_config
 
     cfg = load_config(Path("configs/smoke.yaml"))
-    assert cfg.source.fetch_concurrency == 4
-    assert cfg.source.requests_per_second == 2.0
+    assert cfg.source.fetch_concurrency == 16
+    assert cfg.source.requests_per_second == 8.0

@@ -116,13 +116,21 @@ def fetch(
                 f"  fetched ({page.category_group}) "
                 f"{escape(page.page_title)} ({page.char_count} chars)"
             )
+        fetch_errors = list(source.fetch_errors)
 
     n = _write_jsonl_pair(
         dirs["raw"] / "raw_pages.jsonl",
         dirs["mirror_raw"] / "raw_pages.jsonl",
         pages,
     )
+    write_jsonl(dirs["raw"] / "fetch_errors.jsonl", fetch_errors)
+    write_jsonl(dirs["mirror_raw"] / "fetch_errors.jsonl", fetch_errors)
     console.print(f"[green]Wrote {n} pages → {dirs['raw'] / 'raw_pages.jsonl'}[/green]")
+    if fetch_errors:
+        console.print(
+            f"[yellow]Recorded {len(fetch_errors)} fetch errors → "
+            f"{dirs['raw'] / 'fetch_errors.jsonl'}[/yellow]"
+        )
 
 
 @app.command("filter")
@@ -141,7 +149,9 @@ def filter_cmd(
     pages = read_jsonl_models(raw_path, WikipediaPage)
     accepted, rejected_filter = filter_pages(pages, cfg.filtering)
     deduped, rejected_dedup = deduplicate_pages(accepted)
-    selected = select_per_category(deduped, cfg.categories)
+    selected = select_per_category(
+        deduped, cfg.categories, random_seed=cfg.project.random_seed
+    )
     all_rejected = rejected_filter + rejected_dedup
 
     _write_jsonl_pair(
@@ -255,18 +265,23 @@ def pipeline(
                 f"  ({page.category_group}) {escape(page.page_title)} "
                 f"({page.char_count} chars)"
             )
+        fetch_errors = list(source.fetch_errors)
     _write_jsonl_pair(
         dirs["raw"] / "raw_pages.jsonl",
         dirs["mirror_raw"] / "raw_pages.jsonl",
         pages,
     )
-    console.print(f"Fetched {len(pages)} pages")
+    write_jsonl(dirs["raw"] / "fetch_errors.jsonl", fetch_errors)
+    write_jsonl(dirs["mirror_raw"] / "fetch_errors.jsonl", fetch_errors)
+    console.print(f"Fetched {len(pages)} pages ({len(fetch_errors)} fetch errors)")
 
     # --- filter / clean / dedup / select ---
     console.rule("[bold]2/4 Filter + Dedup[/bold]")
     accepted, rejected_filter = filter_pages(pages, cfg.filtering)
     deduped, rejected_dedup = deduplicate_pages(accepted)
-    selected = select_per_category(deduped, cfg.categories)
+    selected = select_per_category(
+        deduped, cfg.categories, random_seed=cfg.project.random_seed
+    )
     all_rejected = rejected_filter + rejected_dedup
     _write_jsonl_pair(
         dirs["interim"] / "rejected_pages.jsonl",
@@ -408,7 +423,8 @@ def select_seeds_cmd(
     results = read_jsonl_models(
         dirs["validated"] / "validation_results.jsonl", ValidationResult
     )
-    seeds = select_clean_seeds(accepted, results, cfg)
+    chunks = _load_chunks(cfg, dirs)
+    seeds = select_clean_seeds(accepted, results, cfg, chunks=chunks)
     write_jsonl(dirs["final"] / "clean_seeds.jsonl", seeds)
     console.print(
         f"[green]Selected {len(seeds)} clean seeds → "

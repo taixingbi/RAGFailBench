@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Callable
 
 from ragfailbench.concurrent import map_concurrent
@@ -24,6 +25,13 @@ from ragfailbench.schemas.failure import FailureCase
 from ragfailbench.schemas.qa import CleanSeed
 
 ProgressFn = Callable[[EvaluationResult], None]
+
+_UNSAFE_ID_RE = re.compile(r"[^A-Za-z0-9._-]+")
+
+
+def normalize_model_id(model: str) -> str:
+    """Make model names safe for eval_id (e.g. Qwen/Qwen2.5 → Qwen_Qwen2.5)."""
+    return _UNSAFE_ID_RE.sub("_", model).strip("_") or "model"
 
 
 def is_abstention(prediction: str, cfg: AppConfig) -> bool:
@@ -60,6 +68,13 @@ def _answer(context: str, question: str, client: LLMClient, cfg: AppConfig, mode
         ).strip()
     except Exception:  # noqa: BLE001
         return ""
+
+
+def _clean_context(seed: CleanSeed) -> str:
+    """Use gold-chunk-scale clean_contexts; fall back to supporting sentence."""
+    if seed.clean_contexts:
+        return "\n\n".join(c for c in seed.clean_contexts if c and c.strip())
+    return seed.supporting_sentence
 
 
 def _evaluate_one(
@@ -133,17 +148,18 @@ def evaluate_model(
 
     Items are evaluated concurrently up to ``cfg.llm.max_concurrency``.
     """
+    model_key = normalize_model_id(model)
     jobs: list[dict] = []
     counter = 0
     for seed in seeds:
         jobs.append(
             {
-                "eval_id": f"eval_{model}_{counter:06d}",
+                "eval_id": f"eval_{model_key}_{counter:06d}",
                 "sample_id": seed.sample_id,
                 "model": model,
                 "condition": "clean",
                 "severity": None,
-                "context": seed.supporting_sentence,
+                "context": _clean_context(seed),
                 "question": seed.question,
                 "gold": seed.gold_answer,
                 "answer_available": True,
@@ -155,7 +171,7 @@ def evaluate_model(
     for fc in failures:
         jobs.append(
             {
-                "eval_id": f"eval_{model}_{counter:06d}",
+                "eval_id": f"eval_{model_key}_{counter:06d}",
                 "sample_id": fc.failure_id,
                 "model": model,
                 "condition": fc.failure_type,

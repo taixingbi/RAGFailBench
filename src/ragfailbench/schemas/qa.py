@@ -56,6 +56,9 @@ class CleanSeed(BaseModel):
     question: str
     gold_answer: str
     supporting_sentence: str
+    # Same context budget as failure cases: gold chunk (+ neighbors / fillers).
+    # Used for clean evaluation so clean vs failure is not confounded by length.
+    clean_contexts: list[str] = Field(default_factory=list)
     answer_type: str
     difficulty: Literal["easy", "medium", "hard"] = "easy"
     reasoning_type: str = "single_fact"

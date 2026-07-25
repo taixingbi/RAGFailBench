@@ -2,17 +2,32 @@
 
 Wikipedia RAG Failure Benchmark — a reproducible pipeline for generating clean QA seeds and controlled failure cases from real Wikipedia pages.
 
-## Milestone 1 (pages → chunks)
+## Milestone status
+
+| Milestone | Scope | Status |
+|-----------|-------|--------|
+| **M1** | pages → chunks (`fetch → filter → clean → dedup → chunk → stats`) | **Completed** |
+| **M2** | chunks → clean seeds (`generate-qa → validate → select-seeds`) | **Implemented / testing** |
+| **M3** | clean seeds → failure cases (`inject-failures`) | **Initial implementation** |
+| **M4** | evaluation + reports (`evaluate → report`) | **Initial implementation** |
 
 ```
+# M1
 fetch → filter → clean → deduplicate → chunk → stats
-```
 
-## Milestones 2–4 (chunks → seeds → failures → eval)
-
-```
+# M2–M4
 generate-qa → validate → select-seeds → inject-failures → evaluate → report
 ```
+
+## Data provenance (important)
+
+The Pilot uses the **live MediaWiki API**, not a fixed Wikipedia dump snapshot.
+
+- `source.source_mode: live_mediawiki_api` — current page extracts at fetch time
+- `source.retrieval_date` — when pages were retrieved (a label, not a dump date)
+- `source.requested_snapshot_date: null` — historical revision pinning is not used yet
+
+Do **not** claim Pilot data comes from a fixed dated dump. Formal release should switch to a Wikipedia dump or pinned historical revisions.
 
 ## Quick start
 
@@ -48,6 +63,7 @@ Outputs are written under `data/runs/<run_id>/` and mirrored to
 | Path | Description |
 |------|-------------|
 | `data/raw/raw_pages.jsonl` | Raw MediaWiki extracts |
+| `data/raw/fetch_errors.jsonl` | Titles that failed to fetch |
 | `data/interim/rejected_pages.jsonl` | Filtered-out pages with reasons |
 | `data/interim/deduplicated_pages.jsonl` | Deduplicated accepted pages |
 | `data/interim/filtered_pages.jsonl` | Final per-category quota pages |
@@ -67,11 +83,12 @@ Key knobs:
 
 - `categories.*` — target pages per category group
 - `filtering.*` — min length, section count, exclude rules
-- `chunking.*` — token size / overlap / split order
-- `project.random_seed` — deterministic sampling
-- `source.fetch_concurrency` — concurrent MediaWiki page fetches (default 4)
-- `source.requests_per_second` — global rate limit across fetch workers
-- `llm.max_concurrency` — concurrent LLM calls (default 8)
+- `chunking.*` — token size / overlap / split order (`chunk_overlap_tokens: 0` for clear boundary failures)
+- `project.random_seed` — deterministic sampling (including per-category quota shuffle)
+- `source.fetch_concurrency` — concurrent MediaWiki page fetches (default 16)
+- `source.requests_per_second` — global rate limit across fetch workers (default 8)
+- `failure_generation.context_chunk_budget` — shared context size for clean and failure eval
+- `llm.max_concurrency` — concurrent LLM calls (default 16)
 
 ## LLM endpoint (Milestone 2+)
 
@@ -94,7 +111,7 @@ python -m ragfailbench ping-llm --config configs/smoke.yaml
 ```
 
 LLM stages (generate / validate / evaluate) run with thread-pool concurrency.
-Tune via ``llm.max_concurrency`` in the YAML (default **8**).
+Tune via ``llm.max_concurrency`` in the YAML (default **16**).
 
 ## Project layout
 
@@ -103,16 +120,16 @@ src/ragfailbench/
 ├── cli.py
 ├── config.py
 ├── schemas/
-├── sources/
-├── processing/
-├── generation/      # stub for M2
-├── validation/      # stub for M2
-├── failures/        # stub for M3
-├── evaluation/      # stub for M4
+├── sources/         # MediaWiki API (+ dump stub)
+├── processing/      # filter, clean, dedup, chunk
+├── generation/      # M2: candidate QA generation
+├── validation/      # M2: rules, judge, baseline, selection
+├── failures/        # M3: failure injectors + absence checks
+├── evaluation/      # M4: metrics + benchmark runner
 └── reporting/
 ```
 
-## Research questions (later milestones)
+## Research questions
 
 - **RQ1**: How much do RAG systems degrade under common context failures?
 - **RQ2**: Do severity levels produce predictable degradation curves?

@@ -322,8 +322,8 @@ class LLMClient:
         self.temperature = temperature
         self.base_url_env = base_url_env
         self.model_env = model_env
-        self.max_concurrency = 8
-        limits = httpx.Limits(max_connections=32, max_keepalive_connections=16)
+        self.max_concurrency = 16
+        limits = httpx.Limits(max_connections=64, max_keepalive_connections=32)
         self._client = httpx.Client(timeout=timeout, limits=limits)
 
     @classmethod
@@ -337,7 +337,7 @@ class LLMClient:
             model_env=getattr(llm_config, "model_env", "CHAT_MODEL"),
             api_key_env=getattr(llm_config, "api_key_env", "CHAT_API_KEY"),
         )
-        client.max_concurrency = int(getattr(llm_config, "max_concurrency", 8) or 8)
+        client.max_concurrency = int(getattr(llm_config, "max_concurrency", 16) or 16)
         return client
 
     def close(self) -> None:

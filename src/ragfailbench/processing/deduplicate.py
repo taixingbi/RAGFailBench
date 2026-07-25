@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import random
+
 from ragfailbench.schemas.page import RejectedPage, WikipediaPage
 from ragfailbench.utils import char_ngrams, jaccard, normalize_title
 
@@ -67,22 +69,27 @@ def deduplicate_pages(
 def select_per_category(
     pages: list[WikipediaPage],
     quotas: dict[str, int],
+    *,
+    random_seed: int = 42,
 ) -> list[WikipediaPage]:
-    """Take up to ``quotas[group]`` pages per category_group (stable order)."""
+    """Take up to ``quotas[group]`` pages per category_group.
+
+    Within each group, pages are shuffled with a fixed seed (reproducible,
+    without alphabetic title bias).
+    """
     by_group: dict[str, list[WikipediaPage]] = {g: [] for g in quotas}
-    extras: list[WikipediaPage] = []
 
     for page in pages:
         group = page.category_group or ""
         if group in by_group:
             by_group[group].append(page)
-        else:
-            extras.append(page)
 
     selected: list[WikipediaPage] = []
     for group, quota in quotas.items():
-        # Stable: already cleaned/deduped order; sort by title for determinism
-        group_pages = sorted(by_group.get(group, []), key=lambda p: normalize_title(p.page_title))
+        group_pages = list(by_group.get(group, []))
+        # Per-group RNG so group order / quota changes don't reshuffle others.
+        rng = random.Random(f"{random_seed}:{group}")
+        rng.shuffle(group_pages)
         selected.extend(group_pages[:quota])
 
     return selected

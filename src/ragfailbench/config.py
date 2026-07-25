@@ -17,12 +17,20 @@ class ProjectConfig(BaseModel):
 
 class SourceConfig(BaseModel):
     provider: Literal["mediawiki_api", "wikipedia_dump"] = "mediawiki_api"
+    # live_mediawiki_api = current extracts at fetch time (not a dump snapshot).
+    source_mode: Literal["live_mediawiki_api", "wikipedia_dump"] = "live_mediawiki_api"
     language: str = "en"
     api_base: str = "https://en.wikipedia.org/w/api.php"
-    snapshot_date: str = "2026-07-01"
-    user_agent: str = "RAGFailBench/0.1 (research)"
-    requests_per_second: float = 2.0
-    fetch_concurrency: int = 4
+    # When pages were retrieved (label). Set in YAML for the Pilot run date.
+    retrieval_date: str | None = None
+    # Historical dump/revision pin. null = live API; not a fixed snapshot.
+    requested_snapshot_date: str | None = None
+    user_agent: str = (
+        "RAGFailBench/0.1 (research; https://github.com/taixingbi/RAGFailBench)"
+    )
+    # Wikimedia etiquette: keep RPS modest; concurrency hides network latency.
+    requests_per_second: float = 8.0
+    fetch_concurrency: int = 16
     max_retries: int = 3
     timeout_seconds: float = 30.0
     candidates_per_category: int = 250
@@ -42,7 +50,9 @@ class FilteringConfig(BaseModel):
 
 class ChunkingConfig(BaseModel):
     chunk_size_tokens: int = 300
-    chunk_overlap_tokens: int = 50
+    # Default 0: overlap only applied in token-window fallback, and would blur
+    # chunk_boundary failure definitions. Keep 0 for Pilot / boundary studies.
+    chunk_overlap_tokens: int = 0
     encoding: str = "cl100k_base"
     split_order: list[str] = Field(
         default_factory=lambda: ["section", "paragraph", "sentence", "token"]
@@ -95,6 +105,8 @@ class FailureGenerationConfig(BaseModel):
     )
     context_chunk_budget: int = 8
     random_seed: int | None = None
+    # Drop missing_evidence cases where gold answer still appears in context.
+    require_answer_absence: bool = True
 
 
 class EvaluationConfig(BaseModel):
@@ -126,7 +138,7 @@ class LLMConfig(BaseModel):
     default_model: str = "Qwen/Qwen2.5-7B-Instruct"
     timeout_seconds: float = 120.0
     max_tokens: int = 512
-    max_concurrency: int = 8
+    max_concurrency: int = 16
 
 
 class PathsConfig(BaseModel):

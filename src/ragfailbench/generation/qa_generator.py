@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from typing import Any
 
@@ -26,6 +27,12 @@ _DATE_HINT_RE = re.compile(
 
 VALID_ANSWER_TYPES = {"person", "organization", "location", "date", "numeric", "other"}
 VALID_DIFFICULTY = {"easy", "medium", "hard"}
+
+
+def stable_candidate_id(chunk_id: str, question: str) -> str:
+    """Stable ID across runs: hash of chunk_id + question."""
+    digest = hashlib.sha1(f"{chunk_id}||{question}".encode("utf-8")).hexdigest()[:12]
+    return f"cand_{digest}"
 
 
 def is_good_qa_chunk(chunk: Chunk, cfg: AppConfig) -> bool:
@@ -160,7 +167,7 @@ def generate_candidate_qa(
                 progress(chunk, None, err)
             continue
         cand = CandidateQA(
-            candidate_id=f"cand_{len(candidates):06d}",
+            candidate_id=stable_candidate_id(chunk.chunk_id, fields["question"]),
             question=fields["question"],
             gold_answer=fields["gold_answer"],
             supporting_sentence=fields["supporting_sentence"],
