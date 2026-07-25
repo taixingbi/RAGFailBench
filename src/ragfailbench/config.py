@@ -22,6 +22,7 @@ class SourceConfig(BaseModel):
     snapshot_date: str = "2026-07-01"
     user_agent: str = "RAGFailBench/0.1 (research)"
     requests_per_second: float = 2.0
+    fetch_concurrency: int = 4
     max_retries: int = 3
     timeout_seconds: float = 30.0
     candidates_per_category: int = 250
@@ -54,6 +55,11 @@ class QAGenerationConfig(BaseModel):
     endpoint_type: str = "openai_compatible"
     model: str = "Qwen/Qwen2.5-7B-Instruct"
     temperature: float = 0.2
+    max_tokens: int = 512
+    min_chunk_tokens: int = 60
+    max_chunk_tokens: int = 320
+    max_candidate_chunks: int = 1000
+    skip_lead_sections: bool = False
 
 
 class ValidationConfig(BaseModel):
@@ -62,6 +68,14 @@ class ValidationConfig(BaseModel):
     require_answer_containment: bool = True
     require_evidence_containment: bool = True
     require_baseline_correct: bool = True
+    use_answerability_judge: bool = True
+    use_baseline_test: bool = True
+    judge_min_confidence: float = 0.6
+    dedup_similarity_threshold: float = 0.85
+    max_question_tokens: int = 60
+    min_question_chars: int = 12
+    judge_temperature: float = 0.0
+    baseline_temperature: float = 0.0
 
 
 class FailureGenerationConfig(BaseModel):
@@ -76,6 +90,33 @@ class FailureGenerationConfig(BaseModel):
     severity_levels: list[str] = Field(
         default_factory=lambda: ["low", "medium", "high"]
     )
+    noise_ratios: dict[str, float] = Field(
+        default_factory=lambda: {"low": 0.25, "medium": 0.50, "high": 0.75}
+    )
+    context_chunk_budget: int = 8
+    random_seed: int | None = None
+
+
+class EvaluationConfig(BaseModel):
+    models: list[str] = Field(default_factory=list)
+    temperature: float = 0.0
+    max_tokens: int = 256
+    use_llm_judge: bool = True
+    abstain_markers: list[str] = Field(
+        default_factory=lambda: [
+            "i don't know",
+            "i do not know",
+            "cannot answer",
+            "can't answer",
+            "not enough information",
+            "no information",
+            "insufficient information",
+            "unable to answer",
+            "not mentioned",
+            "not provided",
+            "not stated",
+        ]
+    )
 
 
 class LLMConfig(BaseModel):
@@ -85,6 +126,7 @@ class LLMConfig(BaseModel):
     default_model: str = "Qwen/Qwen2.5-7B-Instruct"
     timeout_seconds: float = 120.0
     max_tokens: int = 512
+    max_concurrency: int = 8
 
 
 class PathsConfig(BaseModel):
@@ -111,6 +153,7 @@ class AppConfig(BaseModel):
     failure_generation: FailureGenerationConfig = Field(
         default_factory=FailureGenerationConfig
     )
+    evaluation: EvaluationConfig = Field(default_factory=EvaluationConfig)
     llm: LLMConfig = Field(default_factory=LLMConfig)
     paths: PathsConfig = Field(default_factory=PathsConfig)
 

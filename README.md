@@ -2,12 +2,16 @@
 
 Wikipedia RAG Failure Benchmark — a reproducible pipeline for generating clean QA seeds and controlled failure cases from real Wikipedia pages.
 
-## Milestone 1 (current)
-
-Fetches Wikipedia pages via the MediaWiki API, filters/cleans/deduplicates them, and produces section-aware chunks with full provenance.
+## Milestone 1 (pages → chunks)
 
 ```
 fetch → filter → clean → deduplicate → chunk → stats
+```
+
+## Milestones 2–4 (chunks → seeds → failures → eval)
+
+```
+generate-qa → validate → select-seeds → inject-failures → evaluate → report
 ```
 
 ## Quick start
@@ -16,22 +20,30 @@ fetch → filter → clean → deduplicate → chunk → stats
 # prefers uv if available; otherwise python3 -m venv
 make setup
 make test
-make smoke    # ~50 pages (10 per category)
-make pilot    # full pilot: 500 pages
+make smoke    # M1: ~50 pages (10 per category)
+make seeds    # M2–M4 on smoke chunks (needs CHAT_BASE_URL in .env)
+make pilot    # full M1 pilot: 500 pages
 ```
 
-Or:
+Or step-by-step:
 
 ```bash
 source .venv/bin/activate
 python -m ragfailbench pipeline --config configs/smoke.yaml
-python -m ragfailbench pipeline --config configs/pilot.yaml
+python -m ragfailbench generate-qa --config configs/smoke.yaml
+python -m ragfailbench validate --config configs/smoke.yaml
+python -m ragfailbench select-seeds --config configs/smoke.yaml
+python -m ragfailbench inject-failures --config configs/smoke.yaml
+python -m ragfailbench evaluate --config configs/smoke.yaml
+python -m ragfailbench report --config configs/smoke.yaml
+# or all of M2–M4:
+python -m ragfailbench seed-pipeline --config configs/smoke.yaml
 ```
 
 Outputs are written under `data/runs/<run_id>/` and mirrored to
 `data/{raw,interim,processed}/` for the latest run.
 
-## Outputs (Milestone 1)
+## Outputs
 
 | Path | Description |
 |------|-------------|
@@ -40,7 +52,12 @@ Outputs are written under `data/runs/<run_id>/` and mirrored to
 | `data/interim/deduplicated_pages.jsonl` | Deduplicated accepted pages |
 | `data/interim/filtered_pages.jsonl` | Final per-category quota pages |
 | `data/processed/chunks.jsonl` | Section-aware chunks + adjacency |
-| `reports/dataset_stats.json` | Pipeline statistics |
+| `data/runs/<run_id>/generated/candidate_qa.jsonl` | Candidate QA |
+| `data/runs/<run_id>/validated/accepted_qa.jsonl` | Validated QA |
+| `data/runs/<run_id>/final/clean_seeds.jsonl` | Stratified clean seeds |
+| `data/runs/<run_id>/final/failures/*.jsonl` | Failure cases by type |
+| `data/runs/<run_id>/final/evaluation_results.jsonl` | Per-sample eval results |
+| `reports/<run_id>/` | Stats, validation, evaluation reports |
 
 ## Configuration
 
@@ -52,6 +69,9 @@ Key knobs:
 - `filtering.*` — min length, section count, exclude rules
 - `chunking.*` — token size / overlap / split order
 - `project.random_seed` — deterministic sampling
+- `source.fetch_concurrency` — concurrent MediaWiki page fetches (default 4)
+- `source.requests_per_second` — global rate limit across fetch workers
+- `llm.max_concurrency` — concurrent LLM calls (default 8)
 
 ## LLM endpoint (Milestone 2+)
 
@@ -72,6 +92,9 @@ Smoke-test connectivity:
 ```bash
 python -m ragfailbench ping-llm --config configs/smoke.yaml
 ```
+
+LLM stages (generate / validate / evaluate) run with thread-pool concurrency.
+Tune via ``llm.max_concurrency`` in the YAML (default **8**).
 
 ## Project layout
 

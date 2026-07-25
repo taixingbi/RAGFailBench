@@ -1,14 +1,16 @@
-"""MediaWiki API page fetcher with category sampling."""
+"""MediaWiki API page fetcher with category sampling and concurrent page fetches."""
 
 from __future__ import annotations
 
 import random
+import threading
 import time
 from datetime import datetime, timezone
 from typing import Any, Iterator
 
 import httpx
 
+from ragfailbench.concurrent import map_concurrent
 from ragfailbench.config import AppConfig
 from ragfailbench.schemas.page import WikipediaPage
 from ragfailbench.sources.base import PageSource
@@ -23,17 +25,27 @@ DISAMBIGUATION_MARKERS = (
 
 
 class MediaWikiSource(PageSource):
-    """Fetch pages via the MediaWiki Action API."""
+    """Fetch pages via the MediaWiki Action API.
+
+    Page bodies are fetched concurrently (``source.fetch_concurrency``) while a
+    shared rate limiter enforces ``source.requests_per_second`` across threads.
+    """
 
     def __init__(self, config: AppConfig, client: httpx.Client | None = None) -> None:
         super().__init__(config)
         self._owns_client = client is None
+        limits = httpx.Limits(
+            max_connections=max(config.source.fetch_concurrency * 2, 8),
+            max_keepalive_connections=max(config.source.fetch_concurrency, 4),
+        )
         self._client = client or httpx.Client(
             headers={"User-Agent": config.source.user_agent},
             timeout=config.source.timeout_seconds,
+            limits=limits,
         )
         self._min_interval = 1.0 / max(config.source.requests_per_second, 0.1)
         self._last_request = 0.0
+        self._rate_lock = threading.Lock()
         self._rng = random.Random(config.project.random_seed)
 
     def close(self) -> None:
@@ -47,10 +59,13 @@ class MediaWikiSource(PageSource):
         self.close()
 
     def _throttle(self) -> None:
-        elapsed = time.monotonic() - self._last_request
-        if elapsed < self._min_interval:
-            time.sleep(self._min_interval - elapsed)
-        self._last_request = time.monotonic()
+        """Thread-safe global rate limit on request *starts*."""
+        with self._rate_lock:
+            elapsed = time.monotonic() - self._last_request
+            wait = self._min_interval - elapsed
+            if wait > 0:
+                time.sleep(wait)
+            self._last_request = time.monotonic()
 
     def _get(self, params: dict[str, Any]) -> dict[str, Any]:
         params = {
@@ -196,7 +211,8 @@ class MediaWikiSource(PageSource):
             retrieved_at=datetime.now(timezone.utc),
             source_url=source_url,
             raw_text=extract,
-            is_redirect=redirect_target is not None and normalize_title(redirect_target) != normalize_title(title),
+            is_redirect=redirect_target is not None
+            and normalize_title(redirect_target) != normalize_title(title),
             redirect_target=redirect_target,
             is_disambiguation=is_disambig,
             char_count=len(extract),
@@ -206,19 +222,41 @@ class MediaWikiSource(PageSource):
             },
         )
 
-    def fetch_pages(self) -> Iterator[WikipediaPage]:
-        """Sample and fetch pages for every configured category group."""
-        seen_page_ids: set[int] = set()
+    def _collect_jobs(self) -> list[tuple[str, str]]:
+        """Sample titles for all categories (sequential listing, deterministic)."""
+        jobs: list[tuple[str, str]] = []
+        seen_titles: set[str] = set()
         for group in sorted(self.config.categories.keys()):
-            titles = self.sample_titles_for_category(group)
-            for title in titles:
-                page = self.fetch_page(title, group)
-                if page is None:
+            for title in self.sample_titles_for_category(group):
+                key = normalize_title(title)
+                if key in seen_titles:
                     continue
-                if page.page_id in seen_page_ids:
-                    continue
-                seen_page_ids.add(page.page_id)
-                yield page
+                seen_titles.add(key)
+                jobs.append((title, group))
+        return jobs
+
+    def fetch_pages(self) -> Iterator[WikipediaPage]:
+        """Sample titles, then fetch page bodies concurrently under the rate limit."""
+        jobs = self._collect_jobs()
+        concurrency = max(1, int(self.config.source.fetch_concurrency))
+
+        def _worker(job: tuple[str, str]) -> WikipediaPage | None:
+            title, group = job
+            try:
+                return self.fetch_page(title, group)
+            except Exception:  # noqa: BLE001 - skip failed titles, keep pipeline going
+                return None
+
+        pages = map_concurrent(jobs, _worker, max_concurrency=concurrency)
+
+        seen_page_ids: set[int] = set()
+        for page in pages:
+            if page is None:
+                continue
+            if page.page_id in seen_page_ids:
+                continue
+            seen_page_ids.add(page.page_id)
+            yield page
 
 
 class WikipediaDumpSource(PageSource):

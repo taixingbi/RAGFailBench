@@ -91,6 +91,7 @@ def ping_llm(
     client = LLMClient.from_config(cfg.llm)
     console.print(f"Endpoint: {base}/v1/chat/completions")
     console.print(f"Model:    {client.model}")
+    console.print(f"Concurrency: {client.max_concurrency}")
     text = client.complete(prompt, max_tokens=64)
     console.print(f"[green]OK[/green] → {text!r}")
 
@@ -102,6 +103,10 @@ def fetch(
     """Fetch Wikipedia pages into raw_pages.jsonl."""
     cfg = _load(config)
     dirs = cfg.ensure_dirs()
+    console.print(
+        f"MediaWiki concurrency={cfg.source.fetch_concurrency} "
+        f"rps={cfg.source.requests_per_second}"
+    )
 
     pages: list[WikipediaPage] = []
     with MediaWikiSource(cfg) as source:
@@ -238,6 +243,10 @@ def pipeline(
 
     # --- fetch ---
     console.rule("[bold]1/4 Fetch[/bold]")
+    console.print(
+        f"MediaWiki concurrency={cfg.source.fetch_concurrency} "
+        f"rps={cfg.source.requests_per_second}"
+    )
     pages: list[WikipediaPage] = []
     with MediaWikiSource(cfg) as source:
         for page in source.fetch_pages():
@@ -306,6 +315,253 @@ def pipeline(
     write_json(Path(cfg.paths.reports_dir) / "dataset_stats.json", report)
     console.print(f"[bold green]Done.[/bold green] Stats → {out}")
     console.print(report)
+
+
+# --------------------------------------------------------------------------- #
+# Milestone 2: Clean Seed pipeline
+# --------------------------------------------------------------------------- #
+
+
+def _load_chunks(cfg: AppConfig, dirs: dict) -> list[Chunk]:
+    path = dirs["processed"] / "chunks.jsonl"
+    if not path.exists():
+        path = dirs["mirror_processed"] / "chunks.jsonl"
+    if not path.exists():
+        raise typer.BadParameter("Missing chunks.jsonl; run the M1 pipeline first")
+    return read_jsonl_models(path, Chunk)
+
+
+@app.command("generate-qa")
+def generate_qa(
+    config: Path = typer.Option(..., "--config", "-c"),
+) -> None:
+    """Generate candidate QA from chunks using the LLM."""
+    from ragfailbench.generation.llm_client import LLMClient
+    from ragfailbench.generation.qa_generator import generate_candidate_qa
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    chunks = _load_chunks(cfg, dirs)
+    console.print(f"Loaded {len(chunks)} chunks")
+
+    with LLMClient.from_config(cfg.llm) as client:
+        console.print(
+            f"Generating QA with {client.model} "
+            f"(concurrency={client.max_concurrency}) …"
+        )
+        candidates, errors = generate_candidate_qa(chunks, client, cfg)
+
+    write_jsonl(dirs["generated"] / "candidate_qa.jsonl", candidates)
+    write_jsonl(dirs["generated"] / "qa_generation_errors.jsonl", errors)
+    console.print(
+        f"[green]Generated {len(candidates)} candidates "
+        f"({len(errors)} errors) → {dirs['generated'] / 'candidate_qa.jsonl'}[/green]"
+    )
+
+
+@app.command("validate")
+def validate_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+) -> None:
+    """Run 5-layer validation over candidate QA."""
+    from ragfailbench.generation.llm_client import LLMClient
+    from ragfailbench.validation.validator import validate_candidates
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    cand_path = dirs["generated"] / "candidate_qa.jsonl"
+    if not cand_path.exists():
+        raise typer.BadParameter("Missing candidate_qa.jsonl; run generate-qa first")
+
+    candidates = read_jsonl_models(cand_path, CandidateQA)
+    chunks = _load_chunks(cfg, dirs)
+    chunks_by_id = {c.chunk_id: c for c in chunks}
+    console.print(
+        f"Validating {len(candidates)} candidates "
+        f"(concurrency={cfg.llm.max_concurrency}) …"
+    )
+
+    with LLMClient.from_config(cfg.llm) as client:
+        accepted, results = validate_candidates(candidates, chunks_by_id, cfg, client)
+
+    accepted_ids = {c.candidate_id for c in accepted}
+    rejected = [r for r in results if r.candidate_id not in accepted_ids]
+    write_jsonl(dirs["validated"] / "accepted_qa.jsonl", accepted)
+    write_jsonl(dirs["validated"] / "validation_results.jsonl", results)
+    write_jsonl(dirs["validated"] / "rejected_qa.jsonl", rejected)
+    console.print(
+        f"[green]Accepted {len(accepted)} / {len(candidates)} "
+        f"(rejected {len(rejected)})[/green]"
+    )
+
+
+@app.command("select-seeds")
+def select_seeds_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+) -> None:
+    """Stratified selection of clean seeds from accepted QA."""
+    from ragfailbench.validation.selection import select_clean_seeds
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    accepted = read_jsonl_models(dirs["validated"] / "accepted_qa.jsonl", CandidateQA)
+    results = read_jsonl_models(
+        dirs["validated"] / "validation_results.jsonl", ValidationResult
+    )
+    seeds = select_clean_seeds(accepted, results, cfg)
+    write_jsonl(dirs["final"] / "clean_seeds.jsonl", seeds)
+    console.print(
+        f"[green]Selected {len(seeds)} clean seeds → "
+        f"{dirs['final'] / 'clean_seeds.jsonl'}[/green]"
+    )
+
+
+# --------------------------------------------------------------------------- #
+# Milestone 3: Failure injection
+# --------------------------------------------------------------------------- #
+
+
+@app.command("inject-failures")
+def inject_failures_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+) -> None:
+    """Derive failure cases (4 types x 3 severities) from clean seeds."""
+    from ragfailbench.failures.injector import inject_failures
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    seeds = read_jsonl_models(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
+    chunks = _load_chunks(cfg, dirs)
+    console.print(f"Injecting failures for {len(seeds)} seeds …")
+
+    by_type = inject_failures(seeds, chunks, cfg)
+    failures_dir = dirs["final"] / "failures"
+    failures_dir.mkdir(parents=True, exist_ok=True)
+
+    total = 0
+    combined = []
+    for ftype, cases in by_type.items():
+        write_jsonl(failures_dir / f"{ftype}.jsonl", cases)
+        combined.extend(cases)
+        total += len(cases)
+        console.print(f"  {ftype}: {len(cases)}")
+    write_jsonl(dirs["final"] / "failure_cases.jsonl", combined)
+    console.print(f"[green]Wrote {total} failure cases → {failures_dir}[/green]")
+
+
+# --------------------------------------------------------------------------- #
+# Milestone 4: Benchmark evaluation + reports
+# --------------------------------------------------------------------------- #
+
+
+@app.command()
+def evaluate(
+    config: Path = typer.Option(..., "--config", "-c"),
+    models: str = typer.Option(
+        "", "--models", "-m", help="Comma-separated model names (default: config/env model)"
+    ),
+    limit: int = typer.Option(0, "--limit", help="Limit failure cases (0 = all)"),
+) -> None:
+    """Run the benchmark: answer clean + failure cases, compute metrics."""
+    from ragfailbench.evaluation.failure_metrics import compute_failure_metrics
+    from ragfailbench.evaluation.runner import evaluate_all
+    from ragfailbench.generation.llm_client import LLMClient
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    seeds = read_jsonl_models(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
+    failures = read_jsonl_models(dirs["final"] / "failure_cases.jsonl", FailureCase)
+    if limit > 0:
+        failures = failures[:limit]
+
+    model_list = [m.strip() for m in models.split(",") if m.strip()] or None
+    console.print(
+        f"Evaluating {len(seeds)} seeds + {len(failures)} failures "
+        f"(concurrency={cfg.llm.max_concurrency}) …"
+    )
+
+    with LLMClient.from_config(cfg.llm) as client:
+        results = evaluate_all(seeds, failures, client, cfg, models=model_list)
+
+    write_jsonl(dirs["final"] / "evaluation_results.jsonl", results)
+    metrics = compute_failure_metrics(results)
+    write_json(dirs["reports"] / "failure_metrics.json", metrics)
+    console.print(f"[green]Evaluated {len(results)} items[/green]")
+    for model, mrep in metrics.get("by_model", {}).items():
+        console.print(
+            f"  {model}: clean={mrep['clean_accuracy']} "
+            f"robustness={mrep['failure_robustness_score']}"
+        )
+
+
+@app.command()
+def report(
+    config: Path = typer.Option(..., "--config", "-c"),
+) -> None:
+    """Generate validation / failure / evaluation reports."""
+    from ragfailbench.evaluation.failure_metrics import compute_failure_metrics
+    from ragfailbench.reporting.markdown_report import (
+        build_evaluation_report,
+        build_sample_gallery,
+        build_validation_report,
+        evaluation_results_csv,
+        failure_distribution_csv,
+        write_text,
+    )
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    reports = dirs["reports"]
+
+    def _maybe(path: Path, model):
+        return read_jsonl_models(path, model) if path.exists() else []
+
+    candidates = _maybe(dirs["generated"] / "candidate_qa.jsonl", CandidateQA)
+    results = _maybe(dirs["validated"] / "validation_results.jsonl", ValidationResult)
+    seeds = _maybe(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
+    failures = _maybe(dirs["final"] / "failure_cases.jsonl", FailureCase)
+    evals = _maybe(dirs["final"] / "evaluation_results.jsonl", EvaluationResult)
+
+    written: list[str] = []
+
+    if candidates or seeds:
+        text = build_validation_report(
+            candidates=candidates, results=results, seeds=seeds, run_id=cfg.project.run_id
+        )
+        write_text(reports / "validation_report.md", text)
+        written.append("validation_report.md")
+
+    if failures:
+        write_text(reports / "failure_distribution.csv", failure_distribution_csv(failures))
+        by_type: dict[str, list[FailureCase]] = {}
+        for f in failures:
+            by_type.setdefault(f.failure_type, []).append(f)
+        write_text(reports / "sample_gallery.md", build_sample_gallery(seeds, by_type))
+        written.extend(["failure_distribution.csv", "sample_gallery.md"])
+
+    if evals:
+        write_text(reports / "evaluation_results.csv", evaluation_results_csv(evals))
+        metrics = compute_failure_metrics(evals)
+        write_json(reports / "failure_metrics.json", metrics)
+        write_text(reports / "evaluation_report.md", build_evaluation_report(metrics, cfg.project.run_id))
+        written.extend(["evaluation_results.csv", "evaluation_report.md", "failure_metrics.json"])
+
+    console.print(f"[green]Wrote reports → {reports}[/green]")
+    for name in written:
+        console.print(f"  {name}")
+
+
+@app.command("seed-pipeline")
+def seed_pipeline(
+    config: Path = typer.Option(..., "--config", "-c"),
+) -> None:
+    """M2+M3+M4: generate-qa → validate → select-seeds → inject-failures → evaluate → report."""
+    generate_qa(config)
+    validate_cmd(config)
+    select_seeds_cmd(config)
+    inject_failures_cmd(config)
+    evaluate(config, models="", limit=0)
+    report(config)
 
 
 if __name__ == "__main__":

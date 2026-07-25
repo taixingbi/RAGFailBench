@@ -10,6 +10,7 @@ source:
   snapshot_date: "2026-07-01"
   user_agent: "RAGFailBench/0.1 (research; contact=ragfailbench@example.com)"
   requests_per_second: 2.0
+  fetch_concurrency: 4
   max_retries: 3
   timeout_seconds: 30
   candidates_per_category: 250
@@ -68,6 +69,10 @@ qa_generation:
   endpoint_type: openai_compatible
   model: Qwen/Qwen2.5-7B-Instruct
   temperature: 0.2
+  max_tokens: 512
+  min_chunk_tokens: 60
+  max_chunk_tokens: 320
+  max_candidate_chunks: 1000
 
 validation:
   target_clean_seeds: 100
@@ -75,6 +80,10 @@ validation:
   require_answer_containment: true
   require_evidence_containment: true
   require_baseline_correct: true
+  use_answerability_judge: true
+  use_baseline_test: true
+  judge_min_confidence: 0.6
+  dedup_similarity_threshold: 0.85
 
 failure_generation:
   types:
@@ -86,6 +95,17 @@ failure_generation:
     - low
     - medium
     - high
+  noise_ratios:
+    low: 0.25
+    medium: 0.50
+    high: 0.75
+  context_chunk_budget: 8
+
+evaluation:
+  models: []
+  temperature: 0.0
+  max_tokens: 256
+  use_llm_judge: true
 
 llm:
   base_url_env: CHAT_BASE_URL
@@ -94,6 +114,7 @@ llm:
   default_model: Qwen/Qwen2.5-7B-Instruct
   timeout_seconds: 120
   max_tokens: 512
+  max_concurrency: 8
 
 paths:
   data_dir: data

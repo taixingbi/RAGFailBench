@@ -253,8 +253,52 @@ def chat_completion_text(
         raise ValueError(f"Unexpected chat response shape: {data!r}") from e
 
 
+def extract_json(text: str) -> dict[str, Any] | None:
+    """Best-effort extraction of a single JSON object from model output.
+
+    Handles ```json fences and leading/trailing prose.
+    """
+    import json
+    import re
+
+    if not text:
+        return None
+    candidate = text.strip()
+
+    fence = re.search(r"```(?:json)?\s*(.+?)\s*```", candidate, re.DOTALL)
+    if fence:
+        candidate = fence.group(1).strip()
+
+    # Direct parse
+    try:
+        obj = json.loads(candidate)
+        return obj if isinstance(obj, dict) else None
+    except (json.JSONDecodeError, TypeError):
+        pass
+
+    # Fallback: first balanced { ... } span
+    start = candidate.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    for i in range(start, len(candidate)):
+        ch = candidate[i]
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                snippet = candidate[start : i + 1]
+                try:
+                    obj = json.loads(snippet)
+                    return obj if isinstance(obj, dict) else None
+                except json.JSONDecodeError:
+                    return None
+    return None
+
+
 class LLMClient:
-    """Thin config-aware wrapper around chat_completions."""
+    """Thin config-aware wrapper around chat_completions with a pooled client."""
 
     def __init__(
         self,
@@ -278,11 +322,14 @@ class LLMClient:
         self.temperature = temperature
         self.base_url_env = base_url_env
         self.model_env = model_env
+        self.max_concurrency = 8
+        limits = httpx.Limits(max_connections=32, max_keepalive_connections=16)
+        self._client = httpx.Client(timeout=timeout, limits=limits)
 
     @classmethod
     def from_config(cls, llm_config: Any) -> LLMClient:
         """Build from ``AppConfig.llm`` (or any object with the same fields)."""
-        return cls(
+        client = cls(
             model=getattr(llm_config, "default_model", None),
             timeout=getattr(llm_config, "timeout_seconds", 120.0),
             max_tokens=getattr(llm_config, "max_tokens", 512),
@@ -290,6 +337,17 @@ class LLMClient:
             model_env=getattr(llm_config, "model_env", "CHAT_MODEL"),
             api_key_env=getattr(llm_config, "api_key_env", "CHAT_API_KEY"),
         )
+        client.max_concurrency = int(getattr(llm_config, "max_concurrency", 8) or 8)
+        return client
+
+    def close(self) -> None:
+        self._client.close()
+
+    def __enter__(self) -> LLMClient:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        self.close()
 
     def chat(
         self,
@@ -298,11 +356,12 @@ class LLMClient:
         max_tokens: int | None = None,
         temperature: float | None = None,
         response_format: dict[str, Any] | None = None,
+        model: str | None = None,
     ) -> dict[str, Any]:
         return chat_completions(
             messages=messages,
             base_url=self.base_url,
-            model=self.model,
+            model=model or self.model,
             api_key=self.api_key,
             max_tokens=self.max_tokens if max_tokens is None else max_tokens,
             temperature=self.temperature if temperature is None else temperature,
@@ -310,6 +369,7 @@ class LLMClient:
             response_format=response_format,
             base_url_env=self.base_url_env,
             model_env=self.model_env,
+            client=self._client,
         )
 
     def complete(
@@ -319,16 +379,35 @@ class LLMClient:
         system_content: str | None = None,
         max_tokens: int | None = None,
         temperature: float | None = None,
+        model: str | None = None,
     ) -> str:
-        return chat_completion_text(
-            user_content=user_content,
-            system_content=system_content,
-            base_url=self.base_url,
-            model=self.model,
-            api_key=self.api_key,
-            max_tokens=self.max_tokens if max_tokens is None else max_tokens,
-            temperature=self.temperature if temperature is None else temperature,
-            timeout=self.timeout,
-            base_url_env=self.base_url_env,
-            model_env=self.model_env,
+        messages: list[dict[str, Any]] = []
+        if system_content:
+            messages.append({"role": "system", "content": system_content})
+        messages.append({"role": "user", "content": user_content})
+        data = self.chat(
+            messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            model=model,
         )
+        try:
+            return str(data["choices"][0]["message"]["content"])
+        except (KeyError, IndexError, TypeError) as e:
+            raise ValueError(f"Unexpected chat response shape: {data!r}") from e
+
+    def complete_json(
+        self,
+        user_content: str,
+        *,
+        system_content: str | None = None,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> dict[str, Any] | None:
+        text = self.complete(
+            user_content,
+            system_content=system_content,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
+        return extract_json(text)
