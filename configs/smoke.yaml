@@ -1,0 +1,95 @@
+project:
+  name: ragfailbench
+  random_seed: 42
+  run_id: smoke_v1
+
+source:
+  provider: mediawiki_api
+  language: en
+  api_base: "https://en.wikipedia.org/w/api.php"
+  snapshot_date: "2026-07-01"
+  user_agent: "RAGFailBench/0.1 (research; contact=ragfailbench@example.com)"
+  requests_per_second: 2.0
+  max_retries: 3
+  timeout_seconds: 30
+  candidates_per_category: 40
+  category_seeds:
+    person:
+      - "Category:21st-century American scientists"
+      - "Category:American inventors"
+    location:
+      - "Category:Capital cities"
+      - "Category:Cities in Europe"
+    science_technology:
+      - "Category:Computer science"
+      - "Category:Software"
+    historical_event:
+      - "Category:20th-century conflicts"
+      - "Category:Treaties"
+    organization_product:
+      - "Category:Technology companies of the United States"
+      - "Category:Software companies"
+
+categories:
+  person: 10
+  location: 10
+  science_technology: 10
+  historical_event: 10
+  organization_product: 10
+
+filtering:
+  min_page_chars: 1500
+  min_sections: 2
+  exclude_redirects: true
+  exclude_disambiguation: true
+  exclude_lists: true
+  exclude_timelines: true
+  min_prose_ratio: 0.50
+  max_paragraph_repeat_ratio: 0.40
+
+chunking:
+  chunk_size_tokens: 300
+  chunk_overlap_tokens: 50
+  encoding: cl100k_base
+  split_order:
+    - section
+    - paragraph
+    - sentence
+    - token
+
+qa_generation:
+  target_candidates: 50
+  questions_per_chunk: 1
+  endpoint_type: openai_compatible
+  model: Qwen2.5-7B-Instruct
+  temperature: 0.2
+
+validation:
+  target_clean_seeds: 10
+  min_quality_score: 0.85
+  require_answer_containment: true
+  require_evidence_containment: true
+  require_baseline_correct: true
+
+failure_generation:
+  types:
+    - missing_evidence
+    - context_noise
+    - chunk_boundary
+    - evidence_position
+  severity_levels:
+    - low
+    - medium
+    - high
+
+llm:
+  base_url_env: CHAT_BASE_URL
+  api_key_env: CHAT_API_KEY
+  model_env: CHAT_MODEL
+  default_model: Qwen2.5-7B-Instruct
+  timeout_seconds: 120
+  max_tokens: 512
+
+paths:
+  data_dir: data
+  reports_dir: reports

@@ -1,0 +1,120 @@
+{
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "page_id": {
+      "title": "Page Id",
+      "type": "integer"
+    },
+    "revision_id": {
+      "title": "Revision Id",
+      "type": "integer"
+    },
+    "page_title": {
+      "title": "Page Title",
+      "type": "string"
+    },
+    "categories": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Categories",
+      "type": "array"
+    },
+    "category_group": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Category Group"
+    },
+    "retrieved_at": {
+      "format": "date-time",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "source_url": {
+      "title": "Source Url",
+      "type": "string"
+    },
+    "raw_text": {
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "is_redirect": {
+      "default": false,
+      "title": "Is Redirect",
+      "type": "boolean"
+    },
+    "redirect_target": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Redirect Target"
+    },
+    "is_disambiguation": {
+      "default": false,
+      "title": "Is Disambiguation",
+      "type": "boolean"
+    },
+    "char_count": {
+      "default": 0,
+      "title": "Char Count",
+      "type": "integer"
+    },
+    "section_count": {
+      "default": 0,
+      "title": "Section Count",
+      "type": "integer"
+    },
+    "cleaned_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cleaned Text"
+    },
+    "sections": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Sections",
+      "type": "array"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "required": [
+    "page_id",
+    "revision_id",
+    "page_title",
+    "retrieved_at",
+    "source_url",
+    "raw_text"
+  ],
+  "title": "WikipediaPage",
+  "type": "object"
+}

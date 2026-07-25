@@ -1,0 +1,137 @@
+{
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "eval_id": {
+      "title": "Eval Id",
+      "type": "string"
+    },
+    "sample_id": {
+      "title": "Sample Id",
+      "type": "string"
+    },
+    "model_name": {
+      "title": "Model Name",
+      "type": "string"
+    },
+    "condition": {
+      "title": "Condition",
+      "type": "string"
+    },
+    "severity": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Severity"
+    },
+    "prediction": {
+      "title": "Prediction",
+      "type": "string"
+    },
+    "gold_answer": {
+      "title": "Gold Answer",
+      "type": "string"
+    },
+    "exact_match": {
+      "default": 0.0,
+      "title": "Exact Match",
+      "type": "number"
+    },
+    "token_f1": {
+      "default": 0.0,
+      "title": "Token F1",
+      "type": "number"
+    },
+    "semantic_similarity": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Semantic Similarity"
+    },
+    "llm_judge_correct": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Llm Judge Correct"
+    },
+    "abstained": {
+      "default": false,
+      "title": "Abstained",
+      "type": "boolean"
+    },
+    "hallucinated": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Hallucinated"
+    },
+    "faithfulness": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Faithfulness"
+    },
+    "retrieval_metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Retrieval Metrics",
+      "type": "object"
+    },
+    "failure_metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Failure Metrics",
+      "type": "object"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "required": [
+    "eval_id",
+    "sample_id",
+    "model_name",
+    "condition",
+    "prediction",
+    "gold_answer"
+  ],
+  "title": "EvaluationResult",
+  "type": "object"
+}
