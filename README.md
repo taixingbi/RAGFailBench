@@ -90,9 +90,11 @@ Do **not** claim Pilot data comes from a fixed dated dump. Formal release should
 ```bash
 make setup
 make test
-make smoke    # M1: ~50 pages (10 per category)
-make seeds    # M2–M4 on smoke chunks (needs CHAT_BASE_URL in .env)
-make pilot    # full M1 pilot: 500 pages
+make smoke       # M1: ~50 pages (10 per category)
+make seeds       # M2–M4 on smoke chunks (needs CHAT_BASE_URL in .env)
+make pilot       # M1 only: 500 pages → chunks
+make pilot-seeds # M2–M4 on pilot chunks (needs `make pilot` first)
+make pilot-all   # full pilot: M1 → M4
 ```
 
 Step-by-step:

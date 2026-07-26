@@ -1,4 +1,4 @@
-.PHONY: setup smoke pilot ping-llm seeds test lint export-schemas clean
+.PHONY: setup smoke pilot pilot-seeds pilot-all ping-llm seeds test lint export-schemas clean
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -20,6 +20,13 @@ smoke:
 
 pilot:
 	$(BIN)/python -m ragfailbench pipeline --config configs/pilot.yaml
+
+# M2+M3+M4 on the pilot set (requires chunks.jsonl from `make pilot`)
+pilot-seeds:
+	$(BIN)/python -m ragfailbench seed-pipeline --config configs/pilot.yaml
+
+# Full pilot: M1 → M4
+pilot-all: pilot pilot-seeds
 
 ping-llm:
 	$(BIN)/python -m ragfailbench ping-llm --config configs/smoke.yaml

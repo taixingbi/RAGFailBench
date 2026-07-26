@@ -650,7 +650,7 @@ def seed_pipeline(
     config: Path = typer.Option(..., "--config", "-c"),
 ) -> None:
     """M2+M3+M4: generate-qa → validate → select-seeds → inject-failures → evaluate → report."""
-    generate_qa(config)
+    generate_qa(config, resume=True)
     validate_cmd(config)
     select_seeds_cmd(config)
     inject_failures_cmd(config, judge=False)
