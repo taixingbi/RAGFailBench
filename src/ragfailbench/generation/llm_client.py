@@ -4,20 +4,30 @@ Modeled after layer-rag-evaluation-v1/app/http/inference.py.
 
 Reads ``CHAT_BASE_URL`` / ``CHAT_MODEL`` / ``CHAT_API_KEY`` from the
 environment, loading a project-root ``.env`` file when present.
+
+Includes exponential backoff for queue pressure (``queue_age`` / 429 / 5xx)
+and optional raw-response logging for provenance.
 """
 
 from __future__ import annotations
 
 import asyncio
+import hashlib
+import json
 import os
+import random
+import threading
+import time
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable, Literal
 
 import httpx
 from dotenv import load_dotenv
 
 DEFAULT_CHAT_MODEL = "Qwen/Qwen2.5-7B-Instruct"
+
+StageName = Literal["generation", "judge", "evaluation", "default"]
 
 
 @lru_cache(maxsize=1)
@@ -115,6 +125,198 @@ def resolve_api_key(
     return os.environ.get(env_name) or None
 
 
+def _body_reason(data: Any) -> str:
+    if not isinstance(data, dict):
+        return ""
+    for key in ("reason", "error", "message", "detail"):
+        val = data.get(key)
+        if isinstance(val, dict):
+            val = val.get("message") or val.get("code") or val.get("type") or ""
+        if val:
+            return str(val).lower()
+    return ""
+
+
+def is_queue_pressure(text: str) -> bool:
+    """True for gateway overload signals such as queue_age / overloaded."""
+    t = (text or "").lower()
+    return any(
+        marker in t
+        for marker in (
+            "queue_age",
+            "queue full",
+            "overloaded",
+            "too many requests",
+            "rate limit",
+            "capacity",
+            "try again",
+        )
+    )
+
+
+def is_retryable_http_error(exc: BaseException) -> bool:
+    """Whether an exception from an LLM call should be retried."""
+    if isinstance(exc, (httpx.TimeoutException, httpx.NetworkError, httpx.RemoteProtocolError)):
+        return True
+    if isinstance(exc, httpx.HTTPStatusError):
+        code = exc.response.status_code
+        if code in {408, 425, 429, 500, 502, 503, 504}:
+            return True
+        try:
+            body = exc.response.json()
+        except Exception:  # noqa: BLE001
+            body = None
+        if is_queue_pressure(_body_reason(body) + " " + (exc.response.text or "")[:500]):
+            return True
+    if is_queue_pressure(str(exc)):
+        return True
+    return False
+
+
+def is_retryable_response_body(data: dict[str, Any]) -> bool:
+    """Some gateways return HTTP 200 with a queue_age payload and no choices."""
+    if "choices" in data and data["choices"]:
+        return False
+    return is_queue_pressure(_body_reason(data) + " " + json.dumps(data)[:500])
+
+
+def retry_after_seconds(response: httpx.Response | None, fallback: float) -> float:
+    if response is None:
+        return fallback
+    header = response.headers.get("Retry-After") or response.headers.get("retry-after")
+    if not header:
+        return fallback
+    try:
+        return max(float(header), 0.1)
+    except ValueError:
+        return fallback
+
+
+def compute_backoff(
+    attempt: int,
+    *,
+    base_seconds: float,
+    jitter: bool,
+) -> float:
+    """Exponential backoff: base * 2^attempt, optionally ±25% jitter."""
+    delay = base_seconds * (2**attempt)
+    if jitter:
+        delay *= 0.75 + random.random() * 0.5
+    return min(delay, 60.0)
+
+
+RawLogFn = Callable[[dict[str, Any]], None]
+
+
+def _post_once(
+    *,
+    client: httpx.Client,
+    url: str,
+    payload: dict[str, Any],
+    headers: dict[str, str],
+    timeout: float,
+) -> dict[str, Any]:
+    r = client.post(url, json=payload, headers=headers, timeout=timeout)
+    r.raise_for_status()
+    data = r.json()
+    if is_retryable_response_body(data):
+        raise httpx.HTTPStatusError(
+            f"retryable LLM body: {_body_reason(data) or data!r}",
+            request=r.request,
+            response=r,
+        )
+    return data
+
+
+def chat_completions_with_retry(
+    *,
+    messages: list[dict[str, Any]],
+    base_url: str | None = None,
+    model: str | None = None,
+    max_tokens: int | None = 512,
+    temperature: float | None = None,
+    api_key: str | None = None,
+    timeout: float = 120.0,
+    client: httpx.Client | None = None,
+    extra_headers: dict[str, str] | None = None,
+    response_format: dict[str, Any] | None = None,
+    base_url_env: str = "CHAT_BASE_URL",
+    model_env: str = "CHAT_MODEL",
+    max_retries: int = 5,
+    retry_backoff_seconds: float = 2.0,
+    retry_jitter: bool = True,
+    on_raw: RawLogFn | None = None,
+) -> dict[str, Any]:
+    """POST /v1/chat/completions with exponential backoff on queue pressure."""
+    resolved = resolve_base_url(base_url, env_name=base_url_env)
+    resolved_model = resolve_model(model, env_name=model_env)
+    url = f"{normalize_chat_base_url(resolved)}/v1/chat/completions"
+    key = resolve_api_key(api_key)
+    headers = _build_headers(api_key=key, extra_headers=extra_headers)
+    payload = _build_payload(
+        model=resolved_model,
+        messages=messages,
+        max_tokens=max_tokens,
+        temperature=temperature,
+        response_format=response_format,
+        stream=False,
+    )
+
+    owns_client = client is None
+    http = client or httpx.Client(timeout=timeout)
+    last_exc: BaseException | None = None
+    attempts = max(1, int(max_retries))
+
+    try:
+        for attempt in range(attempts):
+            t0 = time.perf_counter()
+            try:
+                data = _post_once(
+                    client=http, url=url, payload=payload, headers=headers, timeout=timeout
+                )
+                latency_ms = int((time.perf_counter() - t0) * 1000)
+                if on_raw is not None:
+                    on_raw(
+                        {
+                            "ok": True,
+                            "attempt": attempt + 1,
+                            "latency_ms": latency_ms,
+                            "model": resolved_model,
+                            "response": data,
+                        }
+                    )
+                return data
+            except Exception as exc:  # noqa: BLE001
+                last_exc = exc
+                latency_ms = int((time.perf_counter() - t0) * 1000)
+                retryable = is_retryable_http_error(exc)
+                response = getattr(exc, "response", None)
+                if on_raw is not None:
+                    on_raw(
+                        {
+                            "ok": False,
+                            "attempt": attempt + 1,
+                            "latency_ms": latency_ms,
+                            "model": resolved_model,
+                            "error": f"{type(exc).__name__}: {exc}",
+                            "retryable": retryable,
+                            "status_code": getattr(response, "status_code", None),
+                        }
+                    )
+                if not retryable or attempt >= attempts - 1:
+                    raise
+                fallback = compute_backoff(
+                    attempt, base_seconds=retry_backoff_seconds, jitter=retry_jitter
+                )
+                delay = retry_after_seconds(response, fallback)
+                time.sleep(delay)
+        assert last_exc is not None
+        raise last_exc
+    finally:
+        if owns_client:
+            http.close()
+
+
 async def async_chat_completions(
     *,
     messages: list[dict[str, Any]],
@@ -177,31 +379,38 @@ def chat_completions(
     base_url_env: str = "CHAT_BASE_URL",
     model_env: str = "CHAT_MODEL",
     stream: bool = False,
+    max_retries: int = 5,
+    retry_backoff_seconds: float = 2.0,
+    retry_jitter: bool = True,
+    on_raw: RawLogFn | None = None,
 ) -> dict[str, Any]:
-    """Sync POST /v1/chat/completions (non-streaming JSON by default)."""
+    """Sync POST /v1/chat/completions with retries (non-streaming JSON)."""
     if stream:
         raise ValueError(
             "stream=True is not supported by chat_completions; "
             "use stream=False for JSON responses."
         )
-    resolved = resolve_base_url(base_url, env_name=base_url_env)
-    resolved_model = resolve_model(model, env_name=model_env)
-    if client is not None:
-        url = f"{normalize_chat_base_url(resolved)}/v1/chat/completions"
-        key = resolve_api_key(api_key)
-        headers = _build_headers(api_key=key, extra_headers=extra_headers)
-        payload = _build_payload(
-            model=resolved_model,
+    if client is not None or on_raw is not None or max_retries != 1:
+        return chat_completions_with_retry(
             messages=messages,
+            base_url=base_url,
+            model=model,
             max_tokens=max_tokens,
             temperature=temperature,
+            api_key=api_key,
+            timeout=timeout,
+            client=client,
+            extra_headers=extra_headers,
             response_format=response_format,
-            stream=False,
+            base_url_env=base_url_env,
+            model_env=model_env,
+            max_retries=max_retries,
+            retry_backoff_seconds=retry_backoff_seconds,
+            retry_jitter=retry_jitter,
+            on_raw=on_raw,
         )
-        r = client.post(url, json=payload, headers=headers, timeout=timeout)
-        r.raise_for_status()
-        return r.json()
 
+    # No pooled client: prefer async path when not inside a loop.
     try:
         asyncio.get_running_loop()
     except RuntimeError:
@@ -258,7 +467,6 @@ def extract_json(text: str) -> dict[str, Any] | None:
 
     Handles ```json fences and leading/trailing prose.
     """
-    import json
     import re
 
     if not text:
@@ -297,8 +505,21 @@ def extract_json(text: str) -> dict[str, Any] | None:
     return None
 
 
+def truncate_for_log(data: Any, *, max_chars: int = 4000) -> Any:
+    """Shrink nested structures for append-only raw logs."""
+    text = json.dumps(data, ensure_ascii=False, default=str)
+    if len(text) <= max_chars:
+        return data
+    return {
+        "truncated": True,
+        "sha1": hashlib.sha1(text.encode("utf-8")).hexdigest()[:16],
+        "preview": text[:max_chars],
+        "full_chars": len(text),
+    }
+
+
 class LLMClient:
-    """Thin config-aware wrapper around chat_completions with a pooled client."""
+    """Config-aware wrapper with pooled HTTP, retries, and stage concurrency."""
 
     def __init__(
         self,
@@ -322,12 +543,21 @@ class LLMClient:
         self.temperature = temperature
         self.base_url_env = base_url_env
         self.model_env = model_env
-        self.max_concurrency = 16
-        limits = httpx.Limits(max_connections=64, max_keepalive_connections=32)
+        self.max_concurrency = 2
+        self.generation_concurrency = 2
+        self.judge_concurrency = 2
+        self.evaluation_concurrency = 2
+        self.max_retries = 5
+        self.retry_backoff_seconds = 2.0
+        self.retry_jitter = True
+        self.log_raw_responses = False
+        self.raw_log_path: Path | None = None
+        self._raw_lock = threading.Lock()
+        limits = httpx.Limits(max_connections=32, max_keepalive_connections=16)
         self._client = httpx.Client(timeout=timeout, limits=limits)
 
     @classmethod
-    def from_config(cls, llm_config: Any) -> LLMClient:
+    def from_config(cls, llm_config: Any, *, raw_log_path: Path | str | None = None) -> LLMClient:
         """Build from ``AppConfig.llm`` (or any object with the same fields)."""
         client = cls(
             model=getattr(llm_config, "default_model", None),
@@ -337,8 +567,40 @@ class LLMClient:
             model_env=getattr(llm_config, "model_env", "CHAT_MODEL"),
             api_key_env=getattr(llm_config, "api_key_env", "CHAT_API_KEY"),
         )
-        client.max_concurrency = int(getattr(llm_config, "max_concurrency", 16) or 16)
+        client.max_concurrency = int(getattr(llm_config, "max_concurrency", 2) or 2)
+        client.generation_concurrency = int(
+            getattr(llm_config, "generation_concurrency", client.max_concurrency)
+            or client.max_concurrency
+        )
+        client.judge_concurrency = int(
+            getattr(llm_config, "judge_concurrency", client.max_concurrency)
+            or client.max_concurrency
+        )
+        client.evaluation_concurrency = int(
+            getattr(llm_config, "evaluation_concurrency", client.max_concurrency)
+            or client.max_concurrency
+        )
+        client.max_retries = int(getattr(llm_config, "max_retries", 5) or 5)
+        client.retry_backoff_seconds = float(
+            getattr(llm_config, "retry_backoff_seconds", 2.0) or 2.0
+        )
+        client.retry_jitter = bool(getattr(llm_config, "retry_jitter", True))
+        client.log_raw_responses = bool(getattr(llm_config, "log_raw_responses", True))
+        if raw_log_path is not None:
+            client.raw_log_path = Path(raw_log_path)
         return client
+
+    def concurrency_for(self, stage: str) -> int:
+        mapping = {
+            "generation": self.generation_concurrency,
+            "generate": self.generation_concurrency,
+            "judge": self.judge_concurrency,
+            "validation": self.judge_concurrency,
+            "verify": self.judge_concurrency,
+            "evaluation": self.evaluation_concurrency,
+            "evaluate": self.evaluation_concurrency,
+        }
+        return max(1, int(mapping.get(stage, self.max_concurrency) or 1))
 
     def close(self) -> None:
         self._client.close()
@@ -349,6 +611,20 @@ class LLMClient:
     def __exit__(self, *args: object) -> None:
         self.close()
 
+    def _append_raw(self, record: dict[str, Any]) -> None:
+        if not self.log_raw_responses or self.raw_log_path is None:
+            return
+        path = self.raw_log_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        payload = dict(record)
+        if "response" in payload:
+            payload["response"] = truncate_for_log(payload["response"])
+        payload["ts"] = time.time()
+        line = json.dumps(payload, ensure_ascii=False, default=str) + "\n"
+        with self._raw_lock:
+            with path.open("a", encoding="utf-8") as f:
+                f.write(line)
+
     def chat(
         self,
         messages: list[dict[str, Any]],
@@ -358,7 +634,7 @@ class LLMClient:
         response_format: dict[str, Any] | None = None,
         model: str | None = None,
     ) -> dict[str, Any]:
-        return chat_completions(
+        return chat_completions_with_retry(
             messages=messages,
             base_url=self.base_url,
             model=model or self.model,
@@ -370,6 +646,10 @@ class LLMClient:
             base_url_env=self.base_url_env,
             model_env=self.model_env,
             client=self._client,
+            max_retries=self.max_retries,
+            retry_backoff_seconds=self.retry_backoff_seconds,
+            retry_jitter=self.retry_jitter,
+            on_raw=self._append_raw if self.log_raw_responses else None,
         )
 
     def complete(

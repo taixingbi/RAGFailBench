@@ -140,7 +140,9 @@ Key knobs:
 - `failure_generation.types` / `severity_levels` / `noise_ratios` — operator controls
 - `failure_generation.context_chunk_budget` — shared clean vs failure context size
 - `source.fetch_concurrency` / `requests_per_second` — MediaWiki fetch
-- `llm.max_concurrency` — concurrent LLM calls (default 16)
+- `llm.generation_concurrency` / `judge_concurrency` / `evaluation_concurrency` — per-stage limits (default **2**; avoids vLLM `queue_age`)
+- `llm.max_retries` / `retry_backoff_seconds` — exponential backoff on 429 / queue pressure
+- `llm.max_concurrency` — fallback concurrency (default 2)
 
 ## LLM endpoint
 
@@ -155,6 +157,12 @@ CHAT_MODEL=Qwen/Qwen2.5-7B-Instruct
 ```bash
 python -m ragfailbench ping-llm --config configs/smoke.yaml
 ```
+
+LLM stages use thread-pool concurrency with exponential backoff on
+``queue_age`` / 429 / 5xx. Prefer low per-stage concurrency
+(``generation_concurrency`` / ``judge_concurrency`` / ``evaluation_concurrency``,
+default **2**). ``generate-qa`` append-checkpoints to ``candidate_qa.jsonl`` and
+resumes with ``--resume`` (default on).
 
 ## Framework layout
 

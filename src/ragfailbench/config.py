@@ -141,7 +141,30 @@ class LLMConfig(BaseModel):
     default_model: str = "Qwen/Qwen2.5-7B-Instruct"
     timeout_seconds: float = 120.0
     max_tokens: int = 512
-    max_concurrency: int = 16
+    # Fallback concurrency when a stage-specific value is unset.
+    max_concurrency: int = 2
+    generation_concurrency: int = 2
+    judge_concurrency: int = 2
+    evaluation_concurrency: int = 2
+    max_retries: int = 5
+    retry_backoff_seconds: float = 2.0
+    retry_jitter: bool = True
+    # Append truncated raw LLM responses under the run dir when True.
+    log_raw_responses: bool = True
+
+    def concurrency_for(self, stage: str) -> int:
+        """Return concurrency for generation | judge | evaluation | default."""
+        mapping = {
+            "generation": self.generation_concurrency,
+            "generate": self.generation_concurrency,
+            "judge": self.judge_concurrency,
+            "validation": self.judge_concurrency,
+            "verify": self.judge_concurrency,
+            "evaluation": self.evaluation_concurrency,
+            "evaluate": self.evaluation_concurrency,
+        }
+        n = mapping.get(stage, self.max_concurrency)
+        return max(1, int(n or self.max_concurrency or 1))
 
 
 class PathsConfig(BaseModel):

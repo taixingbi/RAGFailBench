@@ -90,12 +90,10 @@ def validate_candidates(
 ) -> tuple[list[CandidateQA], list[ValidationResult]]:
     """Run rules → uniqueness → judge → baseline → dedup.
 
-    LLM-backed candidates are validated concurrently up to
-    ``cfg.llm.max_concurrency``. Returns (accepted_candidates, all_results).
+    LLM-backed candidates are validated concurrently up to the judge
+    concurrency setting. Returns (accepted_candidates, all_results).
     """
-    concurrency = (
-        getattr(client, "max_concurrency", cfg.llm.max_concurrency) if client else 1
-    )
+    concurrency = client.concurrency_for("judge") if client else 1
 
     def _worker(cand: CandidateQA) -> tuple[CandidateQA, ValidationResult]:
         return _validate_one(cand, chunks_by_id, cfg, client)

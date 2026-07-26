@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from pathlib import Path
 from typing import Any
 
 from ragfailbench.concurrent import map_concurrent
@@ -13,6 +14,7 @@ from ragfailbench.generation.prompts import (
     QA_GENERATION_SYSTEM,
     build_qa_generation_prompt,
 )
+from ragfailbench.io import append_jsonl, read_jsonl, read_jsonl_models
 from ragfailbench.schemas.chunk import Chunk
 from ragfailbench.schemas.qa import CandidateQA, SourceRef
 
@@ -130,39 +132,87 @@ def generate_for_chunk(
     return fields, None
 
 
+def load_generation_checkpoint(
+    candidates_path: Path | str,
+    errors_path: Path | str | None = None,
+) -> tuple[list[CandidateQA], set[str], list[dict[str, Any]]]:
+    """Load prior candidates/errors for resume. Returns (cands, done_chunk_ids, errors)."""
+    path = Path(candidates_path)
+    candidates: list[CandidateQA] = []
+    done: set[str] = set()
+    if path.exists():
+        candidates = read_jsonl_models(path, CandidateQA)
+        for c in candidates:
+            done.add(c.source.chunk_id)
+
+    errors: list[dict[str, Any]] = []
+    if errors_path is not None:
+        epath = Path(errors_path)
+        if epath.exists():
+            for row in read_jsonl(epath):
+                errors.append(row)
+                cid = row.get("chunk_id")
+                if cid:
+                    done.add(str(cid))
+    return candidates, done, errors
+
+
 def generate_candidate_qa(
     chunks: list[Chunk],
     client: LLMClient,
     cfg: AppConfig,
     *,
     progress: Any = None,
+    resume_from: Path | str | None = None,
+    errors_path: Path | str | None = None,
+    checkpoint: bool = True,
 ) -> tuple[list[CandidateQA], list[dict[str, Any]]]:
     """Generate up to ``target_candidates`` candidate QAs from selected chunks.
 
-    LLM calls run concurrently up to ``cfg.llm.max_concurrency``.
+    When ``resume_from`` points at an existing ``candidate_qa.jsonl``, already
+    processed chunk_ids are skipped. With ``checkpoint=True``, new records are
+    appended immediately so a crashed run can resume.
     """
     selected = select_qa_chunks(chunks, cfg)
     target = cfg.qa_generation.target_candidates
+
+    candidates: list[CandidateQA] = []
+    errors: list[dict[str, Any]] = []
+    done: set[str] = set()
+    out_path = Path(resume_from) if resume_from else None
+    err_path = Path(errors_path) if errors_path else None
+
+    if out_path is not None:
+        candidates, done, errors = load_generation_checkpoint(out_path, err_path)
+        if len(candidates) >= target:
+            return candidates[:target], errors
+
     # Over-fetch a bit so parse failures don't leave us short of target.
-    work = selected[: max(target * 2, target)]
+    work = [
+        c
+        for c in selected[: max(target * 2, target)]
+        if c.chunk_id not in done
+    ]
+    need = max(target - len(candidates), 0)
+    if need <= 0:
+        return candidates[:target], errors
+
+    concurrency = client.concurrency_for("generation")
 
     def _worker(chunk: Chunk) -> tuple[Chunk, dict[str, Any] | None, str | None]:
         fields, err = generate_for_chunk(chunk, client, cfg)
         return chunk, fields, err
 
-    raw = map_concurrent(
-        work,
-        _worker,
-        max_concurrency=getattr(client, "max_concurrency", cfg.llm.max_concurrency),
-    )
+    raw = map_concurrent(work, _worker, max_concurrency=concurrency)
 
-    candidates: list[CandidateQA] = []
-    errors: list[dict[str, Any]] = []
     for chunk, fields, err in raw:
         if len(candidates) >= target:
             break
         if err is not None or fields is None:
-            errors.append({"chunk_id": chunk.chunk_id, "error": err or "unknown"})
+            row = {"chunk_id": chunk.chunk_id, "error": err or "unknown"}
+            errors.append(row)
+            if checkpoint and err_path is not None:
+                append_jsonl(err_path, row)
             if progress is not None:
                 progress(chunk, None, err)
             continue
@@ -183,10 +233,15 @@ def generate_candidate_qa(
                 chunk_id=chunk.chunk_id,
             ),
             category_group=chunk.category_group,
-            metadata={"generator_model": client.model},
+            metadata={
+                "generator_model": client.model,
+                "prompt_version": "qa_v1",
+            },
         )
         candidates.append(cand)
+        if checkpoint and out_path is not None:
+            append_jsonl(out_path, cand)
         if progress is not None:
             progress(chunk, cand, None)
 
-    return candidates, errors
+    return candidates[:target], errors

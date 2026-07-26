@@ -191,7 +191,7 @@ def evaluate_model(
     results = map_concurrent(
         jobs,
         _worker,
-        max_concurrency=getattr(client, "max_concurrency", cfg.llm.max_concurrency),
+        max_concurrency=client.concurrency_for("evaluation"),
     )
     if progress is not None:
         for res in results:

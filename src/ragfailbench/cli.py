@@ -91,7 +91,7 @@ def ping_llm(
     client = LLMClient.from_config(cfg.llm)
     console.print(f"Endpoint: {base}/v1/chat/completions")
     console.print(f"Model:    {client.model}")
-    console.print(f"Concurrency: {client.max_concurrency}")
+    console.print(f"Concurrency: {client.concurrency_for('generation')}")
     text = client.complete(prompt, max_tokens=64)
     console.print(f"[green]OK[/green] → {text!r}")
 
@@ -349,8 +349,14 @@ def _load_chunks(cfg: AppConfig, dirs: dict) -> list[Chunk]:
 @app.command("generate-qa")
 def generate_qa(
     config: Path = typer.Option(..., "--config", "-c"),
+    resume: bool = typer.Option(
+        True, "--resume/--no-resume", help="Skip chunks already in candidate_qa.jsonl"
+    ),
 ) -> None:
-    """Generate candidate QA from chunks using the LLM."""
+    """Generate candidate QA from chunks using the LLM.
+
+    Appends checkpointed results so a crashed run can resume with ``--resume``.
+    """
     from ragfailbench.generation.llm_client import LLMClient
     from ragfailbench.generation.qa_generator import generate_candidate_qa
 
@@ -359,18 +365,37 @@ def generate_qa(
     chunks = _load_chunks(cfg, dirs)
     console.print(f"Loaded {len(chunks)} chunks")
 
-    with LLMClient.from_config(cfg.llm) as client:
+    cand_path = dirs["generated"] / "candidate_qa.jsonl"
+    err_path = dirs["generated"] / "qa_generation_errors.jsonl"
+    raw_path = dirs["generated"] / "llm_raw.jsonl"
+
+    with LLMClient.from_config(cfg.llm, raw_log_path=raw_path) as client:
+        conc = client.concurrency_for("generation")
         console.print(
             f"Generating QA with {client.model} "
-            f"(concurrency={client.max_concurrency}) …"
+            f"(generation_concurrency={conc}, max_retries={client.max_retries}, "
+            f"resume={resume}) …"
         )
-        candidates, errors = generate_candidate_qa(chunks, client, cfg)
+        if not resume and cand_path.exists():
+            cand_path.unlink()
+        if not resume and err_path.exists():
+            err_path.unlink()
+        candidates, errors = generate_candidate_qa(
+            chunks,
+            client,
+            cfg,
+            resume_from=cand_path,
+            errors_path=err_path,
+            checkpoint=True,
+        )
 
-    write_jsonl(dirs["generated"] / "candidate_qa.jsonl", candidates)
-    write_jsonl(dirs["generated"] / "qa_generation_errors.jsonl", errors)
+    # Rewrite once at the end so the file is exactly the returned set (deduped
+    # to target) even if append checkpoint overshot during a partial run.
+    write_jsonl(cand_path, candidates)
+    write_jsonl(err_path, errors)
     console.print(
         f"[green]Generated {len(candidates)} candidates "
-        f"({len(errors)} errors) → {dirs['generated'] / 'candidate_qa.jsonl'}[/green]"
+        f"({len(errors)} errors) → {cand_path}[/green]"
     )
 
 
@@ -393,10 +418,11 @@ def validate_cmd(
     chunks_by_id = {c.chunk_id: c for c in chunks}
     console.print(
         f"Validating {len(candidates)} candidates "
-        f"(concurrency={cfg.llm.max_concurrency}) …"
+        f"(judge_concurrency={cfg.llm.concurrency_for('judge')}) …"
     )
 
-    with LLMClient.from_config(cfg.llm) as client:
+    raw_path = dirs["validated"] / "llm_raw.jsonl"
+    with LLMClient.from_config(cfg.llm, raw_log_path=raw_path) as client:
         accepted, results = validate_candidates(candidates, chunks_by_id, cfg, client)
 
     accepted_ids = {c.candidate_id for c in accepted}
@@ -470,11 +496,13 @@ def inject_failures_cmd(
         with LLMClient.from_config(cfg.llm) as client:
             console.print(
                 f"Running verification judge with {client.model} "
-                f"(concurrency={client.max_concurrency}) …"
+                f"(judge_concurrency={client.concurrency_for('judge')}) …"
             )
             for ftype in list(by_type):
                 valid, judged_out = verify_failures(
-                    by_type[ftype], client, max_concurrency=client.max_concurrency
+                    by_type[ftype],
+                    client,
+                    max_concurrency=client.concurrency_for("judge"),
                 )
                 by_type[ftype] = valid
                 rejected.extend(judged_out)
@@ -542,10 +570,11 @@ def evaluate(
     model_list = [m.strip() for m in models.split(",") if m.strip()] or None
     console.print(
         f"Evaluating {len(seeds)} seeds + {len(failures)} failures "
-        f"(concurrency={cfg.llm.max_concurrency}) …"
+        f"(evaluation_concurrency={cfg.llm.concurrency_for('evaluation')}) …"
     )
 
-    with LLMClient.from_config(cfg.llm) as client:
+    raw_path = dirs["final"] / "llm_raw_eval.jsonl"
+    with LLMClient.from_config(cfg.llm, raw_log_path=raw_path) as client:
         results = evaluate_all(seeds, failures, client, cfg, models=model_list)
 
     write_jsonl(dirs["final"] / "evaluation_results.jsonl", results)
