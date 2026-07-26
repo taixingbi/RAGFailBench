@@ -105,8 +105,11 @@ class FailureGenerationConfig(BaseModel):
     )
     context_chunk_budget: int = 8
     random_seed: int | None = None
-    # Drop missing_evidence cases where gold answer still appears in context.
+    # Drop cases whose structural verification fails (answer leakage, broken
+    # operator invariants). Rejected cases are quarantined, not silently lost.
     require_answer_absence: bool = True
+    # Additionally run an LLM judge over injected cases (needs CHAT_BASE_URL).
+    use_verification_judge: bool = False
 
 
 class EvaluationConfig(BaseModel):

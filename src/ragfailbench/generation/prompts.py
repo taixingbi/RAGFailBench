@@ -82,6 +82,28 @@ Question: {question}
 Answer:"""
 
 
+ABSENCE_JUDGE_SYSTEM = (
+    "You are a strict evidence auditor. Given a context and a question, you "
+    "judge whether the question can be answered from the context alone — "
+    "including paraphrases or synonyms of the expected answer. Output STRICT "
+    "JSON only."
+)
+
+ABSENCE_JUDGE_TEMPLATE = """\
+Context:
+\"\"\"
+{context}
+\"\"\"
+
+Question: {question}
+Expected answer (for your reference only): {gold_answer}
+
+Can the expected answer be derived from the context above, even via paraphrase
+or partial mention? Return STRICT JSON:
+{{"answer_available": true|false, "confidence": 0.0-1.0}}
+"""
+
+
 CORRECTNESS_JUDGE_SYSTEM = (
     "You grade whether a predicted answer matches the gold answer for a "
     "question. Minor formatting differences are acceptable. Output STRICT JSON only."
@@ -119,4 +141,10 @@ def build_baseline_prompt(*, context: str, question: str) -> str:
 def build_correctness_prompt(*, question: str, gold_answer: str, prediction: str) -> str:
     return CORRECTNESS_JUDGE_TEMPLATE.format(
         question=question, gold_answer=gold_answer, prediction=prediction
+    )
+
+
+def build_absence_judge_prompt(*, context: str, question: str, gold_answer: str) -> str:
+    return ABSENCE_JUDGE_TEMPLATE.format(
+        context=context, question=question, gold_answer=gold_answer
     )

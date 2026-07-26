@@ -440,9 +440,19 @@ def select_seeds_cmd(
 @app.command("inject-failures")
 def inject_failures_cmd(
     config: Path = typer.Option(..., "--config", "-c"),
+    judge: bool = typer.Option(
+        False, "--judge", help="Also run the LLM answer-availability judge"
+    ),
 ) -> None:
-    """Derive failure cases (4 types x 3 severities) from clean seeds."""
+    """Derive failure cases (4 types x 3 severities) from clean seeds.
+
+    Every case gets a structural verification record; invalid injections are
+    quarantined to failures_rejected.jsonl. With --judge (or
+    failure_generation.use_verification_judge), an independent LLM re-checks
+    answer availability on each case.
+    """
     from ragfailbench.failures.injector import inject_failures
+    from ragfailbench.failures.verify import verify_failures
 
     cfg = _load(config)
     dirs = cfg.ensure_dirs()
@@ -451,6 +461,24 @@ def inject_failures_cmd(
     console.print(f"Injecting failures for {len(seeds)} seeds …")
 
     by_type = inject_failures(seeds, chunks, cfg)
+    rejected = by_type.pop("_rejected", [])
+
+    use_judge = judge or cfg.failure_generation.use_verification_judge
+    if use_judge:
+        from ragfailbench.generation.llm_client import LLMClient
+
+        with LLMClient.from_config(cfg.llm) as client:
+            console.print(
+                f"Running verification judge with {client.model} "
+                f"(concurrency={client.max_concurrency}) …"
+            )
+            for ftype in list(by_type):
+                valid, judged_out = verify_failures(
+                    by_type[ftype], client, max_concurrency=client.max_concurrency
+                )
+                by_type[ftype] = valid
+                rejected.extend(judged_out)
+
     failures_dir = dirs["final"] / "failures"
     failures_dir.mkdir(parents=True, exist_ok=True)
 
@@ -462,7 +490,28 @@ def inject_failures_cmd(
         total += len(cases)
         console.print(f"  {ftype}: {len(cases)}")
     write_jsonl(dirs["final"] / "failure_cases.jsonl", combined)
+    write_jsonl(dirs["final"] / "failures_rejected.jsonl", rejected)
+
+    report = {
+        "total_valid": total,
+        "total_rejected": len(rejected),
+        "judge_used": use_judge,
+        "by_type": {ftype: len(cases) for ftype, cases in by_type.items()},
+        "rejection_reasons": {},
+    }
+    for case in rejected:
+        for check in (case.verification.failed_checks if case.verification else []):
+            report["rejection_reasons"][check] = (
+                report["rejection_reasons"].get(check, 0) + 1
+            )
+    write_json(dirs["reports"] / "failure_verification.json", report)
+
     console.print(f"[green]Wrote {total} failure cases → {failures_dir}[/green]")
+    if rejected:
+        console.print(
+            f"[yellow]Quarantined {len(rejected)} invalid injections → "
+            f"{dirs['final'] / 'failures_rejected.jsonl'}[/yellow]"
+        )
 
 
 # --------------------------------------------------------------------------- #
@@ -575,7 +624,7 @@ def seed_pipeline(
     generate_qa(config)
     validate_cmd(config)
     select_seeds_cmd(config)
-    inject_failures_cmd(config)
+    inject_failures_cmd(config, judge=False)
     evaluate(config, models="", limit=0)
     report(config)
 

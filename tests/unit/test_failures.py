@@ -84,6 +84,7 @@ def _seed() -> CleanSeed:
 def test_inject_all_types_and_severities():
     cfg = AppConfig()
     by_type = inject_failures([_seed()], _chunks(), cfg)
+    rejected = by_type.pop("_rejected")
     assert set(by_type.keys()) == {
         "missing_evidence",
         "context_noise",
@@ -91,23 +92,33 @@ def test_inject_all_types_and_severities():
         "evidence_position",
     }
     total = sum(len(v) for v in by_type.values())
-    assert total == 12  # 4 types x 3 severities x 1 seed
+    assert total + len(rejected) == 12  # 4 types x 3 severities x 1 seed
+    assert total == 12  # nothing should be quarantined on this fixture
     for name, cases in by_type.items():
         for case in cases:
             assert case.operator == name
             assert case.stage
             assert 0.0 <= case.difficulty <= 1.0
             assert isinstance(case.parameters, dict)
+            # Every accepted case carries a passing verification record.
+            assert case.verification is not None
+            assert case.verification.injection_valid is True
+            assert case.verification.failed_checks == []
+            assert 0.0 <= case.verification.verification_score <= 1.0
+            assert case.verification.judge_verified is None  # no LLM in unit tests
 
 
 def test_missing_evidence_marks_unanswerable():
     cfg = AppConfig()
     by_type = inject_failures([_seed()], _chunks(), cfg)
+    assert by_type["missing_evidence"]
     for case in by_type["missing_evidence"]:
         assert case.answer_available is False
         assert case.expected_behavior == "abstain"
-        assert case.metadata.get("answer_absence_verified") is True
-        assert case.metadata.get("answer_still_available") is False
+        assert case.verification is not None
+        assert case.verification.injection_valid is True
+        assert case.verification.gold_answer_leaked is False
+        assert case.verification.answer_available is False
         # Supporting sentence should not be fully present in contexts
         joined = " ".join(case.contexts)
         assert SUPPORT not in joined
@@ -117,12 +128,10 @@ def test_missing_evidence_marks_unanswerable():
         assert not contains_answer(joined, "Google")
 
 
-def test_missing_evidence_drops_leaking_neighbor():
-    """Neighbor that still contains the gold answer must not keep the case answerable."""
-    from ragfailbench.failures.verify import verify_answer_absence
+def _leaky_case():
     from ragfailbench.schemas.failure import FailureCase
 
-    case = FailureCase(
+    return FailureCase(
         failure_id="x",
         parent_seed_id="seed_000000",
         failure_type="missing_evidence",
@@ -138,7 +147,45 @@ def test_missing_evidence_drops_leaking_neighbor():
             section_title="History", chunk_id="1_1_0_0",
         ),
     )
-    assert verify_answer_absence(case) is None
+
+
+def test_missing_evidence_drops_leaking_neighbor():
+    """Neighbor that still contains the gold answer must not keep the case answerable."""
+    from ragfailbench.failures.verify import verify_answer_absence
+
+    assert verify_answer_absence(_leaky_case()) is None
+
+
+def test_structural_verify_flags_leak():
+    from ragfailbench.failures.verify import structural_verify
+
+    ver = structural_verify(_leaky_case())
+    assert ver.injection_valid is False
+    assert ver.gold_answer_leaked is True
+    assert "gold_answer_absent" in ver.failed_checks
+    assert ver.verification_score < 1.0
+
+
+def test_verify_failures_partitions_valid_and_rejected():
+    from ragfailbench.failures.verify import verify_failures
+
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks(), cfg)
+    good = by_type["context_noise"]
+    valid, rejected = verify_failures([*good, _leaky_case()])
+    assert len(valid) == len(good)
+    assert len(rejected) == 1
+    assert rejected[0].verification is not None
+    assert rejected[0].verification.injection_valid is False
+
+
+def test_context_noise_verification_checks_position():
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks(), cfg)
+    for case in by_type["context_noise"]:
+        assert case.verification is not None
+        assert case.verification.injection_valid is True
+        assert case.verification.answer_available is True
 
 
 def test_context_noise_contains_gold():

@@ -35,6 +35,20 @@ OPERATOR_STAGE: dict[str, FailureStage] = {
 }
 
 
+class FailureVerification(BaseModel):
+    """Automatic acceptance record for one injected failure case."""
+
+    injection_valid: bool = True
+    answer_available: bool = True
+    gold_answer_leaked: bool = False
+    # None until an LLM judge has been run over this case.
+    judge_verified: bool | None = None
+    verification_score: float = 1.0
+    # Names of structural checks that failed (empty when injection_valid).
+    failed_checks: list[str] = Field(default_factory=list)
+    judge_confidence: float | None = None
+
+
 class FailureCase(BaseModel):
     """One generated failure instance: clean seed + applied Failure Operator."""
 
@@ -58,4 +72,5 @@ class FailureCase(BaseModel):
     category_group: str | None = None
     # Operator knobs used to construct this case (noise_ratio, positions, …).
     parameters: dict[str, Any] = Field(default_factory=dict)
+    verification: FailureVerification | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
