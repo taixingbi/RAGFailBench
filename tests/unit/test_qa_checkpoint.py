@@ -44,13 +44,15 @@ def test_load_generation_checkpoint(tmp_path: Path):
 
 def test_smoke_config_has_stage_concurrency():
     cfg = AppConfig()  # defaults
-    assert cfg.llm.generation_concurrency == 2
+    assert cfg.llm.generation_concurrency == 8
     assert cfg.llm.max_retries >= 3
     from pathlib import Path
 
     from ragfailbench.config import load_config
 
     loaded = load_config(Path("configs/smoke.yaml"))
-    assert loaded.llm.generation_concurrency == 2
-    assert loaded.llm.judge_concurrency == 2
+    assert loaded.llm.generation_concurrency == 8
+    assert loaded.llm.judge_concurrency == 8
+    assert loaded.llm.evaluation_concurrency == 8
+    assert loaded.llm.max_concurrency == 8
     assert loaded.llm.max_retries == 5

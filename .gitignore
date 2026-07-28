@@ -48,3 +48,9 @@ htmlcov/
 # Local
 tmp.md
 *.log
+.env copy.example
+
+# Human review packs (regenerate with `make export-review`)
+reviews/*
+!reviews/.gitkeep
+!reviews/README.md

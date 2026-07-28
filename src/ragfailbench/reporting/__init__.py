@@ -1,5 +1,6 @@
 """Reporting package."""
 
+from ragfailbench.reporting.human_review import export_human_review
 from ragfailbench.reporting.markdown_report import (
     build_evaluation_report,
     build_sample_gallery,
@@ -17,5 +18,6 @@ __all__ = [
     "build_sample_gallery",
     "failure_distribution_csv",
     "evaluation_results_csv",
+    "export_human_review",
     "write_text",
 ]

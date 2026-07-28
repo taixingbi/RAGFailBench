@@ -81,19 +81,31 @@ def ping_llm(
         help="YAML config (for model / timeout defaults)",
     ),
     prompt: str = typer.Option("Say hello in one short sentence.", "--prompt", "-p"),
+    stage: str = typer.Option(
+        "generation",
+        "--stage",
+        "-s",
+        help="generation (CHAT_*) or evaluation (EVAL_* → CHAT_* fallback)",
+    ),
 ) -> None:
     """Smoke-test the OpenAI-compatible chat endpoint from ``.env``."""
-    from ragfailbench.generation.llm_client import LLMClient, load_env, resolve_base_url
+    from ragfailbench.generation.llm_client import LLMClient, load_env
 
     load_env()
     cfg = _load(config)
-    base = resolve_base_url(env_name=cfg.llm.base_url_env)
-    client = LLMClient.from_config(cfg.llm)
-    console.print(f"Endpoint: {base}/v1/chat/completions")
-    console.print(f"Model:    {client.model}")
-    console.print(f"Concurrency: {client.concurrency_for('generation')}")
-    text = client.complete(prompt, max_tokens=64)
-    console.print(f"[green]OK[/green] → {text!r}")
+    if stage.lower() in {"evaluation", "evaluate", "eval"}:
+        client_cm = LLMClient.for_evaluation(cfg)
+        label = "evaluation"
+    else:
+        client_cm = LLMClient.from_config(cfg.llm)
+        label = "generation"
+    with client_cm as client:
+        console.print(f"Stage:    {label}")
+        console.print(f"Endpoint: {client.base_url}/v1/chat/completions")
+        console.print(f"Model:    {client.model}")
+        console.print(f"Concurrency: {client.concurrency_for(label)}")
+        text = client.complete(prompt, max_tokens=64)
+        console.print(f"[green]OK[/green] → {text!r}")
 
 
 @app.command()
@@ -551,9 +563,18 @@ def inject_failures_cmd(
 def evaluate(
     config: Path = typer.Option(..., "--config", "-c"),
     models: str = typer.Option(
-        "", "--models", "-m", help="Comma-separated model names (default: config/env model)"
+        "",
+        "--models",
+        "-m",
+        help="Comma-separated model names on the EVAL_* endpoint "
+        "(default: EVAL_MODEL / config). Re-runs replace only those models.",
     ),
     limit: int = typer.Option(0, "--limit", help="Limit failure cases (0 = all)"),
+    replace_all: bool = typer.Option(
+        False,
+        "--replace-all",
+        help="Overwrite all prior evaluation_results.jsonl (default: merge by model)",
+    ),
 ) -> None:
     """Run the benchmark: answer clean + failure cases, compute metrics."""
     from ragfailbench.evaluation.failure_metrics import compute_failure_metrics
@@ -568,19 +589,36 @@ def evaluate(
         failures = failures[:limit]
 
     model_list = [m.strip() for m in models.split(",") if m.strip()] or None
-    console.print(
-        f"Evaluating {len(seeds)} seeds + {len(failures)} failures "
-        f"(evaluation_concurrency={cfg.llm.concurrency_for('evaluation')}) …"
-    )
+    results_path = dirs["final"] / "evaluation_results.jsonl"
+    prior: list[EvaluationResult] = []
+    if results_path.exists() and not replace_all:
+        prior = read_jsonl_models(results_path, EvaluationResult)
 
     raw_path = dirs["final"] / "llm_raw_eval.jsonl"
-    with LLMClient.from_config(cfg.llm, raw_log_path=raw_path) as client:
-        results = evaluate_all(seeds, failures, client, cfg, models=model_list)
+    with LLMClient.for_evaluation(cfg, raw_log_path=raw_path) as client:
+        run_models = model_list or cfg.evaluation.models or [client.model]
+        console.print(
+            f"Evaluating {len(seeds)} seeds + {len(failures)} failures "
+            f"via {client.base_url} models={run_models} "
+            f"(evaluation_concurrency={client.concurrency_for('evaluation')}) …"
+        )
+        new_results = evaluate_all(
+            seeds, failures, client, cfg, models=run_models
+        )
 
-    write_jsonl(dirs["final"] / "evaluation_results.jsonl", results)
+    run_set = {m.lower() for m in run_models}
+    kept = [r for r in prior if r.model_name.lower() not in run_set]
+    results = kept + new_results
+    if kept:
+        console.print(
+            f"Merged with {len(kept)} prior results "
+            f"(replaced models: {sorted(run_set)})"
+        )
+
+    write_jsonl(results_path, results)
     metrics = compute_failure_metrics(results)
     write_json(dirs["reports"] / "failure_metrics.json", metrics)
-    console.print(f"[green]Evaluated {len(results)} items[/green]")
+    console.print(f"[green]Evaluated {len(new_results)} new / {len(results)} total[/green]")
     for model, mrep in metrics.get("by_model", {}).items():
         console.print(
             f"  {model}: clean={mrep['clean_accuracy']} "
@@ -645,17 +683,220 @@ def report(
         console.print(f"  {name}")
 
 
+@app.command("export-review")
+def export_review_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+    output_dir: Path = typer.Option(
+        Path("reviews"), "--output-dir", "-o", help="Directory for review CSVs"
+    ),
+    per_cell: int = typer.Option(
+        17, "--per-cell", help="Failures to sample per (type, severity) cell"
+    ),
+    seed: int = typer.Option(
+        None, "--seed", help="Sampling seed (default: config.project.random_seed)"
+    ),
+) -> None:
+    """Export CSV spreadsheets for human quality validation."""
+    from ragfailbench.reporting.human_review import export_human_review
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    seeds = read_jsonl_models(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
+    failures_path = dirs["final"] / "failure_cases.jsonl"
+    if not failures_path.exists():
+        raise typer.BadParameter("Missing failure_cases.jsonl; run inject-failures first")
+    failures = read_jsonl_models(failures_path, FailureCase)
+    if not seeds:
+        raise typer.BadParameter("No clean seeds found; run select-seeds first")
+
+    out = output_dir / cfg.project.run_id
+    rng_seed = cfg.project.random_seed if seed is None else seed
+    paths = export_human_review(
+        seeds=seeds,
+        failures=failures,
+        output_dir=out,
+        run_id=cfg.project.run_id,
+        per_cell=per_cell,
+        random_seed=rng_seed,
+    )
+    console.print(f"[green]Wrote human-review pack → {out}[/green]")
+    for name, path in paths.items():
+        console.print(f"  {name}: {path}")
+
+
 @app.command("seed-pipeline")
 def seed_pipeline(
     config: Path = typer.Option(..., "--config", "-c"),
+    skip_evaluate: bool = typer.Option(
+        False,
+        "--skip-evaluate/--evaluate",
+        help="Stop after inject-failures + report (dataset-generation stability runs)",
+    ),
 ) -> None:
-    """M2+M3+M4: generate-qa → validate → select-seeds → inject-failures → evaluate → report."""
+    """M2+M3(+M4): generate-qa → validate → select-seeds → inject-failures → [evaluate] → report."""
     generate_qa(config, resume=True)
     validate_cmd(config)
     select_seeds_cmd(config)
     inject_failures_cmd(config, judge=False)
-    evaluate(config, models="", limit=0)
+    if not skip_evaluate:
+        evaluate(config, models="", limit=0)
     report(config)
+
+
+# --------------------------------------------------------------------------- #
+# Stability experiment (fixed M1 corpus × N seeded M2–M4 runs)
+# --------------------------------------------------------------------------- #
+
+
+@app.command("stability-freeze")
+def stability_freeze(
+    source_run: str = typer.Option(
+        "pilot_v1",
+        "--source-run",
+        help="Existing run_id whose M1 artifacts to freeze",
+    ),
+    corpus_run: str = typer.Option(
+        "pilot_stability_corpus",
+        "--corpus-run",
+        help="Destination run_id for the frozen M1 corpus",
+    ),
+    data_dir: Path = typer.Option(Path("data"), "--data-dir"),
+    overwrite: bool = typer.Option(False, "--overwrite"),
+) -> None:
+    """Copy M1 (raw/interim/processed) once for reuse across stability runs."""
+    from ragfailbench.experiments.stability import copy_frozen_corpus
+
+    dest = copy_frozen_corpus(
+        source_run=source_run,
+        dest_run=corpus_run,
+        data_dir=data_dir,
+        overwrite=overwrite,
+    )
+    chunks = dest / "processed" / "chunks.jsonl"
+    n = sum(1 for line in chunks.open(encoding="utf-8") if line.strip())
+    console.print(
+        f"[green]Frozen corpus[/green] {source_run} → {corpus_run} "
+        f"({n} chunks) at {dest}"
+    )
+
+
+@app.command("stability-run")
+def stability_run(
+    config: Path = typer.Option(
+        Path("configs/pilot.yaml"),
+        "--config",
+        "-c",
+        help="Base pilot YAML (run_id/seed overridden per seed)",
+    ),
+    seeds: str = typer.Option(
+        "42,123,2026",
+        "--seeds",
+        help="Comma-separated random seeds for independent M2–M4 runs",
+    ),
+    corpus_run: str = typer.Option(
+        "pilot_stability_corpus",
+        "--corpus-run",
+        help="Frozen M1 run_id (from stability-freeze)",
+    ),
+    run_prefix: str = typer.Option(
+        "pilot_stability_s",
+        "--run-prefix",
+        help="Per-seed run_id prefix → {prefix}{seed}",
+    ),
+    config_dir: Path = typer.Option(
+        Path("configs/stability"),
+        "--config-dir",
+        help="Where to write per-seed YAML configs",
+    ),
+    data_dir: Path = typer.Option(Path("data"), "--data-dir"),
+    skip_evaluate: bool = typer.Option(
+        True,
+        "--skip-evaluate/--evaluate",
+        help="Default: dataset-generation only (no M4 evaluate)",
+    ),
+    overwrite_corpus: bool = typer.Option(
+        False,
+        "--overwrite-corpus",
+        help="Re-copy frozen M1 into each run dir",
+    ),
+) -> None:
+    """Freeze-copy M1 into each run, then run M2–M4 with different seeds."""
+    from ragfailbench.experiments.stability import (
+        copy_frozen_corpus,
+        stability_run_id,
+        write_seed_config,
+    )
+
+    seed_list = [int(s.strip()) for s in seeds.split(",") if s.strip()]
+    if not seed_list:
+        raise typer.BadParameter("No seeds provided")
+
+    corpus_chunks = data_dir / "runs" / corpus_run / "processed" / "chunks.jsonl"
+    if not corpus_chunks.exists():
+        raise typer.BadParameter(
+            f"Missing frozen corpus at {corpus_chunks}. "
+            "Run: ragfailbench stability-freeze --source-run pilot_v1"
+        )
+
+    for seed in seed_list:
+        run_id = stability_run_id(seed, prefix=run_prefix)
+        console.print(f"\n[bold]=== Stability run seed={seed} run_id={run_id} ===[/bold]")
+        copy_frozen_corpus(
+            source_run=corpus_run,
+            dest_run=run_id,
+            data_dir=data_dir,
+            overwrite=overwrite_corpus,
+        )
+        cfg_path = write_seed_config(
+            config,
+            seed=seed,
+            run_id=run_id,
+            output_path=config_dir / f"{run_id}.yaml",
+        )
+        console.print(f"Config → {cfg_path}")
+        seed_pipeline(cfg_path, skip_evaluate=skip_evaluate)
+
+
+@app.command("stability-report")
+def stability_report(
+    seeds: str = typer.Option("42,123,2026", "--seeds"),
+    run_prefix: str = typer.Option("pilot_stability_s", "--run-prefix"),
+    output_dir: Path = typer.Option(
+        Path("reports/pilot_stability"),
+        "--output-dir",
+        "-o",
+    ),
+    data_dir: Path = typer.Option(Path("data"), "--data-dir"),
+    reports_dir: Path = typer.Option(Path("reports"), "--reports-dir"),
+    reviews_dir: Path = typer.Option(Path("reviews"), "--reviews-dir"),
+) -> None:
+    """Aggregate mean ± std stability metrics across seeded runs."""
+    from ragfailbench.experiments.stability import (
+        collect_run_metrics,
+        stability_run_id,
+        write_stability_report,
+    )
+
+    seed_list = [int(s.strip()) for s in seeds.split(",") if s.strip()]
+    metrics = []
+    for seed in seed_list:
+        run_id = stability_run_id(seed, prefix=run_prefix)
+        m = collect_run_metrics(
+            run_id,
+            data_dir=data_dir,
+            reports_dir=reports_dir,
+            reviews_dir=reviews_dir,
+            random_seed=seed,
+        )
+        metrics.append(m)
+        console.print(
+            f"  {run_id}: candidates={m.candidate_qa_count} "
+            f"accept={m.qa_acceptance_rate} seeds={m.clean_seed_count} "
+            f"fail_pass={m.failure_verification_pass_rate}"
+        )
+    paths = write_stability_report(metrics, output_dir)
+    console.print(f"[green]Wrote[/green] {paths['markdown']}")
+    console.print(f"[green]Wrote[/green] {paths['json']}")
 
 
 if __name__ == "__main__":

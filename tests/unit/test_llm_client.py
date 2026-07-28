@@ -58,6 +58,71 @@ def test_resolve_model_default(monkeypatch):
     assert resolve_model(None) == "Qwen/Qwen2.5-7B-Instruct"
 
 
+def test_resolve_base_url_fallback(monkeypatch):
+    from ragfailbench.generation.llm_client import resolve_base_url
+
+    monkeypatch.setattr(
+        "ragfailbench.generation.llm_client.load_env",
+        lambda dotenv_path=None: False,
+    )
+    monkeypatch.delenv("EVAL_BASE_URL", raising=False)
+    monkeypatch.delenv("INFERENCE_URL", raising=False)
+    monkeypatch.setenv("CHAT_BASE_URL", "http://chat.example")
+    assert (
+        resolve_base_url(None, env_name="EVAL_BASE_URL", fallback_env="CHAT_BASE_URL")
+        == "http://chat.example"
+    )
+    monkeypatch.setenv("EVAL_BASE_URL", "http://eval.example")
+    assert (
+        resolve_base_url(None, env_name="EVAL_BASE_URL", fallback_env="CHAT_BASE_URL")
+        == "http://eval.example"
+    )
+
+
+def test_for_evaluation_prefers_eval_env(monkeypatch):
+    from ragfailbench.config import AppConfig
+    from ragfailbench.generation.llm_client import LLMClient
+
+    monkeypatch.setattr(
+        "ragfailbench.generation.llm_client.load_env",
+        lambda dotenv_path=None: False,
+    )
+    monkeypatch.setenv("CHAT_BASE_URL", "http://chat.example")
+    monkeypatch.setenv("CHAT_MODEL", "chat-model")
+    monkeypatch.setenv("CHAT_API_KEY", "chat-key")
+    monkeypatch.setenv("EVAL_BASE_URL", "http://eval.example")
+    monkeypatch.setenv("EVAL_MODEL", "nova-pro")
+    monkeypatch.setenv("EVAL_API_KEY", "eval-key")
+
+    cfg = AppConfig()
+    with LLMClient.for_evaluation(cfg) as client:
+        assert client.base_url == "http://eval.example"
+        assert client.model == "nova-pro"
+        assert client.api_key == "eval-key"
+
+
+def test_for_evaluation_falls_back_to_chat(monkeypatch):
+    from ragfailbench.config import AppConfig
+    from ragfailbench.generation.llm_client import LLMClient
+
+    monkeypatch.setattr(
+        "ragfailbench.generation.llm_client.load_env",
+        lambda dotenv_path=None: False,
+    )
+    monkeypatch.setenv("CHAT_BASE_URL", "http://chat.example")
+    monkeypatch.setenv("CHAT_MODEL", "chat-model")
+    monkeypatch.setenv("CHAT_API_KEY", "chat-key")
+    monkeypatch.delenv("EVAL_BASE_URL", raising=False)
+    monkeypatch.delenv("EVAL_MODEL", raising=False)
+    monkeypatch.delenv("EVAL_API_KEY", raising=False)
+
+    cfg = AppConfig()
+    with LLMClient.for_evaluation(cfg) as client:
+        assert client.base_url == "http://chat.example"
+        assert client.model == "chat-model"
+        assert client.api_key == "chat-key"
+
+
 def test_queue_age_detected():
     assert is_queue_pressure("queue_age")
     assert is_queue_pressure('{"reason": "queue_age"}')

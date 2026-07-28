@@ -117,6 +117,13 @@ class EvaluationConfig(BaseModel):
     temperature: float = 0.0
     max_tokens: int = 256
     use_llm_judge: bool = True
+    # Optional separate OpenAI-compatible endpoint for evaluate.
+    # Prefers EVAL_* when set; otherwise falls back to CHAT_* / llm.*.
+    base_url_env: str = "EVAL_BASE_URL"
+    api_key_env: str = "EVAL_API_KEY"
+    model_env: str = "EVAL_MODEL"
+    # If set, used when EVAL_MODEL / CHAT_MODEL are unset.
+    default_model: str | None = None
     abstain_markers: list[str] = Field(
         default_factory=lambda: [
             "i don't know",
@@ -142,10 +149,10 @@ class LLMConfig(BaseModel):
     timeout_seconds: float = 120.0
     max_tokens: int = 512
     # Fallback concurrency when a stage-specific value is unset.
-    max_concurrency: int = 2
-    generation_concurrency: int = 2
-    judge_concurrency: int = 2
-    evaluation_concurrency: int = 2
+    max_concurrency: int = 8
+    generation_concurrency: int = 8
+    judge_concurrency: int = 8
+    evaluation_concurrency: int = 8
     max_retries: int = 5
     retry_backoff_seconds: float = 2.0
     retry_jitter: bool = True

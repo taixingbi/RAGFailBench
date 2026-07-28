@@ -1,16 +1,15 @@
 project:
   name: ragfailbench
-  random_seed: 42
-  run_id: pilot_v1
-
+  random_seed: 123
+  run_id: pilot_stability_s123
 source:
   provider: mediawiki_api
   source_mode: live_mediawiki_api
   language: en
-  api_base: "https://en.wikipedia.org/w/api.php"
-  retrieval_date: "2026-07-25"
+  api_base: https://en.wikipedia.org/w/api.php
+  retrieval_date: '2026-07-25'
   requested_snapshot_date: null
-  user_agent: "RAGFailBench/0.1 (research; https://github.com/taixingbi/RAGFailBench)"
+  user_agent: RAGFailBench/0.1 (research; https://github.com/taixingbi/RAGFailBench)
   requests_per_second: 8.0
   fetch_concurrency: 16
   max_retries: 3
@@ -18,33 +17,31 @@ source:
   candidates_per_category: 250
   category_seeds:
     person:
-      - "Category:21st-century American scientists"
-      - "Category:American inventors"
-      - "Category:Nobel laureates in Physics"
+    - Category:21st-century American scientists
+    - Category:American inventors
+    - Category:Nobel laureates in Physics
     location:
-      - "Category:Capital cities"
-      - "Category:Cities in Europe"
-      - "Category:National parks of the United States"
+    - Category:Capital cities
+    - Category:Cities in Europe
+    - Category:National parks of the United States
     science_technology:
-      - "Category:Computer science"
-      - "Category:Software"
-      - "Category:Physics"
+    - Category:Computer science
+    - Category:Software
+    - Category:Physics
     historical_event:
-      - "Category:20th-century conflicts"
-      - "Category:Treaties"
-      - "Category:Revolutions"
+    - Category:20th-century conflicts
+    - Category:Treaties
+    - Category:Revolutions
     organization_product:
-      - "Category:Technology companies of the United States"
-      - "Category:Software companies"
-      - "Category:Open-source software"
-
+    - Category:Technology companies of the United States
+    - Category:Software companies
+    - Category:Open-source software
 categories:
   person: 100
   location: 100
   science_technology: 100
   historical_event: 100
   organization_product: 100
-
 filtering:
   min_page_chars: 2000
   min_sections: 2
@@ -54,17 +51,15 @@ filtering:
   exclude_timelines: true
   min_prose_ratio: 0.55
   max_paragraph_repeat_ratio: 0.35
-
 chunking:
   chunk_size_tokens: 300
   chunk_overlap_tokens: 0
   encoding: cl100k_base
   split_order:
-    - section
-    - paragraph
-    - sentence
-    - token
-
+  - section
+  - paragraph
+  - sentence
+  - token
 qa_generation:
   target_candidates: 500
   questions_per_chunk: 1
@@ -75,7 +70,6 @@ qa_generation:
   min_chunk_tokens: 60
   max_chunk_tokens: 320
   max_candidate_chunks: 1000
-
 validation:
   target_clean_seeds: 100
   min_quality_score: 0.85
@@ -86,34 +80,30 @@ validation:
   use_baseline_test: true
   judge_min_confidence: 0.6
   dedup_similarity_threshold: 0.85
-
 failure_generation:
   types:
-    - missing_evidence
-    - context_noise
-    - chunk_boundary
-    - evidence_position
+  - missing_evidence
+  - context_noise
+  - chunk_boundary
+  - evidence_position
   severity_levels:
-    - low
-    - medium
-    - high
+  - low
+  - medium
+  - high
   noise_ratios:
     low: 0.25
-    medium: 0.50
+    medium: 0.5
     high: 0.75
   context_chunk_budget: 8
-
+  random_seed: 123
 evaluation:
   models: []
   temperature: 0.0
   max_tokens: 256
   use_llm_judge: true
-  # Optional separate endpoint (EVAL_* in .env); falls back to CHAT_*.
   base_url_env: EVAL_BASE_URL
   api_key_env: EVAL_API_KEY
   model_env: EVAL_MODEL
-  # default_model: null
-
 llm:
   base_url_env: CHAT_BASE_URL
   api_key_env: CHAT_API_KEY
@@ -129,7 +119,6 @@ llm:
   retry_backoff_seconds: 2.0
   retry_jitter: true
   log_raw_responses: true
-
 paths:
   data_dir: data
   reports_dir: reports

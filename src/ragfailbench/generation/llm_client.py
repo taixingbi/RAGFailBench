@@ -2,8 +2,9 @@
 
 Modeled after layer-rag-evaluation-v1/app/http/inference.py.
 
-Reads ``CHAT_BASE_URL`` / ``CHAT_MODEL`` / ``CHAT_API_KEY`` from the
-environment, loading a project-root ``.env`` file when present.
+Generation / validation read ``CHAT_BASE_URL`` / ``CHAT_MODEL`` /
+``CHAT_API_KEY``. Evaluation prefers ``EVAL_*`` when set, else falls back
+to ``CHAT_*``. Project-root ``.env`` is loaded when present.
 
 Includes exponential backoff for queue pressure (``queue_age`` / 429 / 5xx)
 and optional raw-response logging for provenance.
@@ -88,17 +89,24 @@ def _build_payload(
     return payload
 
 
-def resolve_base_url(base_url: str | None = None, *, env_name: str = "CHAT_BASE_URL") -> str:
+def resolve_base_url(
+    base_url: str | None = None,
+    *,
+    env_name: str = "CHAT_BASE_URL",
+    fallback_env: str | None = None,
+) -> str:
     load_env()
     url = (
         base_url
         or os.environ.get(env_name)
+        or (os.environ.get(fallback_env) if fallback_env else None)
         or os.environ.get("INFERENCE_URL")
         or ""
     ).strip()
     if not url:
+        names = env_name if not fallback_env else f"{env_name} or {fallback_env}"
         raise ValueError(
-            "Chat base_url is required. Pass base_url= or set CHAT_BASE_URL "
+            f"Chat base_url is required. Pass base_url= or set {names} "
             "in the environment / .env (see .env.example)."
         )
     return url
@@ -108,21 +116,32 @@ def resolve_model(
     model: str | None = None,
     *,
     env_name: str = "CHAT_MODEL",
+    fallback_env: str | None = None,
     default: str = DEFAULT_CHAT_MODEL,
 ) -> str:
     load_env()
-    return (model or os.environ.get(env_name) or default).strip()
+    return (
+        model
+        or os.environ.get(env_name)
+        or (os.environ.get(fallback_env) if fallback_env else None)
+        or default
+    ).strip()
 
 
 def resolve_api_key(
     api_key: str | None = None,
     *,
     env_name: str = "CHAT_API_KEY",
+    fallback_env: str | None = None,
 ) -> str | None:
     load_env()
     if api_key is not None:
         return api_key or None
-    return os.environ.get(env_name) or None
+    return (
+        os.environ.get(env_name)
+        or (os.environ.get(fallback_env) if fallback_env else None)
+        or None
+    )
 
 
 def _body_reason(data: Any) -> str:
@@ -533,41 +552,54 @@ class LLMClient:
         base_url_env: str = "CHAT_BASE_URL",
         model_env: str = "CHAT_MODEL",
         api_key_env: str = "CHAT_API_KEY",
+        base_url_fallback_env: str | None = None,
+        model_fallback_env: str | None = None,
+        api_key_fallback_env: str | None = None,
+        model_default: str = DEFAULT_CHAT_MODEL,
     ) -> None:
         load_env()
-        self.base_url = resolve_base_url(base_url, env_name=base_url_env)
-        self.model = resolve_model(model, env_name=model_env)
-        self.api_key = resolve_api_key(api_key, env_name=api_key_env)
+        self.base_url = resolve_base_url(
+            base_url, env_name=base_url_env, fallback_env=base_url_fallback_env
+        )
+        self.model = resolve_model(
+            model,
+            env_name=model_env,
+            fallback_env=model_fallback_env,
+            default=model_default,
+        )
+        self.api_key = resolve_api_key(
+            api_key, env_name=api_key_env, fallback_env=api_key_fallback_env
+        )
         self.timeout = timeout
         self.max_tokens = max_tokens
         self.temperature = temperature
         self.base_url_env = base_url_env
         self.model_env = model_env
-        self.max_concurrency = 2
-        self.generation_concurrency = 2
-        self.judge_concurrency = 2
-        self.evaluation_concurrency = 2
+        self.max_concurrency = 8
+        self.generation_concurrency = 8
+        self.judge_concurrency = 8
+        self.evaluation_concurrency = 8
         self.max_retries = 5
         self.retry_backoff_seconds = 2.0
         self.retry_jitter = True
         self.log_raw_responses = False
         self.raw_log_path: Path | None = None
         self._raw_lock = threading.Lock()
-        limits = httpx.Limits(max_connections=32, max_keepalive_connections=16)
+        limits = httpx.Limits(max_connections=64, max_keepalive_connections=32)
         self._client = httpx.Client(timeout=timeout, limits=limits)
 
     @classmethod
     def from_config(cls, llm_config: Any, *, raw_log_path: Path | str | None = None) -> LLMClient:
         """Build from ``AppConfig.llm`` (or any object with the same fields)."""
         client = cls(
-            model=getattr(llm_config, "default_model", None),
             timeout=getattr(llm_config, "timeout_seconds", 120.0),
             max_tokens=getattr(llm_config, "max_tokens", 512),
             base_url_env=getattr(llm_config, "base_url_env", "CHAT_BASE_URL"),
             model_env=getattr(llm_config, "model_env", "CHAT_MODEL"),
             api_key_env=getattr(llm_config, "api_key_env", "CHAT_API_KEY"),
+            model_default=getattr(llm_config, "default_model", DEFAULT_CHAT_MODEL),
         )
-        client.max_concurrency = int(getattr(llm_config, "max_concurrency", 2) or 2)
+        client.max_concurrency = int(getattr(llm_config, "max_concurrency", 8) or 8)
         client.generation_concurrency = int(
             getattr(llm_config, "generation_concurrency", client.max_concurrency)
             or client.max_concurrency
@@ -586,6 +618,54 @@ class LLMClient:
         )
         client.retry_jitter = bool(getattr(llm_config, "retry_jitter", True))
         client.log_raw_responses = bool(getattr(llm_config, "log_raw_responses", True))
+        if raw_log_path is not None:
+            client.raw_log_path = Path(raw_log_path)
+        return client
+
+    @classmethod
+    def for_evaluation(
+        cls,
+        app_config: Any,
+        *,
+        raw_log_path: Path | str | None = None,
+    ) -> LLMClient:
+        """Build an evaluator client.
+
+        Prefers ``EVAL_BASE_URL`` / ``EVAL_API_KEY`` / ``EVAL_MODEL`` when set;
+        otherwise falls back to ``CHAT_*`` / ``AppConfig.llm``.
+        """
+        llm = app_config.llm
+        ev = app_config.evaluation
+        default_model = getattr(ev, "default_model", None) or getattr(
+            llm, "default_model", DEFAULT_CHAT_MODEL
+        )
+        client = cls(
+            timeout=getattr(llm, "timeout_seconds", 120.0),
+            max_tokens=getattr(ev, "max_tokens", None) or getattr(llm, "max_tokens", 512),
+            temperature=getattr(ev, "temperature", 0.0),
+            base_url_env=getattr(ev, "base_url_env", "EVAL_BASE_URL"),
+            model_env=getattr(ev, "model_env", "EVAL_MODEL"),
+            api_key_env=getattr(ev, "api_key_env", "EVAL_API_KEY"),
+            base_url_fallback_env=getattr(llm, "base_url_env", "CHAT_BASE_URL"),
+            model_fallback_env=getattr(llm, "model_env", "CHAT_MODEL"),
+            api_key_fallback_env=getattr(llm, "api_key_env", "CHAT_API_KEY"),
+            model_default=default_model,
+        )
+        max_c = int(getattr(llm, "max_concurrency", 8) or 8)
+        client.max_concurrency = max_c
+        client.generation_concurrency = int(
+            getattr(llm, "generation_concurrency", max_c) or max_c
+        )
+        client.judge_concurrency = int(getattr(llm, "judge_concurrency", max_c) or max_c)
+        client.evaluation_concurrency = int(
+            getattr(llm, "evaluation_concurrency", max_c) or max_c
+        )
+        client.max_retries = int(getattr(llm, "max_retries", 5) or 5)
+        client.retry_backoff_seconds = float(
+            getattr(llm, "retry_backoff_seconds", 2.0) or 2.0
+        )
+        client.retry_jitter = bool(getattr(llm, "retry_jitter", True))
+        client.log_raw_responses = bool(getattr(llm, "log_raw_responses", True))
         if raw_log_path is not None:
             client.raw_log_path = Path(raw_log_path)
         return client

@@ -95,6 +95,15 @@ make seeds       # M2–M4 on smoke chunks (needs CHAT_BASE_URL in .env)
 make pilot       # M1 only: 500 pages → chunks
 make pilot-seeds # M2–M4 on pilot chunks (needs `make pilot` first)
 make pilot-all   # full pilot: M1 → M4
+make export-review  # CSVs for human quality validation (after pilot-seeds)
+make export-review-s123  # second-seed HAR pack
+make evaluate-llama-s42  # 2nd model on EVAL_* gateway (merges w/ nova-pro)
+
+# Paper stability (≥3 seeded M2–M4 runs on a frozen 500-page M1 corpus)
+make stability-freeze   # copy pilot_v1 → pilot_stability_corpus
+make stability-run      # seeds 42,123,2026 (hours; needs .env CHAT_*)
+make stability-report   # mean ± std → reports/pilot_stability/
+# or: make stability
 ```
 
 Step-by-step:
@@ -114,6 +123,18 @@ python -m ragfailbench report --config configs/smoke.yaml
 # or Build+Inject+Evaluate:
 python -m ragfailbench seed-pipeline --config configs/smoke.yaml
 ```
+
+### Pipeline stability (paper)
+
+Recommended design: **freeze M1 once**, then repeat only the stochastic AI stages:
+
+1. `make pilot` (or reuse `pilot_v1`) → freeze with `make stability-freeze`
+2. `make stability-run` → three independent M2–M4 dataset runs (`SEED=42,123,2026`), same chunks
+3. `make stability-report` → mean ± std for candidate count, schema success, acceptance rate, clean-seed yield, failure verification pass rate, category/difficulty distributions
+4. Fill human-review CSVs per run → HAR appears in the same report
+5. Optionally re-run `evaluate` three times per model if decoding is non-deterministic
+
+Per-seed configs are written under `configs/stability/`. Dataset-generation runs use `--skip-evaluate` by default (evaluate separately for the benchmark table).
 
 Outputs live under `data/runs/<run_id>/` (and mirrors under `data/{raw,interim,processed}/`).
 
@@ -142,29 +163,44 @@ Key knobs:
 - `failure_generation.types` / `severity_levels` / `noise_ratios` — operator controls
 - `failure_generation.context_chunk_budget` — shared clean vs failure context size
 - `source.fetch_concurrency` / `requests_per_second` — MediaWiki fetch
-- `llm.generation_concurrency` / `judge_concurrency` / `evaluation_concurrency` — per-stage limits (default **2**; avoids vLLM `queue_age`)
+- `llm.generation_concurrency` / `judge_concurrency` / `evaluation_concurrency` — default **8**
 - `llm.max_retries` / `retry_backoff_seconds` — exponential backoff on 429 / queue pressure
-- `llm.max_concurrency` — fallback concurrency (default 2)
+- `llm.max_concurrency` — fallback concurrency (default 8)
 
 ## LLM endpoint
 
 Copy [`.env.example`](.env.example) to `.env`:
 
 ```bash
+# Generation / validation (M2–M3)
 CHAT_BASE_URL=http://192.168.86.179:30180
 CHAT_MODEL=Qwen/Qwen2.5-7B-Instruct
 # CHAT_API_KEY=
+
+# Evaluation (M4) — optional; falls back to CHAT_* if unset
+# Same gateway: nova-pro, llama, … (shared EVAL_API_KEY)
+# EVAL_BASE_URL=https://xxxxxxxx.lambda-url.us-east-1.on.aws/v1
+# EVAL_MODEL=nova-pro
+# EVAL_API_KEY=
 ```
 
 ```bash
 python -m ragfailbench ping-llm --config configs/smoke.yaml
+python -m ragfailbench ping-llm --config configs/smoke.yaml --stage evaluation
+# Second eval model on the same EVAL_* gateway (merges into evaluation_results.jsonl):
+python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m llama
+python -m ragfailbench report -c configs/stability/pilot_stability_s42.yaml
 ```
+
+`evaluate` uses `LLMClient.for_evaluation`: prefers `EVAL_*`, else `CHAT_*`.
+Pass `-m llama` (or any gateway model id) without changing `EVAL_MODEL`; prior models are kept unless `--replace-all`.
+Generation / validation keep using `CHAT_*` only.
 
 LLM stages use thread-pool concurrency with exponential backoff on
 ``queue_age`` / 429 / 5xx. Prefer low per-stage concurrency
-(``generation_concurrency`` / ``judge_concurrency`` / ``evaluation_concurrency``,
-default **2**). ``generate-qa`` append-checkpoints to ``candidate_qa.jsonl`` and
-resumes with ``--resume`` (default on).
+(``generation_concurrency`` / ``judge_concurrency`` / ``evaluation_concurrency``
+all default **8**). ``generate-qa`` append-checkpoints to
+``candidate_qa.jsonl`` and resumes with ``--resume`` (default on).
 
 ## Framework layout
 
