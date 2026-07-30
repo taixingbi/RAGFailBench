@@ -763,7 +763,7 @@ def stability_freeze(
     data_dir: Path = typer.Option(Path("data"), "--data-dir"),
     overwrite: bool = typer.Option(False, "--overwrite"),
 ) -> None:
-    """Copy M1 (raw/interim/processed) once for reuse across stability runs."""
+    """Copy M1 (1_raw/2_interim/3_processed) once for reuse across stability runs."""
     from ragfailbench.experiments.stability import copy_frozen_corpus
 
     dest = copy_frozen_corpus(
@@ -772,7 +772,7 @@ def stability_freeze(
         data_dir=data_dir,
         overwrite=overwrite,
     )
-    chunks = dest / "processed" / "chunks.jsonl"
+    chunks = dest / "3_processed" / "chunks.jsonl"
     n = sum(1 for line in chunks.open(encoding="utf-8") if line.strip())
     console.print(
         f"[green]Frozen corpus[/green] {source_run} → {corpus_run} "
@@ -831,10 +831,14 @@ def stability_run(
     if not seed_list:
         raise typer.BadParameter("No seeds provided")
 
-    corpus_chunks = data_dir / "runs" / corpus_run / "processed" / "chunks.jsonl"
+    corpus_chunks = data_dir / "runs" / corpus_run / "3_processed" / "chunks.jsonl"
+    if not corpus_chunks.exists():
+        legacy = data_dir / "runs" / corpus_run / "processed" / "chunks.jsonl"
+        if legacy.exists():
+            corpus_chunks = legacy
     if not corpus_chunks.exists():
         raise typer.BadParameter(
-            f"Missing frozen corpus at {corpus_chunks}. "
+            f"Missing frozen corpus at {data_dir / 'runs' / corpus_run / '3_processed' / 'chunks.jsonl'}. "
             "Run: ragfailbench stability-freeze --source-run pilot_v1"
         )
 

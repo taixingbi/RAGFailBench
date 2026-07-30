@@ -9,17 +9,48 @@ QA_GENERATION_SYSTEM = (
     "no prose, no markdown, and no code fences."
 )
 
+_DIFFICULTY_SPECS = {
+    "easy": (
+        "Difficulty target: EASY\n"
+        "- Ask for one atomic fact stated in a single sentence "
+        "(who / when / where / how many).\n"
+        "- Prefer a short verbatim answer (name, date, number, place).\n"
+        "- Do not require combining information across sentences."
+    ),
+    "medium": (
+        "Difficulty target: MEDIUM\n"
+        "- The answer MUST still appear verbatim in the passage.\n"
+        "- The question should require combining cues from TWO nearby sentences "
+        "or applying a light comparison / ordering / attribution.\n"
+        "- Avoid trivial one-word lookup questions when richer facts exist.\n"
+        "- Keep the question self-contained (no pronouns that need the title)."
+    ),
+    "hard": (
+        "Difficulty target: HARD\n"
+        "- The answer MUST still appear verbatim in the passage.\n"
+        "- The question should include TWO constraints "
+        "(e.g. time + place, person + role, event + outcome) so a skim-reader "
+        "cannot answer from a single obvious phrase.\n"
+        "- Prefer facts that sit among distractors (other dates, names, places).\n"
+        "- Still single-passage only; do not invent facts."
+    ),
+}
+
 QA_GENERATION_TEMPLATE = """\
 Create ONE factual question that can be answered using ONLY the passage below.
 
-Hard requirements:
+{difficulty_spec}
+
+Hard requirements (all difficulties):
 - The answer MUST appear verbatim as a substring of the passage.
-- The "supporting_sentence" MUST be copied verbatim (character-for-character) from the passage and must contain the answer.
+- The "supporting_sentence" MUST be copied verbatim (character-for-character) \
+from the passage and must contain the answer.
 - The question MUST NOT contain the answer.
-- The question MUST NOT rely on the article title or phrases like "according to the passage/text/article".
+- The question MUST NOT rely on the article title or phrases like \
+"according to the passage/text/article".
 - Avoid vague pronouns; make the question self-contained.
-- Test exactly ONE fact (single-hop). Prefer short answers (a name, date, number, place, or organization).
 - Do NOT invent facts that are not in the passage.
+- Set "difficulty" exactly to "{target_difficulty}".
 
 Return STRICT JSON with exactly these keys:
 {{
@@ -27,8 +58,8 @@ Return STRICT JSON with exactly these keys:
   "gold_answer": "...",
   "supporting_sentence": "...",
   "answer_type": "person|organization|location|date|numeric|other",
-  "difficulty": "easy|medium|hard",
-  "reasoning_type": "single_fact",
+  "difficulty": "{target_difficulty}",
+  "reasoning_type": "single_fact|multi_sentence|multi_constraint",
   "is_time_sensitive": true|false
 }}
 
@@ -44,6 +75,7 @@ ANSWERABILITY_JUDGE_SYSTEM = (
     "question/answer, you judge whether the answer is uniquely supported by the "
     "passage. Output STRICT JSON only."
 )
+
 
 ANSWERABILITY_JUDGE_TEMPLATE = """\
 Passage:
@@ -119,8 +151,17 @@ Return STRICT JSON:
 """
 
 
-def build_qa_generation_prompt(chunk_text: str) -> str:
-    return QA_GENERATION_TEMPLATE.format(chunk_text=chunk_text)
+def build_qa_generation_prompt(
+    chunk_text: str,
+    *,
+    target_difficulty: str = "easy",
+) -> str:
+    diff = target_difficulty if target_difficulty in _DIFFICULTY_SPECS else "easy"
+    return QA_GENERATION_TEMPLATE.format(
+        chunk_text=chunk_text,
+        target_difficulty=diff,
+        difficulty_spec=_DIFFICULTY_SPECS[diff],
+    )
 
 
 def build_answerability_prompt(

@@ -70,6 +70,13 @@ class QAGenerationConfig(BaseModel):
     max_chunk_tokens: int = 320
     max_candidate_chunks: int = 1000
     skip_lead_sections: bool = False
+    # Target mix for generated candidates (normalized to sum=1).
+    # Selection later also aims for ~40/40/20 among clean seeds.
+    difficulty_quotas: dict[str, float] = Field(
+        default_factory=lambda: {"easy": 0.40, "medium": 0.40, "hard": 0.20}
+    )
+    # If True, coerce model difficulty label to the requested target.
+    enforce_target_difficulty: bool = True
 
 
 class ValidationConfig(BaseModel):
@@ -95,6 +102,8 @@ class FailureGenerationConfig(BaseModel):
             "context_noise",
             "chunk_boundary",
             "evidence_position",
+            "conflict",
+            "hard_negative",
         ]
     )
     severity_levels: list[str] = Field(
@@ -179,6 +188,17 @@ class PathsConfig(BaseModel):
     reports_dir: str = "reports"
 
 
+# On-disk stage folder names (ordered pipeline prefixes).
+STAGE_DIRS = {
+    "raw": "1_raw",
+    "interim": "2_interim",
+    "processed": "3_processed",
+    "generated": "4_generated",
+    "validated": "5_validated",
+    "final": "6_final",
+}
+
+
 class AppConfig(BaseModel):
     project: ProjectConfig = Field(default_factory=ProjectConfig)
     source: SourceConfig = Field(default_factory=SourceConfig)
@@ -217,28 +237,33 @@ class AppConfig(BaseModel):
         base = Path(root) if root else Path(self.paths.data_dir)
         return base / "runs" / self.project.run_id
 
+    def stage_dir(self, stage: str, root: Path | None = None) -> Path:
+        """Return ``data/runs/<run_id>/<N_stage>`` for a logical stage name."""
+        folder = STAGE_DIRS.get(stage, stage)
+        return self.run_data_dir(root) / folder
+
     def ensure_dirs(self, root: Path | None = None) -> dict[str, Path]:
         """Create and return standard output directories for this run.
 
-        Primary outputs live under ``data/runs/<run_id>/…`` for isolation.
-        Convenience mirrors also exist at ``data/{raw,interim,processed}/``.
+        Primary outputs live under ``data/runs/<run_id>/N_stage/`` for isolation.
+        Convenience mirrors also exist at ``data/{1_raw,2_interim,3_processed}/``.
         """
         run_dir = self.run_data_dir(root)
         reports = Path(self.paths.reports_dir) / self.project.run_id
         data_root = Path(root) if root else Path(self.paths.data_dir)
         dirs = {
             "run": run_dir,
-            "raw": run_dir / "raw",
-            "interim": run_dir / "interim",
-            "processed": run_dir / "processed",
-            "generated": run_dir / "generated",
-            "validated": run_dir / "validated",
-            "final": run_dir / "final",
+            "raw": run_dir / STAGE_DIRS["raw"],
+            "interim": run_dir / STAGE_DIRS["interim"],
+            "processed": run_dir / STAGE_DIRS["processed"],
+            "generated": run_dir / STAGE_DIRS["generated"],
+            "validated": run_dir / STAGE_DIRS["validated"],
+            "final": run_dir / STAGE_DIRS["final"],
             "reports": reports,
             # Plan-documented convenience mirrors (latest run overwrite)
-            "mirror_raw": data_root / "raw",
-            "mirror_interim": data_root / "interim",
-            "mirror_processed": data_root / "processed",
+            "mirror_raw": data_root / STAGE_DIRS["raw"],
+            "mirror_interim": data_root / STAGE_DIRS["interim"],
+            "mirror_processed": data_root / STAGE_DIRS["processed"],
         }
         for path in dirs.values():
             path.mkdir(parents=True, exist_ok=True)

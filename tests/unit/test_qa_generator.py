@@ -69,6 +69,48 @@ def test_normalize_qa_fields_invalid_type_defaults():
     assert out["difficulty"] == "easy"
 
 
+def test_normalize_enforces_target_difficulty():
+    data = {
+        "question": "q?",
+        "gold_answer": "a",
+        "supporting_sentence": "a is here",
+        "difficulty": "easy",
+    }
+    out = _normalize_qa_fields(
+        data, target_difficulty="hard", enforce_target=True
+    )
+    assert out["difficulty"] == "hard"
+
+
+def test_allocate_difficulty_counts_500():
+    from ragfailbench.generation.qa_generator import allocate_difficulty_counts
+
+    counts = allocate_difficulty_counts(
+        500, {"easy": 0.4, "medium": 0.4, "hard": 0.2}
+    )
+    assert sum(counts.values()) == 500
+    assert counts["easy"] == 200
+    assert counts["medium"] == 200
+    assert counts["hard"] == 100
+
+
+def test_build_difficulty_schedule_interleaves():
+    from ragfailbench.generation.qa_generator import build_difficulty_schedule
+
+    sched = build_difficulty_schedule(10, {"easy": 0.4, "medium": 0.4, "hard": 0.2})
+    assert len(sched) == 10
+    assert sched.count("hard") == 2
+    assert set(sched) <= {"easy", "medium", "hard"}
+
+
+def test_build_qa_prompt_includes_target():
+    from ragfailbench.generation.prompts import build_qa_generation_prompt
+
+    text = build_qa_generation_prompt("Some passage text.", target_difficulty="medium")
+    assert "Difficulty target: MEDIUM" in text
+    assert '"difficulty": "medium"' in text
+
+
 def test_normalize_qa_fields_missing():
     assert _normalize_qa_fields({"question": "q"}) is None
 

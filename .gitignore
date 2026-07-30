@@ -13,21 +13,21 @@ venv/
 !.env.example
 
 # Data artifacts (keep directory structure via .gitkeep)
-data/raw/*
-!data/raw/.gitkeep
-data/interim/*
-!data/interim/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-data/generated/*
-!data/generated/.gitkeep
-data/validated/*
-!data/validated/.gitkeep
-data/final/*
-!data/final/.gitkeep
-!data/final/failures/
-data/final/failures/*
-!data/final/failures/.gitkeep
+data/1_raw/*
+!data/1_raw/.gitkeep
+data/2_interim/*
+!data/2_interim/.gitkeep
+data/3_processed/*
+!data/3_processed/.gitkeep
+data/4_generated/*
+!data/4_generated/.gitkeep
+data/5_validated/*
+!data/5_validated/.gitkeep
+data/6_final/*
+!data/6_final/.gitkeep
+!data/6_final/failures/
+data/6_final/failures/*
+!data/6_final/failures/.gitkeep
 data/runs/
 
 # Reports

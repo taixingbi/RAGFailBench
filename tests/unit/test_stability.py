@@ -31,16 +31,16 @@ def test_stability_run_id():
 
 def test_copy_frozen_corpus(tmp_path: Path):
     src = tmp_path / "runs" / "src"
-    (src / "processed").mkdir(parents=True)
-    (src / "raw").mkdir(parents=True)
-    (src / "processed" / "chunks.jsonl").write_text('{"id":1}\n', encoding="utf-8")
-    (src / "raw" / "raw_pages.jsonl").write_text("{}\n", encoding="utf-8")
+    (src / "3_processed").mkdir(parents=True)
+    (src / "1_raw").mkdir(parents=True)
+    (src / "3_processed" / "chunks.jsonl").write_text('{"id":1}\n', encoding="utf-8")
+    (src / "1_raw" / "raw_pages.jsonl").write_text("{}\n", encoding="utf-8")
 
     dest = copy_frozen_corpus(
         source_run="src", dest_run="dst", data_dir=tmp_path
     )
-    assert (dest / "processed" / "chunks.jsonl").exists()
-    assert (dest / "raw" / "raw_pages.jsonl").exists()
+    assert (dest / "3_processed" / "chunks.jsonl").exists()
+    assert (dest / "1_raw" / "raw_pages.jsonl").exists()
 
 
 def test_collect_and_aggregate(tmp_path: Path):
@@ -55,20 +55,20 @@ def test_collect_and_aggregate(tmp_path: Path):
         run_id = stability_run_id(seed)
         root = data / "runs" / run_id
         _write_jsonl(
-            root / "generated" / "candidate_qa.jsonl",
+            root / "4_generated" / "candidate_qa.jsonl",
             [{"i": i} for i in range(n_cand)],
         )
-        _write_jsonl(root / "generated" / "qa_generation_errors.jsonl", [])
+        _write_jsonl(root / "4_generated" / "qa_generation_errors.jsonl", [])
         _write_jsonl(
-            root / "validated" / "accepted_qa.jsonl",
+            root / "5_validated" / "accepted_qa.jsonl",
             [{"i": i} for i in range(n_acc)],
         )
         _write_jsonl(
-            root / "validated" / "rejected_qa.jsonl",
+            root / "5_validated" / "rejected_qa.jsonl",
             [{"i": i} for i in range(n_cand - n_acc)],
         )
         _write_jsonl(
-            root / "final" / "clean_seeds.jsonl",
+            root / "6_final" / "clean_seeds.jsonl",
             [
                 {
                     "category_group": "person" if i % 2 == 0 else "location",

@@ -13,7 +13,7 @@ from typing import Any
 from ragfailbench.io import read_json, read_jsonl, write_json
 
 
-CORPUS_STAGES = ("raw", "interim", "processed")
+CORPUS_STAGES = ("1_raw", "2_interim", "3_processed")
 
 
 @dataclass
@@ -55,19 +55,28 @@ def copy_frozen_corpus(
     stages: tuple[str, ...] = CORPUS_STAGES,
     overwrite: bool = False,
 ) -> Path:
-    """Copy M1 artifacts (raw/interim/processed) from ``source_run`` into ``dest_run``."""
+    """Copy M1 artifacts (1_raw/2_interim/3_processed) from ``source_run`` into ``dest_run``."""
     root = Path(data_dir)
     src = root / "runs" / source_run
     dst = root / "runs" / dest_run
     if not src.exists():
         raise FileNotFoundError(f"Source run not found: {src}")
-    chunks = src / "processed" / "chunks.jsonl"
+    chunks = src / "3_processed" / "chunks.jsonl"
     if not chunks.exists():
-        raise FileNotFoundError(f"Missing frozen chunks: {chunks}")
+        # Backward-compatible fallback for pre-rename runs.
+        legacy = src / "processed" / "chunks.jsonl"
+        if legacy.exists():
+            chunks = legacy
+        else:
+            raise FileNotFoundError(f"Missing frozen chunks: {chunks}")
 
     dst.mkdir(parents=True, exist_ok=True)
     for stage in stages:
         sdir = src / stage
+        if not sdir.exists():
+            # Map numbered stage → legacy unnumbered name if needed.
+            legacy_name = stage.split("_", 1)[-1] if "_" in stage else stage
+            sdir = src / legacy_name
         ddir = dst / stage
         if not sdir.exists():
             continue
@@ -79,7 +88,7 @@ def copy_frozen_corpus(
                 continue
         shutil.copytree(sdir, ddir)
 
-    dest_chunks = dst / "processed" / "chunks.jsonl"
+    dest_chunks = dst / "3_processed" / "chunks.jsonl"
     if not dest_chunks.exists():
         raise FileNotFoundError(f"Failed to copy chunks into {dest_chunks}")
     return dst
@@ -122,6 +131,15 @@ def _human_rate_from_csv(
     return sum(1 for d in decisions if d == positive.lower()) / len(decisions)
 
 
+def _stage_file(root: Path, numbered: str, filename: str) -> Path:
+    """Prefer ``N_stage/file``; fall back to legacy unnumbered ``stage/file``."""
+    path = root / numbered / filename
+    if path.exists():
+        return path
+    legacy = numbered.split("_", 1)[-1]
+    return root / legacy / filename
+
+
 def collect_run_metrics(
     run_id: str,
     *,
@@ -136,11 +154,11 @@ def collect_run_metrics(
     reviews = Path(reviews_dir) / run_id
 
     m = RunStabilityMetrics(run_id=run_id, random_seed=random_seed)
-    cand_path = root / "generated" / "candidate_qa.jsonl"
-    err_path = root / "generated" / "qa_generation_errors.jsonl"
-    accepted_path = root / "validated" / "accepted_qa.jsonl"
-    rejected_path = root / "validated" / "rejected_qa.jsonl"
-    seeds_path = root / "final" / "clean_seeds.jsonl"
+    cand_path = _stage_file(root, "4_generated", "candidate_qa.jsonl")
+    err_path = _stage_file(root, "4_generated", "qa_generation_errors.jsonl")
+    accepted_path = _stage_file(root, "5_validated", "accepted_qa.jsonl")
+    rejected_path = _stage_file(root, "5_validated", "rejected_qa.jsonl")
+    seeds_path = _stage_file(root, "6_final", "clean_seeds.jsonl")
     verify_path = reports / "failure_verification.json"
 
     m.candidate_qa_count = _count_jsonl(cand_path)
@@ -170,9 +188,11 @@ def collect_run_metrics(
         m.failure_valid_count = int(verify.get("total_valid") or 0)
         m.failure_rejected_count = int(verify.get("total_rejected") or 0)
     else:
-        m.failure_valid_count = _count_jsonl(root / "final" / "failure_cases.jsonl")
+        m.failure_valid_count = _count_jsonl(
+            _stage_file(root, "6_final", "failure_cases.jsonl")
+        )
         m.failure_rejected_count = _count_jsonl(
-            root / "final" / "failures_rejected.jsonl"
+            _stage_file(root, "6_final", "failures_rejected.jsonl")
         )
         if m.failure_valid_count == 0 and m.failure_rejected_count == 0:
             m.notes.append("failure_verification.json missing")

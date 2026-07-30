@@ -7,8 +7,10 @@ import random
 from ragfailbench.config import AppConfig
 from ragfailbench.failures.base import ChunkIndex, FailureInjector
 from ragfailbench.failures.chunk_boundary import ChunkBoundaryInjector
+from ragfailbench.failures.conflict import ConflictInjector
 from ragfailbench.failures.context_noise import ContextNoiseInjector
 from ragfailbench.failures.evidence_position import EvidencePositionInjector
+from ragfailbench.failures.hard_negative import HardNegativeInjector
 from ragfailbench.failures.missing_evidence import MissingEvidenceInjector
 from ragfailbench.failures.verify import verify_case
 from ragfailbench.schemas.chunk import Chunk
@@ -30,6 +32,8 @@ def build_injectors(
         ),
         "chunk_boundary": ChunkBoundaryInjector(index, rng, context_budget=budget),
         "evidence_position": EvidencePositionInjector(index, rng, context_budget=budget),
+        "conflict": ConflictInjector(index, rng, context_budget=budget),
+        "hard_negative": HardNegativeInjector(index, rng, context_budget=budget),
     }
     # Respect configured subset / ordering
     return {name: injectors[name] for name in fcfg.types if name in injectors}
@@ -42,7 +46,7 @@ def inject_failures(
 ) -> dict[str, list[FailureCase]]:
     """Generate failure cases grouped by failure type.
 
-    Each seed yields ``len(types) * len(severities)`` cases (default 4 x 3 = 12),
+    Each seed yields ``len(types) * len(severities)`` cases (default 6 x 3 = 18),
     minus cases dropped by structural verification (e.g. answer leakage).
     Rejected cases are also returned, under the ``"_rejected"`` key.
     """

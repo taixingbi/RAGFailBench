@@ -213,12 +213,14 @@ def export_human_review(
 - **context_noise**: is gold still present? do distractors accidentally support the answer?
 - **chunk_boundary**: is one chunk insufficient? is the split mid-word (`midword_split`)?
 - **evidence_position**: same content, only order changed?
+- **conflict**: is gold still answerable *and* is there a clear contradictory claim?
+- **hard_negative**: contexts look topical but must not support the gold answer
 
 ## Suggested order
 
 1. Finish all clean seeds → compute HAR
 2. Review all sampled `missing_evidence` first
-3. Then noise / boundary / position
+3. Then noise / boundary / position / conflict / hard_negative
 """,
         encoding="utf-8",
     )

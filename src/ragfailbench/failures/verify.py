@@ -56,6 +56,27 @@ def _operator_checks(case: FailureCase) -> dict[str, bool]:
         checks["evidence_split_across_chunks"] = not any(
             case.supporting_sentence in c for c in case.contexts
         )
+    elif case.failure_type == "conflict":
+        alt = str(case.parameters.get("alternate_answer") or "")
+        conflict = str(case.parameters.get("conflict_passage") or "")
+        checks["conflict_passage_present"] = bool(conflict) and any(
+            c == conflict or conflict in c for c in case.contexts
+        )
+        if alt:
+            checks["alternate_answer_present"] = contains_answer(joined, alt)
+        # Gold must remain findable; conflict must not be the only story.
+        positions = case.parameters.get("gold_positions")
+        if isinstance(positions, list) and positions:
+            checks["gold_still_present"] = any(
+                0 <= int(p) < len(case.contexts)
+                and contains_answer(case.contexts[int(p)], case.gold_answer)
+                for p in positions
+            )
+    elif case.failure_type == "hard_negative":
+        checks["supporting_sentence_absent"] = case.supporting_sentence not in joined
+        expected = case.parameters.get("num_contexts")
+        if expected is not None:
+            checks["context_count_matches"] = len(case.contexts) == expected
 
     return checks
 

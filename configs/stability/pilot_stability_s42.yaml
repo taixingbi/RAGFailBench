@@ -70,6 +70,11 @@ qa_generation:
   min_chunk_tokens: 60
   max_chunk_tokens: 320
   max_candidate_chunks: 1000
+  difficulty_quotas:
+    easy: 0.40
+    medium: 0.40
+    hard: 0.20
+  enforce_target_difficulty: true
 validation:
   target_clean_seeds: 100
   min_quality_score: 0.85
@@ -82,10 +87,12 @@ validation:
   dedup_similarity_threshold: 0.85
 failure_generation:
   types:
-  - missing_evidence
-  - context_noise
-  - chunk_boundary
-  - evidence_position
+    - missing_evidence
+    - context_noise
+    - chunk_boundary
+    - evidence_position
+    - conflict
+    - hard_negative
   severity_levels:
   - low
   - medium

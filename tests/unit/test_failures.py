@@ -42,6 +42,25 @@ def _chunks() -> list[Chunk]:
         previous_chunk_id="1_1_0_0",
         category_group="science_technology",
     )
+    # Near-miss hard negative: topical overlap, no gold answer.
+    hard_neg = Chunk(
+        chunk_id="99_1_0_0",
+        page_id=99,
+        revision_id=1,
+        page_title="Container orchestration",
+        section_path=["Lead"],
+        section_title="Lead",
+        paragraph_index=0,
+        chunk_index=0,
+        token_count=55,
+        char_start=0,
+        char_end=120,
+        text=(
+            "Kubernetes is a popular open-source system originally designed for "
+            "container orchestration and later adopted widely across industry."
+        ),
+        category_group="science_technology",
+    )
     # Distractors from other pages / categories
     others = []
     for i in range(2, 8):
@@ -62,7 +81,7 @@ def _chunks() -> list[Chunk]:
                 category_group="science_technology" if i % 2 else "person",
             )
         )
-    return [gold, nxt, *others]
+    return [gold, nxt, hard_neg, *others]
 
 
 def _seed() -> CleanSeed:
@@ -90,10 +109,12 @@ def test_inject_all_types_and_severities():
         "context_noise",
         "chunk_boundary",
         "evidence_position",
+        "conflict",
+        "hard_negative",
     }
     total = sum(len(v) for v in by_type.values())
-    assert total + len(rejected) == 12  # 4 types x 3 severities x 1 seed
-    assert total == 12  # nothing should be quarantined on this fixture
+    assert total + len(rejected) == 18  # 6 types x 3 severities x 1 seed
+    assert total == 18  # nothing should be quarantined on this fixture
     for name, cases in by_type.items():
         for case in cases:
             assert case.operator == name
@@ -206,9 +227,48 @@ def test_evidence_position_moves_gold():
     assert positions["low"] < positions["high"]
 
 
+def test_conflict_keeps_gold_and_adds_contradiction():
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks(), cfg)
+    assert by_type["conflict"]
+    for case in by_type["conflict"]:
+        assert case.answer_available is True
+        assert case.expected_behavior == "answer"
+        assert case.stage == "context"
+        alt = case.parameters["alternate_answer"]
+        assert alt and alt != "Google"
+        joined = "\n".join(case.contexts)
+        assert "Google" in joined
+        assert alt in joined
+        assert case.parameters.get("conflict_passage")
+        assert case.verification is not None
+        assert case.verification.injection_valid is True
+
+
+def test_hard_negative_omits_gold_answer():
+    from ragfailbench.evaluation.generation_metrics import contains_answer
+
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks(), cfg)
+    assert by_type["hard_negative"]
+    counts = {}
+    for case in by_type["hard_negative"]:
+        assert case.answer_available is False
+        assert case.expected_behavior == "abstain"
+        assert case.stage == "retrieval"
+        joined = "\n".join(case.contexts)
+        assert not contains_answer(joined, "Google")
+        assert SUPPORT not in joined
+        counts[case.severity] = len(case.contexts)
+        assert case.verification is not None
+        assert case.verification.injection_valid is True
+    assert counts["low"] <= counts["medium"] <= counts["high"]
+
+
 def test_failure_ids_traceable():
     cfg = AppConfig()
     by_type = inject_failures([_seed()], _chunks(), cfg)
+    by_type.pop("_rejected", None)
     for cases in by_type.values():
         for case in cases:
             assert case.parent_seed_id == "seed_000000"

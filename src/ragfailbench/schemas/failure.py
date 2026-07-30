@@ -16,6 +16,8 @@ FailureType = Literal[
     "context_noise",
     "chunk_boundary",
     "evidence_position",
+    "conflict",
+    "hard_negative",
 ]
 Severity = Literal["low", "medium", "high"]
 FailureStage = Literal["evidence", "context", "chunking", "retrieval", "generation"]
@@ -32,6 +34,8 @@ OPERATOR_STAGE: dict[str, FailureStage] = {
     "context_noise": "context",
     "chunk_boundary": "chunking",
     "evidence_position": "context",
+    "conflict": "context",
+    "hard_negative": "retrieval",
 }
 
 

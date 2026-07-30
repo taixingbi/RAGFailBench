@@ -67,8 +67,10 @@ Operators transform a **clean seed** into controlled failure cases. Each case re
 | `context_noise` | context | Bury gold among distractors (ratio-controlled) |
 | `chunk_boundary` | chunking | Split evidence across artificial chunk cuts |
 | `evidence_position` | context | Move gold to front / middle / end (lost-in-the-middle) |
+| `conflict` | context | Keep gold, insert a contradictory alternate claim |
+| `hard_negative` | retrieval | Near-miss contexts (lexical overlap) with gold omitted → abstain |
 
-Planned extensions (same operator API): `conflict`, `citation_error`, `long_context`, `hard_negative`, …
+Planned extensions (same operator API): `citation_error`, `long_context`, …
 
 ```bash
 python -m ragfailbench inject-failures --config configs/smoke.yaml
@@ -136,19 +138,19 @@ Recommended design: **freeze M1 once**, then repeat only the stochastic AI stage
 
 Per-seed configs are written under `configs/stability/`. Dataset-generation runs use `--skip-evaluate` by default (evaluate separately for the benchmark table).
 
-Outputs live under `data/runs/<run_id>/` (and mirrors under `data/{raw,interim,processed}/`).
+Outputs live under `data/runs/<run_id>/` (and mirrors under `data/{1_raw,2_interim,3_processed}/`).
 
 ## Outputs
 
 | Path | Description |
 |------|-------------|
-| `data/raw/raw_pages.jsonl` | Raw MediaWiki extracts |
-| `data/raw/fetch_errors.jsonl` | Titles that failed to fetch |
-| `data/interim/filtered_pages.jsonl` | Final per-category quota pages |
-| `data/processed/chunks.jsonl` | Section-aware chunks + adjacency |
-| `data/runs/<run_id>/final/clean_seeds.jsonl` | Stratified clean seeds |
-| `data/runs/<run_id>/final/failures/*.jsonl` | Failure cases by operator |
-| `data/runs/<run_id>/final/evaluation_results.jsonl` | Per-sample eval results |
+| `data/1_raw/raw_pages.jsonl` | Raw MediaWiki extracts (mirror) |
+| `data/1_raw/fetch_errors.jsonl` | Titles that failed to fetch |
+| `data/2_interim/filtered_pages.jsonl` | Final per-category quota pages |
+| `data/3_processed/chunks.jsonl` | Section-aware chunks + adjacency |
+| `data/runs/<run_id>/6_final/clean_seeds.jsonl` | Stratified clean seeds |
+| `data/runs/<run_id>/6_final/failures/*.jsonl` | Failure cases by operator |
+| `data/runs/<run_id>/6_final/evaluation_results.jsonl` | Per-sample eval results |
 | `reports/<run_id>/` | Stats, validation, evaluation reports |
 
 ## Configuration
@@ -157,6 +159,8 @@ See [`configs/pilot.yaml`](configs/pilot.yaml) and [`configs/smoke.yaml`](config
 
 Key knobs:
 
+- `qa_generation.difficulty_quotas` — candidate mix (default **40% easy / 40% medium / 20% hard**)
+- `qa_generation.enforce_target_difficulty` — coerce label to requested bucket
 - `categories.*` — pages per category group
 - `chunking.chunk_overlap_tokens: 0` — clearer chunk-boundary failures
 - `project.random_seed` — reproducible sampling

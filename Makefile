@@ -91,5 +91,7 @@ export-schemas:
 	$(BIN)/python -m ragfailbench export-schemas --output-dir schemas
 
 clean:
-	rm -rf data/raw/* data/interim/* data/processed/* reports/*
-	touch data/raw/.gitkeep data/interim/.gitkeep data/processed/.gitkeep reports/.gitkeep
+	rm -rf data/1_raw/* data/2_interim/* data/3_processed/* reports/*
+	touch data/1_raw/.gitkeep data/2_interim/.gitkeep data/3_processed/.gitkeep reports/.gitkeep
+	mkdir -p data/6_final/failures
+	touch data/4_generated/.gitkeep data/5_validated/.gitkeep data/6_final/.gitkeep data/6_final/failures/.gitkeep
