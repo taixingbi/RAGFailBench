@@ -1,0 +1,39 @@
+{
+  "run_id": "pilot_v1",
+  "raw_page_count": 926,
+  "rejected_page_count": 371,
+  "filtered_page_count": 449,
+  "chunk_count": 7489,
+  "pages_by_category": {
+    "person": 100,
+    "location": 75,
+    "science_technology": 83,
+    "historical_event": 100,
+    "organization_product": 91
+  },
+  "rejection_reason_counts": {
+    "redirect": 15,
+    "too_short": 230,
+    "list_page": 156,
+    "too_short_after_clean": 14,
+    "disambiguation": 2,
+    "timeline_page": 36,
+    "insufficient_sections": 4,
+    "high_repeat_ratio": 3
+  },
+  "chunks_per_page_avg": 16.68,
+  "token_count": {
+    "min": 5,
+    "max": 300,
+    "avg": 164.65
+  },
+  "section_count": {
+    "min": 2,
+    "max": 64,
+    "avg": 9.74
+  },
+  "adjacency_coverage": {
+    "with_previous": 7040,
+    "with_next": 7040
+  }
+}

@@ -1,0 +1,13 @@
+failure_type,severity,count
+chunk_boundary,high,86
+chunk_boundary,low,97
+chunk_boundary,medium,92
+context_noise,high,100
+context_noise,low,100
+context_noise,medium,100
+evidence_position,high,100
+evidence_position,low,100
+evidence_position,medium,100
+missing_evidence,high,100
+missing_evidence,low,100
+missing_evidence,medium,89

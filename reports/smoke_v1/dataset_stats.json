@@ -1,0 +1,38 @@
+{
+  "run_id": "smoke_v1",
+  "raw_page_count": 198,
+  "rejected_page_count": 69,
+  "filtered_page_count": 50,
+  "chunk_count": 775,
+  "pages_by_category": {
+    "person": 10,
+    "location": 10,
+    "science_technology": 10,
+    "historical_event": 10,
+    "organization_product": 10
+  },
+  "rejection_reason_counts": {
+    "list_page": 24,
+    "too_short": 31,
+    "redirect": 4,
+    "timeline_page": 16,
+    "too_short_after_clean": 6,
+    "insufficient_sections": 3,
+    "high_repeat_ratio": 1
+  },
+  "chunks_per_page_avg": 15.5,
+  "token_count": {
+    "min": 5,
+    "max": 299,
+    "avg": 164.49
+  },
+  "section_count": {
+    "min": 2,
+    "max": 53,
+    "avg": 9.56
+  },
+  "adjacency_coverage": {
+    "with_previous": 725,
+    "with_next": 725
+  }
+}

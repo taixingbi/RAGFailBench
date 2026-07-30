@@ -1,0 +1,220 @@
+{
+  "n_runs": 3,
+  "run_ids": [
+    "pilot_stability_s42",
+    "pilot_stability_s123",
+    "pilot_stability_s2026"
+  ],
+  "seeds": [
+    42,
+    123,
+    2026
+  ],
+  "rates": {
+    "schema_success_rate": {
+      "mean": 0.998003992015968,
+      "std": 0.0,
+      "n": 3,
+      "display": "99.8% ± 0.0%"
+    },
+    "qa_acceptance_rate": {
+      "mean": 0.346,
+      "std": 0.0523067873224881,
+      "n": 3,
+      "display": "34.6% ± 5.2%"
+    },
+    "clean_seed_yield": {
+      "mean": 0.2,
+      "std": 0.0,
+      "n": 3,
+      "display": "20.0% ± 0.0%"
+    },
+    "failure_verification_pass_rate": {
+      "mean": 0.9757407407407408,
+      "std": 0.0044560034872281095,
+      "n": 3,
+      "display": "97.6% ± 0.4%"
+    },
+    "human_acceptance_rate": {
+      "mean": 0.74,
+      "std": 0.26870057685088805,
+      "n": 2,
+      "display": "74.0% ± 26.9%"
+    },
+    "human_failure_validity_rate": {
+      "mean": 0.9166666666666666,
+      "std": 0.0069324194233975,
+      "n": 2,
+      "display": "91.7% ± 0.7%"
+    }
+  },
+  "counts": {
+    "candidate_qa_count": {
+      "mean": 500.0,
+      "std": 0.0,
+      "n": 3,
+      "display": "500.0 ± 0.0"
+    },
+    "generation_error_count": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n": 3,
+      "display": "1.0 ± 0.0"
+    },
+    "accepted_qa_count": {
+      "mean": 173.0,
+      "std": 26.153393661244042,
+      "n": 3,
+      "display": "173.0 ± 26.2"
+    },
+    "clean_seed_count": {
+      "mean": 100.0,
+      "std": 0.0,
+      "n": 3,
+      "display": "100.0 ± 0.0"
+    },
+    "failure_valid_count": {
+      "mean": 1756.3333333333333,
+      "std": 8.020806277010642,
+      "n": 3,
+      "display": "1756.3 ± 8.0"
+    },
+    "failure_rejected_count": {
+      "mean": 43.666666666666664,
+      "std": 8.020806277010642,
+      "n": 3,
+      "display": "43.7 ± 8.0"
+    }
+  },
+  "per_run": [
+    {
+      "run_id": "pilot_stability_s42",
+      "random_seed": 42,
+      "candidate_qa_count": 500,
+      "generation_error_count": 1,
+      "schema_success_rate": 0.998003992015968,
+      "accepted_qa_count": 143,
+      "rejected_qa_count": 357,
+      "qa_acceptance_rate": 0.286,
+      "clean_seed_count": 100,
+      "clean_seed_yield": 0.2,
+      "failure_valid_count": 1748,
+      "failure_rejected_count": 52,
+      "failure_verification_pass_rate": 0.9711111111111111,
+      "category_distribution": {
+        "person": 24,
+        "location": 19,
+        "science_technology": 20,
+        "historical_event": 21,
+        "organization_product": 16
+      },
+      "difficulty_distribution": {
+        "easy": 47,
+        "medium": 39,
+        "hard": 14
+      },
+      "human_acceptance_rate": 0.93,
+      "human_failure_validity_rate": 0.9215686274509803,
+      "notes": []
+    },
+    {
+      "run_id": "pilot_stability_s123",
+      "random_seed": 123,
+      "candidate_qa_count": 500,
+      "generation_error_count": 1,
+      "schema_success_rate": 0.998003992015968,
+      "accepted_qa_count": 191,
+      "rejected_qa_count": 309,
+      "qa_acceptance_rate": 0.382,
+      "clean_seed_count": 100,
+      "clean_seed_yield": 0.2,
+      "failure_valid_count": 1757,
+      "failure_rejected_count": 43,
+      "failure_verification_pass_rate": 0.9761111111111112,
+      "category_distribution": {
+        "person": 20,
+        "location": 20,
+        "science_technology": 21,
+        "historical_event": 21,
+        "organization_product": 18
+      },
+      "difficulty_distribution": {
+        "easy": 98,
+        "medium": 2
+      },
+      "human_acceptance_rate": 0.55,
+      "human_failure_validity_rate": 0.9117647058823529,
+      "notes": []
+    },
+    {
+      "run_id": "pilot_stability_s2026",
+      "random_seed": 2026,
+      "candidate_qa_count": 500,
+      "generation_error_count": 1,
+      "schema_success_rate": 0.998003992015968,
+      "accepted_qa_count": 185,
+      "rejected_qa_count": 315,
+      "qa_acceptance_rate": 0.37,
+      "clean_seed_count": 100,
+      "clean_seed_yield": 0.2,
+      "failure_valid_count": 1764,
+      "failure_rejected_count": 36,
+      "failure_verification_pass_rate": 0.98,
+      "category_distribution": {
+        "person": 21,
+        "location": 21,
+        "science_technology": 20,
+        "historical_event": 20,
+        "organization_product": 18
+      },
+      "difficulty_distribution": {
+        "easy": 98,
+        "medium": 2
+      },
+      "human_acceptance_rate": null,
+      "human_failure_validity_rate": null,
+      "notes": [
+        "human clean-seed review CSV missing or empty",
+        "human failure review CSV missing or empty"
+      ]
+    }
+  ],
+  "category_distribution_by_run": {
+    "pilot_stability_s42": {
+      "person": 24,
+      "location": 19,
+      "science_technology": 20,
+      "historical_event": 21,
+      "organization_product": 16
+    },
+    "pilot_stability_s123": {
+      "person": 20,
+      "location": 20,
+      "science_technology": 21,
+      "historical_event": 21,
+      "organization_product": 18
+    },
+    "pilot_stability_s2026": {
+      "person": 21,
+      "location": 21,
+      "science_technology": 20,
+      "historical_event": 20,
+      "organization_product": 18
+    }
+  },
+  "difficulty_distribution_by_run": {
+    "pilot_stability_s42": {
+      "easy": 47,
+      "medium": 39,
+      "hard": 14
+    },
+    "pilot_stability_s123": {
+      "easy": 98,
+      "medium": 2
+    },
+    "pilot_stability_s2026": {
+      "easy": 98,
+      "medium": 2
+    }
+  }
+}

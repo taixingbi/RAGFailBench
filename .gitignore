@@ -12,28 +12,6 @@ venv/
 .env.*
 !.env.example
 
-# Data artifacts (keep directory structure via .gitkeep)
-data/1_raw/*
-!data/1_raw/.gitkeep
-data/2_interim/*
-!data/2_interim/.gitkeep
-data/3_processed/*
-!data/3_processed/.gitkeep
-data/4_generated/*
-!data/4_generated/.gitkeep
-data/5_validated/*
-!data/5_validated/.gitkeep
-data/6_final/*
-!data/6_final/.gitkeep
-!data/6_final/failures/
-data/6_final/failures/*
-!data/6_final/failures/.gitkeep
-data/runs/
-
-# Reports
-reports/*
-!reports/.gitkeep
-
 # IDE / OS
 .idea/
 .vscode/

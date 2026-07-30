@@ -1,0 +1,196 @@
+{
+  "by_condition": {
+    "Qwen/Qwen2.5-7B-Instruct::clean": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "clean",
+      "n": 100,
+      "accuracy": 0.85,
+      "exact_match": 0.73,
+      "token_f1": 0.8278,
+      "abstention_rate": 0.11,
+      "hallucination_rate": 0.03
+    },
+    "Qwen/Qwen2.5-7B-Instruct::missing_evidence": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "missing_evidence",
+      "n": 282,
+      "accuracy": 0.0142,
+      "exact_match": 0.0035,
+      "token_f1": 0.0065,
+      "abstention_rate": 0.9113,
+      "hallucination_rate": 0.0887
+    },
+    "Qwen/Qwen2.5-7B-Instruct::context_noise": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "context_noise",
+      "n": 300,
+      "accuracy": 0.9267,
+      "exact_match": 0.81,
+      "token_f1": 0.9139,
+      "abstention_rate": 0.0133,
+      "hallucination_rate": 0.0233
+    },
+    "Qwen/Qwen2.5-7B-Instruct::chunk_boundary": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "chunk_boundary",
+      "n": 275,
+      "accuracy": 0.9164,
+      "exact_match": 0.8255,
+      "token_f1": 0.9051,
+      "abstention_rate": 0.0473,
+      "hallucination_rate": 0.0182
+    },
+    "Qwen/Qwen2.5-7B-Instruct::evidence_position": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "evidence_position",
+      "n": 300,
+      "accuracy": 0.8733,
+      "exact_match": 0.75,
+      "token_f1": 0.8526,
+      "abstention_rate": 0.0833,
+      "hallucination_rate": 0.0133
+    }
+  },
+  "by_model": {
+    "Qwen/Qwen2.5-7B-Instruct": {
+      "clean_accuracy": 0.85,
+      "conditions": {
+        "missing_evidence": {
+          "accuracy": 0.0142,
+          "performance_drop": 0.8358,
+          "abstention_rate": 0.9113,
+          "hallucination_rate": 0.0887
+        },
+        "context_noise": {
+          "accuracy": 0.9267,
+          "performance_drop": -0.0767,
+          "abstention_rate": 0.0133,
+          "hallucination_rate": 0.0233
+        },
+        "chunk_boundary": {
+          "accuracy": 0.9164,
+          "performance_drop": -0.0664,
+          "abstention_rate": 0.0473,
+          "hallucination_rate": 0.0182
+        },
+        "evidence_position": {
+          "accuracy": 0.8733,
+          "performance_drop": -0.0233,
+          "abstention_rate": 0.0833,
+          "hallucination_rate": 0.0133
+        }
+      },
+      "failure_robustness_score": 0.8327
+    }
+  },
+  "by_severity": {
+    "Qwen/Qwen2.5-7B-Instruct::missing_evidence::low": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "missing_evidence",
+      "severity": "low",
+      "n": 100,
+      "accuracy": 0.03,
+      "abstention_rate": 0.84,
+      "hallucination_rate": 0.16
+    },
+    "Qwen/Qwen2.5-7B-Instruct::missing_evidence::medium": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "missing_evidence",
+      "severity": "medium",
+      "n": 82,
+      "accuracy": 0.0122,
+      "abstention_rate": 0.9024,
+      "hallucination_rate": 0.0976
+    },
+    "Qwen/Qwen2.5-7B-Instruct::missing_evidence::high": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "missing_evidence",
+      "severity": "high",
+      "n": 100,
+      "accuracy": 0.0,
+      "abstention_rate": 0.99,
+      "hallucination_rate": 0.01
+    },
+    "Qwen/Qwen2.5-7B-Instruct::context_noise::low": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "context_noise",
+      "severity": "low",
+      "n": 100,
+      "accuracy": 0.95,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.02
+    },
+    "Qwen/Qwen2.5-7B-Instruct::context_noise::medium": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "context_noise",
+      "severity": "medium",
+      "n": 100,
+      "accuracy": 0.94,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.01
+    },
+    "Qwen/Qwen2.5-7B-Instruct::context_noise::high": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "context_noise",
+      "severity": "high",
+      "n": 100,
+      "accuracy": 0.89,
+      "abstention_rate": 0.04,
+      "hallucination_rate": 0.04
+    },
+    "Qwen/Qwen2.5-7B-Instruct::chunk_boundary::low": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "chunk_boundary",
+      "severity": "low",
+      "n": 96,
+      "accuracy": 0.9792,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0104
+    },
+    "Qwen/Qwen2.5-7B-Instruct::chunk_boundary::medium": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "chunk_boundary",
+      "severity": "medium",
+      "n": 92,
+      "accuracy": 0.913,
+      "abstention_rate": 0.0435,
+      "hallucination_rate": 0.0217
+    },
+    "Qwen/Qwen2.5-7B-Instruct::chunk_boundary::high": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "chunk_boundary",
+      "severity": "high",
+      "n": 87,
+      "accuracy": 0.8506,
+      "abstention_rate": 0.1034,
+      "hallucination_rate": 0.023
+    },
+    "Qwen/Qwen2.5-7B-Instruct::evidence_position::low": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "evidence_position",
+      "severity": "low",
+      "n": 100,
+      "accuracy": 0.9,
+      "abstention_rate": 0.08,
+      "hallucination_rate": 0.01
+    },
+    "Qwen/Qwen2.5-7B-Instruct::evidence_position::medium": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "evidence_position",
+      "severity": "medium",
+      "n": 100,
+      "accuracy": 0.87,
+      "abstention_rate": 0.06,
+      "hallucination_rate": 0.02
+    },
+    "Qwen/Qwen2.5-7B-Instruct::evidence_position::high": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "condition": "evidence_position",
+      "severity": "high",
+      "n": 100,
+      "accuracy": 0.85,
+      "abstention_rate": 0.11,
+      "hallucination_rate": 0.01
+    }
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "by_condition": {
+    "nova-pro::clean": {
+      "model": "nova-pro",
+      "condition": "clean",
+      "n": 10,
+      "accuracy": 1.0,
+      "exact_match": 0.8,
+      "token_f1": 0.9524,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::missing_evidence": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "n": 22,
+      "accuracy": 0.0,
+      "exact_match": 0.0,
+      "token_f1": 0.009,
+      "abstention_rate": 0.8636,
+      "hallucination_rate": 0.1364
+    },
+    "nova-pro::context_noise": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "n": 24,
+      "accuracy": 1.0,
+      "exact_match": 0.875,
+      "token_f1": 0.9583,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::chunk_boundary": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "n": 23,
+      "accuracy": 0.913,
+      "exact_match": 0.8261,
+      "token_f1": 0.8746,
+      "abstention_rate": 0.087,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::evidence_position": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "n": 24,
+      "accuracy": 1.0,
+      "exact_match": 0.875,
+      "token_f1": 0.9702,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    }
+  },
+  "by_model": {
+    "nova-pro": {
+      "clean_accuracy": 1.0,
+      "conditions": {
+        "missing_evidence": {
+          "accuracy": 0.0,
+          "performance_drop": 1.0,
+          "abstention_rate": 0.8636,
+          "hallucination_rate": 0.1364
+        },
+        "context_noise": {
+          "accuracy": 1.0,
+          "performance_drop": 0.0,
+          "abstention_rate": 0.0,
+          "hallucination_rate": 0.0
+        },
+        "chunk_boundary": {
+          "accuracy": 0.913,
+          "performance_drop": 0.087,
+          "abstention_rate": 0.087,
+          "hallucination_rate": 0.0
+        },
+        "evidence_position": {
+          "accuracy": 1.0,
+          "performance_drop": 0.0,
+          "abstention_rate": 0.0,
+          "hallucination_rate": 0.0
+        }
+      },
+      "failure_robustness_score": 0.7283
+    }
+  },
+  "by_severity": {
+    "nova-pro::missing_evidence::low": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "severity": "low",
+      "n": 8,
+      "accuracy": 0.0,
+      "abstention_rate": 0.625,
+      "hallucination_rate": 0.375
+    },
+    "nova-pro::missing_evidence::medium": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "severity": "medium",
+      "n": 6,
+      "accuracy": 0.0,
+      "abstention_rate": 1.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::missing_evidence::high": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "severity": "high",
+      "n": 8,
+      "accuracy": 0.0,
+      "abstention_rate": 1.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::context_noise::low": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "severity": "low",
+      "n": 8,
+      "accuracy": 1.0,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::context_noise::medium": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "severity": "medium",
+      "n": 8,
+      "accuracy": 1.0,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::context_noise::high": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "severity": "high",
+      "n": 8,
+      "accuracy": 1.0,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::chunk_boundary::low": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "severity": "low",
+      "n": 8,
+      "accuracy": 0.875,
+      "abstention_rate": 0.125,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::chunk_boundary::medium": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "severity": "medium",
+      "n": 8,
+      "accuracy": 0.875,
+      "abstention_rate": 0.125,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::chunk_boundary::high": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "severity": "high",
+      "n": 7,
+      "accuracy": 1.0,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::evidence_position::low": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "severity": "low",
+      "n": 8,
+      "accuracy": 1.0,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::evidence_position::medium": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "severity": "medium",
+      "n": 8,
+      "accuracy": 1.0,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::evidence_position::high": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "severity": "high",
+      "n": 8,
+      "accuracy": 1.0,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0
+    }
+  }
+}

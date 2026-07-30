@@ -1,0 +1,104 @@
+eval_id,sample_id,model_name,condition,severity,exact_match,token_f1,semantic_similarity,llm_judge_correct,abstained,hallucinated,prediction,gold_answer
+eval_nova-pro_000000,seed_000000,nova-pro,clean,,1.0,1.0,1.0,True,False,False,Brown University,Brown University
+eval_nova-pro_000001,seed_000001,nova-pro,clean,,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000002,seed_000002,nova-pro,clean,,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000003,seed_000003,nova-pro,clean,,0.0,0.8571428571428571,0.8125,True,False,False,Since 28 April 1994.,28 April 1994
+eval_nova-pro_000004,seed_000004,nova-pro,clean,,1.0,1.0,1.0,False,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000005,seed_000005,nova-pro,clean,,1.0,1.0,1.0,False,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000006,seed_000006,nova-pro,clean,,0.0,0.6666666666666666,0.5714285714285714,True,False,False,14.29 miles,14.29
+eval_nova-pro_000007,seed_000007,nova-pro,clean,,1.0,1.0,1.0,True,False,False,1983,1983
+eval_nova-pro_000008,seed_000008,nova-pro,clean,,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000009,seed_000009,nova-pro,clean,,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000010,seed_000000__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.0,0.14814814814814814,,True,False,I don't know.,Brown University
+eval_nova-pro_000011,seed_000000__missing_evidence__medium,nova-pro,missing_evidence,medium,0.0,0.0,0.14814814814814814,,True,False,I don't know.,Brown University
+eval_nova-pro_000012,seed_000000__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.0,,True,False,,Brown University
+eval_nova-pro_000013,seed_000001__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.0,0.17391304347826086,,True,False,I don't know.,"July 30, 1938"
+eval_nova-pro_000014,seed_000001__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.17391304347826086,,True,False,I don't know.,"July 30, 1938"
+eval_nova-pro_000015,seed_000002__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.0,0.3,,True,False,I don't know.,Pyongyang
+eval_nova-pro_000016,seed_000002__missing_evidence__medium,nova-pro,missing_evidence,medium,0.0,0.0,0.3,,True,False,I don't know.,Pyongyang
+eval_nova-pro_000017,seed_000002__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.3,,True,False,I don't know.,Pyongyang
+eval_nova-pro_000018,seed_000003__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.0,0.16666666666666666,,True,False,I don't know.,28 April 1994
+eval_nova-pro_000019,seed_000003__missing_evidence__medium,nova-pro,missing_evidence,medium,0.0,0.0,0.16666666666666666,,True,False,I don't know.,28 April 1994
+eval_nova-pro_000020,seed_000003__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.16666666666666666,,True,False,I don't know.,28 April 1994
+eval_nova-pro_000021,seed_000004__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.08,0.22580645161290322,False,False,True,"The field that combines computational science with culinary studies is the one described in the context, which applies data-driven techniques to analyze various aspects of food.",Computational gastronomy
+eval_nova-pro_000022,seed_000004__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.34285714285714286,,True,False,I don't know.,Computational gastronomy
+eval_nova-pro_000023,seed_000005__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.11764705882352942,0.2857142857142857,False,False,True,High availability is a high percentage of time that the system is functioning.,(1 – (down time/ total time))*100%
+eval_nova-pro_000024,seed_000005__missing_evidence__medium,nova-pro,missing_evidence,medium,0.0,0.0,0.3684210526315789,,True,False,I don't know.,(1 – (down time/ total time))*100%
+eval_nova-pro_000025,seed_000005__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.3684210526315789,,True,False,I don't know.,(1 – (down time/ total time))*100%
+eval_nova-pro_000026,seed_000008__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.0,0.3333333333333333,False,False,True,Silicon Valley,"Los Angeles, California"
+eval_nova-pro_000027,seed_000008__missing_evidence__medium,nova-pro,missing_evidence,medium,0.0,0.0,0.18181818181818182,,True,False,I don't know.,"Los Angeles, California"
+eval_nova-pro_000028,seed_000008__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.18181818181818182,,True,False,I don't know.,"Los Angeles, California"
+eval_nova-pro_000029,seed_000009__missing_evidence__low,nova-pro,missing_evidence,low,0.0,0.0,0.0,,True,False,I don't know.,100
+eval_nova-pro_000030,seed_000009__missing_evidence__medium,nova-pro,missing_evidence,medium,0.0,0.0,0.0,,True,False,I don't know.,100
+eval_nova-pro_000031,seed_000009__missing_evidence__high,nova-pro,missing_evidence,high,0.0,0.0,0.0,,True,False,I don't know.,100
+eval_nova-pro_000032,seed_000000__context_noise__low,nova-pro,context_noise,low,0.0,0.5714285714285715,0.6666666666666666,True,False,False,Brown University in Rhode Island,Brown University
+eval_nova-pro_000033,seed_000000__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,True,False,False,Brown University,Brown University
+eval_nova-pro_000034,seed_000000__context_noise__high,nova-pro,context_noise,high,0.0,0.5714285714285715,0.6666666666666666,True,False,False,Brown University in Rhode Island.,Brown University
+eval_nova-pro_000035,seed_000001__context_noise__low,nova-pro,context_noise,low,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000036,seed_000001__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000037,seed_000001__context_noise__high,nova-pro,context_noise,high,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000038,seed_000002__context_noise__low,nova-pro,context_noise,low,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000039,seed_000002__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000040,seed_000002__context_noise__high,nova-pro,context_noise,high,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000041,seed_000003__context_noise__low,nova-pro,context_noise,low,0.0,0.8571428571428571,0.8125,True,False,False,Since 28 April 1994.,28 April 1994
+eval_nova-pro_000042,seed_000003__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,False,False,False,28 April 1994,28 April 1994
+eval_nova-pro_000043,seed_000003__context_noise__high,nova-pro,context_noise,high,1.0,1.0,1.0,True,False,False,28 April 1994,28 April 1994
+eval_nova-pro_000044,seed_000004__context_noise__low,nova-pro,context_noise,low,1.0,1.0,1.0,True,False,False,Computational gastronomy.,Computational gastronomy
+eval_nova-pro_000045,seed_000004__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000046,seed_000004__context_noise__high,nova-pro,context_noise,high,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000047,seed_000005__context_noise__low,nova-pro,context_noise,low,1.0,1.0,1.0,True,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000048,seed_000005__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,True,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000049,seed_000005__context_noise__high,nova-pro,context_noise,high,1.0,1.0,1.0,True,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000050,seed_000008__context_noise__low,nova-pro,context_noise,low,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000051,seed_000008__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000052,seed_000008__context_noise__high,nova-pro,context_noise,high,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000053,seed_000009__context_noise__low,nova-pro,context_noise,low,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000054,seed_000009__context_noise__medium,nova-pro,context_noise,medium,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000055,seed_000009__context_noise__high,nova-pro,context_noise,high,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000056,seed_000000__chunk_boundary__low,nova-pro,chunk_boundary,low,1.0,1.0,1.0,True,False,False,Brown University,Brown University
+eval_nova-pro_000057,seed_000000__chunk_boundary__medium,nova-pro,chunk_boundary,medium,0.0,0.5714285714285715,0.6666666666666666,True,False,False,Brown University in Rhode Island,Brown University
+eval_nova-pro_000058,seed_000000__chunk_boundary__high,nova-pro,chunk_boundary,high,1.0,1.0,1.0,True,False,False,Brown University,Brown University
+eval_nova-pro_000059,seed_000001__chunk_boundary__low,nova-pro,chunk_boundary,low,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000060,seed_000001__chunk_boundary__medium,nova-pro,chunk_boundary,medium,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000061,seed_000001__chunk_boundary__high,nova-pro,chunk_boundary,high,0.0,0.5454545454545454,0.4897959183673469,True,False,False,"Michael Bell was born on July 30, 1938.","July 30, 1938"
+eval_nova-pro_000062,seed_000002__chunk_boundary__low,nova-pro,chunk_boundary,low,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000063,seed_000002__chunk_boundary__medium,nova-pro,chunk_boundary,medium,0.0,0.0,0.0,,True,False,,Pyongyang
+eval_nova-pro_000064,seed_000002__chunk_boundary__high,nova-pro,chunk_boundary,high,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000065,seed_000003__chunk_boundary__low,nova-pro,chunk_boundary,low,1.0,1.0,1.0,True,False,False,28 April 1994,28 April 1994
+eval_nova-pro_000066,seed_000003__chunk_boundary__medium,nova-pro,chunk_boundary,medium,1.0,1.0,1.0,True,False,False,28 April 1994,28 April 1994
+eval_nova-pro_000067,seed_000003__chunk_boundary__high,nova-pro,chunk_boundary,high,1.0,1.0,1.0,True,False,False,28 April 1994,28 April 1994
+eval_nova-pro_000068,seed_000004__chunk_boundary__low,nova-pro,chunk_boundary,low,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000069,seed_000004__chunk_boundary__medium,nova-pro,chunk_boundary,medium,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000070,seed_000004__chunk_boundary__high,nova-pro,chunk_boundary,high,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000071,seed_000005__chunk_boundary__low,nova-pro,chunk_boundary,low,0.0,0.0,0.0,,True,False,,(1 – (down time/ total time))*100%
+eval_nova-pro_000072,seed_000005__chunk_boundary__medium,nova-pro,chunk_boundary,medium,1.0,1.0,1.0,True,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000073,seed_000008__chunk_boundary__low,nova-pro,chunk_boundary,low,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000074,seed_000008__chunk_boundary__medium,nova-pro,chunk_boundary,medium,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000075,seed_000008__chunk_boundary__high,nova-pro,chunk_boundary,high,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000076,seed_000009__chunk_boundary__low,nova-pro,chunk_boundary,low,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000077,seed_000009__chunk_boundary__medium,nova-pro,chunk_boundary,medium,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000078,seed_000009__chunk_boundary__high,nova-pro,chunk_boundary,high,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000079,seed_000000__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,Brown University,Brown University
+eval_nova-pro_000080,seed_000000__evidence_position__medium,nova-pro,evidence_position,medium,0.0,0.5714285714285715,0.6666666666666666,True,False,False,Brown University in Rhode Island,Brown University
+eval_nova-pro_000081,seed_000000__evidence_position__high,nova-pro,evidence_position,high,1.0,1.0,1.0,False,False,False,Brown University,Brown University
+eval_nova-pro_000082,seed_000001__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000083,seed_000001__evidence_position__medium,nova-pro,evidence_position,medium,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000084,seed_000001__evidence_position__high,nova-pro,evidence_position,high,1.0,1.0,1.0,True,False,False,"July 30, 1938","July 30, 1938"
+eval_nova-pro_000085,seed_000002__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000086,seed_000002__evidence_position__medium,nova-pro,evidence_position,medium,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000087,seed_000002__evidence_position__high,nova-pro,evidence_position,high,1.0,1.0,1.0,True,False,False,Pyongyang,Pyongyang
+eval_nova-pro_000088,seed_000003__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,28 April 1994,28 April 1994
+eval_nova-pro_000089,seed_000003__evidence_position__medium,nova-pro,evidence_position,medium,0.0,0.8571428571428571,0.8125,True,False,False,Since 28 April 1994.,28 April 1994
+eval_nova-pro_000090,seed_000003__evidence_position__high,nova-pro,evidence_position,high,0.0,0.8571428571428571,0.8125,True,False,False,Since 28 April 1994.,28 April 1994
+eval_nova-pro_000091,seed_000004__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000092,seed_000004__evidence_position__medium,nova-pro,evidence_position,medium,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000093,seed_000004__evidence_position__high,nova-pro,evidence_position,high,1.0,1.0,1.0,True,False,False,Computational gastronomy,Computational gastronomy
+eval_nova-pro_000094,seed_000005__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000095,seed_000005__evidence_position__medium,nova-pro,evidence_position,medium,1.0,1.0,1.0,True,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000096,seed_000005__evidence_position__high,nova-pro,evidence_position,high,1.0,1.0,1.0,True,False,False,(1 – (down time/ total time))*100%,(1 – (down time/ total time))*100%
+eval_nova-pro_000097,seed_000008__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000098,seed_000008__evidence_position__medium,nova-pro,evidence_position,medium,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000099,seed_000008__evidence_position__high,nova-pro,evidence_position,high,1.0,1.0,1.0,True,False,False,"Los Angeles, California","Los Angeles, California"
+eval_nova-pro_000100,seed_000009__evidence_position__low,nova-pro,evidence_position,low,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000101,seed_000009__evidence_position__medium,nova-pro,evidence_position,medium,1.0,1.0,1.0,True,False,False,100,100
+eval_nova-pro_000102,seed_000009__evidence_position__high,nova-pro,evidence_position,high,1.0,1.0,1.0,True,False,False,100,100
