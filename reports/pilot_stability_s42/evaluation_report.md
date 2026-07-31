@@ -1,17 +1,5 @@
 # Evaluation Report — pilot_stability_s42
 
-## llama
-
-- Clean accuracy: **0.96**
-- Failure Robustness Score: **0.7669**
-
-| Condition | Accuracy | Perf. Drop | Abstention | Hallucination |
-|-----------|----------|-----------|------------|---------------|
-| missing_evidence | 0.0141 | 0.9459 | 0.9155 | 0.0845 |
-| context_noise | 0.9733 | -0.0133 | 0.0 | 0.0167 |
-| chunk_boundary | 0.9468 | 0.0132 | 0.0177 | 0.0284 |
-| evidence_position | 0.9733 | -0.0133 | 0.0 | 0.02 |
-
 ## nova-pro
 
 - Clean accuracy: **0.93**
@@ -25,3 +13,17 @@
 | evidence_position | 0.91 | 0.02 | 0.0433 | 0.03 |
 | conflict | 0.8167 | 0.1133 | 0.04 | 0.1267 |
 | hard_negative | 0.0433 | 0.8867 | 0.8833 | 0.1167 |
+
+## llama
+
+- Clean accuracy: **0.92**
+- Failure Robustness Score: **0.6862**
+
+| Condition | Accuracy | Perf. Drop | Abstention | Hallucination |
+|-----------|----------|-----------|------------|---------------|
+| missing_evidence | 0.0213 | 0.8987 | 0.9149 | 0.0851 |
+| context_noise | 0.9333 | -0.0133 | 0.01 | 0.0367 |
+| chunk_boundary | 0.906 | 0.014 | 0.0301 | 0.0489 |
+| evidence_position | 0.9333 | -0.0133 | 0.01 | 0.03 |
+| conflict | 0.8 | 0.12 | 0.0267 | 0.1133 |
+| hard_negative | 0.0433 | 0.8767 | 0.8933 | 0.1067 |

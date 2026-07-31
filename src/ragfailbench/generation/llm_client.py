@@ -454,33 +454,6 @@ def chat_completions(
     )
 
 
-def chat_completion_text(
-    *,
-    user_content: str,
-    base_url: str | None = None,
-    model: str | None = None,
-    system_content: str | None = None,
-    max_tokens: int | None = 512,
-    **kwargs: Any,
-) -> str:
-    """One-shot user message; returns assistant message content string."""
-    messages: list[dict[str, Any]] = []
-    if system_content:
-        messages.append({"role": "system", "content": system_content})
-    messages.append({"role": "user", "content": user_content})
-    data = chat_completions(
-        messages=messages,
-        base_url=base_url,
-        model=model,
-        max_tokens=max_tokens,
-        **kwargs,
-    )
-    try:
-        return str(data["choices"][0]["message"]["content"])
-    except (KeyError, IndexError, TypeError) as e:
-        raise ValueError(f"Unexpected chat response shape: {data!r}") from e
-
-
 def extract_json(text: str) -> dict[str, Any] | None:
     """Best-effort extraction of a single JSON object from model output.
 

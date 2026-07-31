@@ -56,6 +56,13 @@
       "title": "Supporting Sentence",
       "type": "string"
     },
+    "clean_contexts": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Clean Contexts",
+      "type": "array"
+    },
     "answer_type": {
       "title": "Answer Type",
       "type": "string"

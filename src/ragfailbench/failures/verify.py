@@ -185,20 +185,3 @@ def verify_failures(
         assert case.verification is not None
         (valid if case.verification.injection_valid else rejected).append(case)
     return valid, rejected
-
-
-def verify_answer_absence(case: FailureCase) -> FailureCase | None:
-    """Back-compat helper: structural check only; None if the label is unsafe.
-
-    Prefer :func:`verify_case` / :func:`verify_failures` in new code.
-    """
-    if case.answer_available:
-        return case
-    verified = verify_case(case)
-    assert verified.verification is not None
-    if verified.verification.gold_answer_leaked:
-        return None
-    meta = dict(verified.metadata or {})
-    meta["answer_absence_verified"] = True
-    meta["answer_still_available"] = False
-    return verified.model_copy(update={"metadata": meta})

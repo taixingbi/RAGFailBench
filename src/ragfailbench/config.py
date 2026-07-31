@@ -237,11 +237,6 @@ class AppConfig(BaseModel):
         base = Path(root) if root else Path(self.paths.data_dir)
         return base / "runs" / self.project.run_id
 
-    def stage_dir(self, stage: str, root: Path | None = None) -> Path:
-        """Return ``data/runs/<run_id>/<N_stage>`` for a logical stage name."""
-        folder = STAGE_DIRS.get(stage, stage)
-        return self.run_data_dir(root) / folder
-
     def ensure_dirs(self, root: Path | None = None) -> dict[str, Path]:
         """Create and return standard output directories for this run.
 

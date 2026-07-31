@@ -92,32 +92,6 @@
       "default": null,
       "title": "Hallucinated"
     },
-    "faithfulness": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Faithfulness"
-    },
-    "retrieval_metrics": {
-      "additionalProperties": {
-        "type": "number"
-      },
-      "title": "Retrieval Metrics",
-      "type": "object"
-    },
-    "failure_metrics": {
-      "additionalProperties": {
-        "type": "number"
-      },
-      "title": "Failure Metrics",
-      "type": "object"
-    },
     "metadata": {
       "additionalProperties": true,
       "title": "Metadata",

@@ -25,7 +25,4 @@ class EvaluationResult(BaseModel):
     llm_judge_correct: bool | None = None
     abstained: bool = False
     hallucinated: bool | None = None
-    faithfulness: float | None = None
-    retrieval_metrics: dict[str, float] = Field(default_factory=dict)
-    failure_metrics: dict[str, float] = Field(default_factory=dict)
     metadata: dict[str, Any] = Field(default_factory=dict)

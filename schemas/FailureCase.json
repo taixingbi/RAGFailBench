@@ -1,5 +1,63 @@
 {
   "$defs": {
+    "FailureVerification": {
+      "description": "Automatic acceptance record for one injected failure case.",
+      "properties": {
+        "injection_valid": {
+          "default": true,
+          "title": "Injection Valid",
+          "type": "boolean"
+        },
+        "answer_available": {
+          "default": true,
+          "title": "Answer Available",
+          "type": "boolean"
+        },
+        "gold_answer_leaked": {
+          "default": false,
+          "title": "Gold Answer Leaked",
+          "type": "boolean"
+        },
+        "judge_verified": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Judge Verified"
+        },
+        "verification_score": {
+          "default": 1.0,
+          "title": "Verification Score",
+          "type": "number"
+        },
+        "failed_checks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failed Checks",
+          "type": "array"
+        },
+        "judge_confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Judge Confidence"
+        }
+      },
+      "title": "FailureVerification",
+      "type": "object"
+    },
     "SourceRef": {
       "properties": {
         "page_id": {
@@ -34,6 +92,7 @@
       "type": "object"
     }
   },
+  "description": "One generated failure instance: clean seed + applied Failure Operator.",
   "properties": {
     "schema_version": {
       "default": "1.0",
@@ -53,10 +112,36 @@
         "missing_evidence",
         "context_noise",
         "chunk_boundary",
-        "evidence_position"
+        "evidence_position",
+        "conflict",
+        "hard_negative"
       ],
       "title": "Failure Type",
       "type": "string"
+    },
+    "operator": {
+      "default": "",
+      "title": "Operator",
+      "type": "string"
+    },
+    "stage": {
+      "anyOf": [
+        {
+          "enum": [
+            "evidence",
+            "context",
+            "chunking",
+            "retrieval",
+            "generation"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "default": "context",
+      "title": "Stage"
     },
     "severity": {
       "enum": [
@@ -66,6 +151,11 @@
       ],
       "title": "Severity",
       "type": "string"
+    },
+    "difficulty": {
+      "default": 0.5,
+      "title": "Difficulty",
+      "type": "number"
     },
     "question": {
       "title": "Question",
@@ -114,6 +204,22 @@
       ],
       "default": null,
       "title": "Category Group"
+    },
+    "parameters": {
+      "additionalProperties": true,
+      "title": "Parameters",
+      "type": "object"
+    },
+    "verification": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FailureVerification"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "metadata": {
       "additionalProperties": true,

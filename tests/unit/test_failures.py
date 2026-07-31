@@ -172,9 +172,11 @@ def _leaky_case():
 
 def test_missing_evidence_drops_leaking_neighbor():
     """Neighbor that still contains the gold answer must not keep the case answerable."""
-    from ragfailbench.failures.verify import verify_answer_absence
+    from ragfailbench.failures.verify import structural_verify
 
-    assert verify_answer_absence(_leaky_case()) is None
+    ver = structural_verify(_leaky_case())
+    assert ver.injection_valid is False
+    assert ver.gold_answer_leaked is True
 
 
 def test_structural_verify_flags_leak():

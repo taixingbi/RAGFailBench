@@ -12,6 +12,10 @@ venv/
 .env.*
 !.env.example
 
+# Reports (keep paper tables under reports/pilot_stability*)
+reports/smoke_v1/
+*.log
+
 # IDE / OS
 .idea/
 .vscode/
@@ -23,12 +27,6 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
-# Local
+# Local scratch
 tmp.md
-*.log
 .env copy.example
-
-# Human review packs (regenerate with `make export-review`)
-reviews/*
-!reviews/.gitkeep
-!reviews/README.md
