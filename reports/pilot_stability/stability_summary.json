@@ -36,16 +36,16 @@
       "display": "97.0% ± 0.1%"
     },
     "human_acceptance_rate": {
-      "mean": 0.83,
-      "std": 0.0,
-      "n": 1,
-      "display": "83.0% ± 0.0%"
+      "mean": 0.86,
+      "std": 0.02645751311064593,
+      "n": 3,
+      "display": "86.0% ± 2.6%"
     },
     "human_failure_validity_rate": {
-      "mean": 1.0,
-      "std": 0.0,
-      "n": 1,
-      "display": "100.0% ± 0.0%"
+      "mean": 0.9978213507625272,
+      "std": 0.0018867655855870056,
+      "n": 3,
+      "display": "99.8% ± 0.2%"
     }
   },
   "counts": {
@@ -143,12 +143,9 @@
         "medium": 38,
         "hard": 18
       },
-      "human_acceptance_rate": null,
-      "human_failure_validity_rate": null,
-      "notes": [
-        "human clean-seed review CSV missing or empty",
-        "human failure review CSV missing or empty"
-      ]
+      "human_acceptance_rate": 0.87,
+      "human_failure_validity_rate": 0.9967320261437909,
+      "notes": []
     },
     {
       "run_id": "pilot_stability_s2026",
@@ -176,12 +173,9 @@
         "medium": 40,
         "hard": 16
       },
-      "human_acceptance_rate": null,
-      "human_failure_validity_rate": null,
-      "notes": [
-        "human clean-seed review CSV missing or empty",
-        "human failure review CSV missing or empty"
-      ]
+      "human_acceptance_rate": 0.88,
+      "human_failure_validity_rate": 0.9967320261437909,
+      "notes": []
     }
   ],
   "category_distribution_by_run": {

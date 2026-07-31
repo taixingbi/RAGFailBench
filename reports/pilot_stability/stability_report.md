@@ -14,16 +14,16 @@ Run IDs: `['pilot_stability_s42', 'pilot_stability_s123', 'pilot_stability_s2026
 | Clean-seed yield | 20.0% ± 0.0% | Dataset construction stability |
 | Clean-seed count | 100.0 ± 0.0 | Absolute yield |
 | Failure verification pass rate | 97.0% ± 0.1% | Injection reliability |
-| Human acceptance rate (HAR) | 83.0% ± 0.0% | Actual quality stability |
-| Human failure validity | 100.0% ± 0.0% | Injection quality |
+| Human acceptance rate (HAR) | 86.0% ± 2.6% | Actual quality stability |
+| Human failure validity | 99.8% ± 0.2% | Injection quality |
 
 ## Per-run funnel
 
 | run_id | seed | candidates | schema% | accept% | seeds | yield% | fail_pass% | HAR |
 |--------|------|------------|---------|---------|-------|--------|------------|-----|
 | pilot_stability_s42 | 42 | 500 | 99.8% | 28.6% | 100 | 20.0% | 97.1% | 83.0% |
-| pilot_stability_s123 | 123 | 500 | 99.6% | 29.4% | 100 | 20.0% | 96.9% | n/a |
-| pilot_stability_s2026 | 2026 | 500 | 99.8% | 28.6% | 100 | 20.0% | 97.1% | n/a |
+| pilot_stability_s123 | 123 | 500 | 99.6% | 29.4% | 100 | 20.0% | 96.9% | 87.0% |
+| pilot_stability_s2026 | 2026 | 500 | 99.8% | 28.6% | 100 | 20.0% | 97.1% | 88.0% |
 
 ## Category / difficulty distributions
 
