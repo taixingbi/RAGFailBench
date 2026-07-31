@@ -23,4 +23,4 @@ This writes under `reviews/<run_id>/`:
 3. Open the failures CSV → fill `human_injection_valid`, `issue_code`, etc.
 4. Optionally have a second annotator label a 30+40 subset for Cohen’s κ.
 
-Completed review CSVs can be kept privately or committed intentionally; this directory is gitignored by default except this README.
+Completed review packs for the pilot / stability runs are committed under `reviews/<run_id>/` for paper HAR reporting.
