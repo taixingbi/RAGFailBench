@@ -13,8 +13,10 @@ Status: scaled stability + filled 200-seed reviews + 3×3 eval (seeds × models)
 - [x] **Benchmark:** all seeds × `nova-pro` / `llama` / `gpt-oss`
   - Clean ≈ 0.81–0.85; absence ops dominate; `gpt-oss` more conflict-sensitive
 - [x] **paper.md** refreshed to match reports
+- [x] **Validation contribution:** `make validation-contribution` → `validation_contribution.md`
 - [ ] Severity curves (RQ2 figures)
 - [ ] Related-work depth + dump pin + κ
+- [ ] Optional HAR ablation (needs new human samples per stage)
 
 ## Eval / report commands
 

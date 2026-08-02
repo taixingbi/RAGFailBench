@@ -1,4 +1,4 @@
-.PHONY: setup smoke pilot pilot-seeds pilot-all ping-llm seeds test lint export-schemas export-review export-review-s123 evaluate-llama-s42 evaluate-gpt-oss-s42 evaluate-all-s42 clean stability-freeze stability-run stability-report stability
+.PHONY: setup smoke pilot pilot-seeds pilot-all ping-llm seeds test lint export-schemas export-review export-review-s123 evaluate-llama-s42 evaluate-gpt-oss-s42 evaluate-all-s42 clean stability-freeze stability-run stability-report validation-contribution stability
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -89,6 +89,12 @@ stability-run:
 
 stability-report:
 	$(BIN)/python -m ragfailbench stability-report \
+		--seeds $(STABILITY_SEEDS) \
+		--output-dir reports/pilot_stability
+
+# Validation stage contribution from existing validation_results.jsonl (no re-LLM)
+validation-contribution:
+	$(BIN)/python -m ragfailbench validation-contribution \
 		--seeds $(STABILITY_SEEDS) \
 		--output-dir reports/pilot_stability
 

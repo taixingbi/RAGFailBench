@@ -50,6 +50,8 @@ Corpus (Wiki) → filter/chunk (M1)
 
 **Failure case.** Same question and gold answer; contexts rewritten by an operator. Labels include `answer_available` and `expected_behavior` (`answer` vs `abstain`).
 
+**Validation (not a strict Rule→Judge→Baseline funnel).** Candidates first pass deterministic rule checks (containment, title leak, uniqueness heuristics, …). Rule-passing candidates are then **independently** assessed by an LLM answerability judge and a gold-chunk baseline-answer test (baseline does *not* wait for judge acceptance). Signals are combined into a quality score; items below `min_quality_score` are rejected; finally near-duplicates are removed among accepted items. Full per-candidate records (rules, judge, baseline, quality, reasons) are stored in `5_validated/validation_results.jsonl`.
+
 ### 3.2 Failure Operators
 
 | Operator | Stage | Mechanism | Expected |
@@ -111,7 +113,23 @@ Freeze M1 once (`pilot_v1` → `pilot_stability_corpus`). Repeat M2–M3 with se
 
 Yield at 20% is by construction (`200/1000`). Difficulty mixes are aligned across seeds (~88–91 easy / 78–80 medium / 31–32 hard). Categories are balanced at selection (40 each).
 
-### 5.2 Human audit
+### 5.2 Validation component contribution
+
+From existing `validation_results.jsonl` only (no re-generation / no re-judge). Across three seeds (1000 candidates each):
+
+| Validation signal | Rejected candidates | Unique rejections | Typical reason |
+|-------------------|--------------------:|------------------:|----------------|
+| Rule checks | 561.7 ± 6.4 | **56.0 ± 3.0** | title leakage / containment / uniqueness |
+| LLM Judge | 31.3 ± 4.7 | **9.7 ± 1.5** | unsupported / unclear / unanswerable |
+| Baseline test | 40.7 ± 4.9 | **2.7 ± 1.5** | gold-chunk baseline incorrect |
+| Quality threshold | 537.3 ± 4.6 | 0.0 | combined score below threshold |
+| Deduplication | 2.7 ± 0.6 | 2.7 ± 0.6 | near-duplicate question or fact |
+
+**Rejected** = candidates whose reasons include that signal (rows can overlap). **Unique** = rejected candidates whose reasons map to *only* that signal. Rules dominate volume; judge and baseline still contribute non-zero unique rejects (neither is redundant). Quality threshold almost never rejects alone—it co-occurs with failed rule/judge/baseline signals that already lower the score. Full tables: `reports/pilot_stability/validation_contribution.md`.
+
+This is a *stage contribution* analysis, not a HAR ablation: human review covers final clean seeds only, so Rule-only / Rule+Judge HAR would need new stratified annotation.
+
+### 5.3 Human audit
 
 | Run | Clean HAR | Failure sample validity |
 |-----|-----------|-------------------------|
@@ -122,7 +140,7 @@ Yield at 20% is by construction (`200/1000`). Difficulty mixes are aligned acros
 
 Interpret HAR as quality of *selected* seeds, not of raw candidates. Automatic acceptance (~39%) and HAR (~66%) measure different stages: the filter is still strict; humans reject additional ambiguous / time-sensitive / non-unique items among retained seeds. HAR is stable across seeds (low std) despite the absolute rate being lower than an earlier 100-seed pilot pack.
 
-### 5.3 Model × operator (RQ1, RQ3) — primary table `pilot_stability_s42`
+### 5.4 Model × operator (RQ1, RQ3) — primary table `pilot_stability_s42`
 
 Clean accuracy / robustness: nova-pro **0.825 / 0.785**, llama **0.81 / 0.804**, gpt-oss **0.84 / 0.755**.
 
@@ -153,7 +171,7 @@ Clean accuracy / robustness: nova-pro **0.825 / 0.785**, llama **0.81 / 0.804**,
 - **Noise / boundary / position remain weak stressors** under current severities for these models.
 - **Operator ranking is largely shared**; the main cross-model divergence is conflict sensitivity.
 
-### 5.4 RQ2 (severity / difficulty)
+### 5.5 RQ2 (severity / difficulty)
 
 Severity curves and difficulty-conditioned drops: report from `failure_metrics.json` / per-severity splits (fill detailed plots in camera-ready). Difficulty quotas stabilize seed composition across runs; operator severity remains the primary controllable axis for degradation curves.
 
@@ -185,10 +203,11 @@ make stability-run && make stability-report
 make evaluate-all-s42
 python -m ragfailbench evaluate -c configs/stability/pilot_stability_s123.yaml
 python -m ragfailbench evaluate -c configs/stability/pilot_stability_s2026.yaml
+make validation-contribution   # stage table from validation_results.jsonl
 ```
 
 Code: https://github.com/taixingbi/RAGFailBench  
-Key artifacts: `reports/pilot_stability/`, `reports/pilot_stability_s*/failure_metrics.json`, `reviews/pilot_stability_s*/`, `configs/stability/`.
+Key artifacts: `reports/pilot_stability/` (incl. `validation_contribution.md`), `reports/pilot_stability_s*/failure_metrics.json`, `reviews/pilot_stability_s*/`, `configs/stability/`.
 
 ---
 
@@ -199,7 +218,9 @@ Key artifacts: `reports/pilot_stability/`, `reports/pilot_stability_s*/failure_m
 - [x] Three-model operator table (s42: nova-pro + llama + gpt-oss)
 - [x] Eval all three seeds × three models
 - [x] Fill 200-seed HAR; refresh stability HAR (**66.0% ± 1.8%**)
+- [x] Validation component contribution (+ unique rejections); correct Rule∥Judge/Baseline wording
 - [ ] Severity curves (RQ2 figures)
+- [ ] Optional: stratified HAR ablation (Rule-only / Rule+Judge samples)
 - [ ] Related-work depth + baselines discussion
 - [ ] Pin dump / revision for camera-ready data claim
 - [ ] Inter-annotator agreement (κ) on a subset

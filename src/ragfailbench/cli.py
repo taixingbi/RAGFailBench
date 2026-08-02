@@ -904,5 +904,54 @@ def stability_report(
     console.print(f"[green]Wrote[/green] {paths['json']}")
 
 
+@app.command("validation-contribution")
+def validation_contribution(
+    seeds: str = typer.Option("42,123,2026", "--seeds"),
+    run_prefix: str = typer.Option("pilot_stability_s", "--run-prefix"),
+    run_ids: str = typer.Option(
+        "",
+        "--run-ids",
+        help="Comma-separated run_ids (overrides --seeds / --run-prefix)",
+    ),
+    output_dir: Path = typer.Option(
+        Path("reports/pilot_stability"),
+        "--output-dir",
+        "-o",
+    ),
+    data_dir: Path = typer.Option(Path("data"), "--data-dir"),
+) -> None:
+    """Stage contribution / unique-rejection table from validation_results.jsonl.
+
+    No QA regeneration and no re-calling judge/baseline — reads existing
+    ``5_validated/validation_results.jsonl`` only.
+    """
+    from ragfailbench.experiments.stability import stability_run_id
+    from ragfailbench.reporting.validation_contribution import (
+        write_contribution_reports,
+    )
+
+    if run_ids.strip():
+        ids = [r.strip() for r in run_ids.split(",") if r.strip()]
+    else:
+        seed_list = [int(s.strip()) for s in seeds.split(",") if s.strip()]
+        ids = [stability_run_id(s, prefix=run_prefix) for s in seed_list]
+
+    agg = write_contribution_reports(
+        data_dir=data_dir, run_ids=ids, output_dir=output_dir
+    )
+    if not agg.get("n_runs"):
+        console.print("[red]No validation_results.jsonl found for given runs[/red]")
+        raise typer.Exit(1)
+    console.print(
+        f"[green]Wrote[/green] {output_dir / 'validation_contribution.md'} "
+        f"({agg['n_runs']} runs)"
+    )
+    console.print(f"[green]Wrote[/green] {output_dir / 'validation_contribution.json'}")
+    for name, c in agg.get("components", {}).items():
+        mean = c["rejected_candidates"].get("mean")
+        uniq = c["unique_rejections"].get("mean")
+        console.print(f"  {name}: rejected≈{mean:.1f} unique≈{uniq:.1f}")
+
+
 if __name__ == "__main__":
     app()

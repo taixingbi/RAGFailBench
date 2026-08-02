@@ -8,6 +8,7 @@
 
 ```bash
 make stability-report
+make validation-contribution   # Rule / Judge / Baseline unique rejects (no re-LLM)
 make evaluate-all-s42
 python -m ragfailbench evaluate -c configs/stability/pilot_stability_s123.yaml
 python -m ragfailbench evaluate -c configs/stability/pilot_stability_s2026.yaml
