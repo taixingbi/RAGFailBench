@@ -53,6 +53,6 @@ def test_smoke_config_has_stage_concurrency():
     loaded = load_config(Path("configs/smoke.yaml"))
     assert loaded.llm.generation_concurrency == 8
     assert loaded.llm.judge_concurrency == 8
-    assert loaded.llm.evaluation_concurrency == 8
+    assert loaded.llm.evaluation_concurrency == 32
     assert loaded.llm.max_concurrency == 8
     assert loaded.llm.max_retries == 5

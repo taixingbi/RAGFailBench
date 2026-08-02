@@ -134,7 +134,7 @@ llm:
   max_concurrency: 8
   generation_concurrency: 8
   judge_concurrency: 8
-  evaluation_concurrency: 8
+  evaluation_concurrency: 32
   max_retries: 5
   retry_backoff_seconds: 2.0
   retry_jitter: true

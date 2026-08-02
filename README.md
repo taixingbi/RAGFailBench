@@ -84,7 +84,7 @@ See [`configs/pilot.yaml`](configs/pilot.yaml), [`configs/smoke.yaml`](configs/s
 | `failure_generation.context_chunk_budget` | Matched clean vs failure context size |
 | `project.random_seed` | Reproducible sampling |
 | `chunking.chunk_overlap_tokens: 0` | Cleaner `chunk_boundary` failures |
-| `llm.*_concurrency` / `max_retries` | Default concurrency **8**; backoff on 429 / queue pressure |
+| `llm.*_concurrency` / `max_retries` | Gen/judge concurrency **8**; Bedrock eval **32**; backoff on 429 / token pressure |
 
 ## LLM endpoints
 

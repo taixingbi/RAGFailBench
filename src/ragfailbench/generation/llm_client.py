@@ -551,7 +551,7 @@ class LLMClient:
         self.max_concurrency = 8
         self.generation_concurrency = 8
         self.judge_concurrency = 8
-        self.evaluation_concurrency = 8
+        self.evaluation_concurrency = 32
         self.max_retries = 5
         self.retry_backoff_seconds = 2.0
         self.retry_jitter = True
@@ -582,8 +582,7 @@ class LLMClient:
             or client.max_concurrency
         )
         client.evaluation_concurrency = int(
-            getattr(llm_config, "evaluation_concurrency", client.max_concurrency)
-            or client.max_concurrency
+            getattr(llm_config, "evaluation_concurrency", 32) or 32
         )
         client.max_retries = int(getattr(llm_config, "max_retries", 5) or 5)
         client.retry_backoff_seconds = float(
@@ -637,7 +636,7 @@ class LLMClient:
         )
         client.judge_concurrency = int(getattr(llm, "judge_concurrency", max_c) or max_c)
         client.evaluation_concurrency = int(
-            getattr(llm, "evaluation_concurrency", max_c) or max_c
+            getattr(llm, "evaluation_concurrency", 32) or 32
         )
         client.max_retries = int(getattr(llm, "max_retries", 5) or 5)
         client.retry_backoff_seconds = float(

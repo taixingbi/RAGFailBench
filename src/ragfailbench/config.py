@@ -167,7 +167,7 @@ class LLMConfig(BaseModel):
     max_concurrency: int = 8
     generation_concurrency: int = 8
     judge_concurrency: int = 8
-    evaluation_concurrency: int = 8
+    evaluation_concurrency: int = 32
     max_retries: int = 5
     retry_backoff_seconds: float = 2.0
     retry_jitter: bool = True
