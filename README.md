@@ -41,7 +41,7 @@ cp .env.example .env   # set CHAT_* (and optional EVAL_*)
 make smoke             # M1: ~50 pages
 make seeds             # M2–M4 on smoke (needs CHAT_*)
 
-make pilot             # M1: 1000 pages → chunks
+make pilot             # M1: up to 1000 pages → chunks (realized may be lower after filters)
 make pilot-seeds       # M2–M4 on pilot (1000 candidates → 200 clean seeds)
 make export-review     # human-review CSVs → reviews/<run_id>/
 ```
@@ -51,10 +51,9 @@ Paper stability (freeze M1 once; ≥3 seeded M2–M4 runs):
 ```bash
 make stability-freeze          # pilot_v1 → pilot_stability_corpus
 make stability-run             # seeds 42,123,2026 (hours)
-make stability-report          # mean ± std → reports/pilot_stability/
-# fill reviews/pilot_stability_s*/ → HAR in the same report
-make evaluate-llama-s42        # 2nd eval model on EVAL_* (merges w/ nova-pro)
-make evaluate-gpt-oss-s42      # 3rd eval model (gpt-oss)
+make stability-report          # mean ± std + HAR → reports/pilot_stability/
+make evaluate-all-s42          # nova-pro,llama,gpt-oss on s42
+# then evaluate s123 / s2026 the same way if needed
 ```
 
 CLI equivalent: `python -m ragfailbench <command> -c configs/smoke.yaml`  
