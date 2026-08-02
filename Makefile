@@ -1,4 +1,4 @@
-.PHONY: setup smoke pilot pilot-seeds pilot-all ping-llm seeds test lint export-schemas export-review export-review-s123 evaluate-llama-s42 clean stability-freeze stability-run stability-report stability
+.PHONY: setup smoke pilot pilot-seeds pilot-all ping-llm seeds test lint export-schemas export-review export-review-s123 evaluate-llama-s42 evaluate-gpt-oss-s42 evaluate-all-s42 clean stability-freeze stability-run stability-report stability
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -49,11 +49,25 @@ export-review-s123:
 		--config configs/stability/pilot_stability_s123.yaml \
 		--output-dir reviews
 
-# Second eval model on EVAL_* gateway (keeps prior nova-pro rows)
+# Bedrock eval models (EVAL_BASE_URL + EVAL_API_KEY; no EVAL_MODEL)
 evaluate-llama-s42:
 	$(BIN)/python -m ragfailbench evaluate \
 		--config configs/stability/pilot_stability_s42.yaml \
 		--models llama
+	$(BIN)/python -m ragfailbench report \
+		--config configs/stability/pilot_stability_s42.yaml
+
+evaluate-gpt-oss-s42:
+	$(BIN)/python -m ragfailbench evaluate \
+		--config configs/stability/pilot_stability_s42.yaml \
+		--models gpt-oss
+	$(BIN)/python -m ragfailbench report \
+		--config configs/stability/pilot_stability_s42.yaml
+
+evaluate-all-s42:
+	$(BIN)/python -m ragfailbench evaluate \
+		--config configs/stability/pilot_stability_s42.yaml \
+		--models nova-pro,llama,gpt-oss
 	$(BIN)/python -m ragfailbench report \
 		--config configs/stability/pilot_stability_s42.yaml
 

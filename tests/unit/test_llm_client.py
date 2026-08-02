@@ -91,14 +91,17 @@ def test_for_evaluation_prefers_eval_env(monkeypatch):
     monkeypatch.setenv("CHAT_MODEL", "chat-model")
     monkeypatch.setenv("CHAT_API_KEY", "chat-key")
     monkeypatch.setenv("EVAL_BASE_URL", "http://eval.example")
-    monkeypatch.setenv("EVAL_MODEL", "nova-pro")
+    monkeypatch.delenv("EVAL_MODEL", raising=False)
     monkeypatch.setenv("EVAL_API_KEY", "eval-key")
 
     cfg = AppConfig()
     with LLMClient.for_evaluation(cfg) as client:
         assert client.base_url == "http://eval.example"
+        # Model ids come from -m / evaluation.models; client.model is placeholder.
         assert client.model == "nova-pro"
         assert client.api_key == "eval-key"
+        assert "llama" in cfg.evaluation.models
+        assert "gpt-oss" in cfg.evaluation.models
 
 
 def test_for_evaluation_falls_back_to_chat(monkeypatch):
@@ -119,7 +122,8 @@ def test_for_evaluation_falls_back_to_chat(monkeypatch):
     cfg = AppConfig()
     with LLMClient.for_evaluation(cfg) as client:
         assert client.base_url == "http://chat.example"
-        assert client.model == "chat-model"
+        # URL/key fall back to CHAT_*; model does not follow CHAT_MODEL.
+        assert client.model == "nova-pro"
         assert client.api_key == "chat-key"
 
 

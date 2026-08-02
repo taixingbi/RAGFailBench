@@ -14,7 +14,7 @@ source:
   fetch_concurrency: 16
   max_retries: 3
   timeout_seconds: 30
-  candidates_per_category: 250
+  candidates_per_category: 500
   category_seeds:
     person:
     - Category:21st-century American scientists
@@ -37,11 +37,11 @@ source:
     - Category:Software companies
     - Category:Open-source software
 categories:
-  person: 100
-  location: 100
-  science_technology: 100
-  historical_event: 100
-  organization_product: 100
+  person: 200
+  location: 200
+  science_technology: 200
+  historical_event: 200
+  organization_product: 200
 filtering:
   min_page_chars: 2000
   min_sections: 2
@@ -61,7 +61,7 @@ chunking:
   - sentence
   - token
 qa_generation:
-  target_candidates: 500
+  target_candidates: 1000
   questions_per_chunk: 1
   endpoint_type: openai_compatible
   model: Qwen/Qwen2.5-7B-Instruct
@@ -69,14 +69,14 @@ qa_generation:
   max_tokens: 512
   min_chunk_tokens: 60
   max_chunk_tokens: 320
-  max_candidate_chunks: 1000
+  max_candidate_chunks: 2000
   difficulty_quotas:
-    easy: 0.40
-    medium: 0.40
-    hard: 0.20
+    easy: 0.4
+    medium: 0.4
+    hard: 0.2
   enforce_target_difficulty: true
 validation:
-  target_clean_seeds: 100
+  target_clean_seeds: 200
   min_quality_score: 0.85
   require_answer_containment: true
   require_evidence_containment: true
@@ -87,12 +87,12 @@ validation:
   dedup_similarity_threshold: 0.85
 failure_generation:
   types:
-    - missing_evidence
-    - context_noise
-    - chunk_boundary
-    - evidence_position
-    - conflict
-    - hard_negative
+  - missing_evidence
+  - context_noise
+  - chunk_boundary
+  - evidence_position
+  - conflict
+  - hard_negative
   severity_levels:
   - low
   - medium
@@ -104,13 +104,17 @@ failure_generation:
   context_chunk_budget: 8
   random_seed: 2026
 evaluation:
-  models: []
+  models:
+  - nova-pro
+  - llama
+  - gpt-oss
   temperature: 0.0
   max_tokens: 256
   use_llm_judge: true
   base_url_env: EVAL_BASE_URL
   api_key_env: EVAL_API_KEY
   model_env: EVAL_MODEL
+  default_model: nova-pro
 llm:
   base_url_env: CHAT_BASE_URL
   api_key_env: CHAT_API_KEY

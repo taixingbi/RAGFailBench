@@ -2,104 +2,103 @@
 
 ## Clean Seeds
 
-- **Q:** When did Johannes Hans Daniel Jensen die?
-  - **A:** 11 February 1973 (date, easy)
-  - **Evidence:** Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 February 1973) was a German theoretical physicist.
-  - **Source:** J. Hans D. Jensen / Lead
+- **Q:** When did Pavel Alekseyevich Cherenkov die?
+  - **A:** 6 January 1990 (date, easy)
+  - **Evidence:** Pavel Alekseyevich Cherenkov (Russian: Па́вел Алексе́евич Черенко́в [ˈpavʲɪl ɐlʲɪkˈsʲe(j)ɪvʲɪtɕ tɕɪrʲɪnˈkof]; 28 July 1904 – 6 January 1990) was a Soviet physicist who shared the 1958 Nobel Prize in Physics with Ilya Frank and Igor Tamm "for the discovery and interpretation of the Cherenkov effect".
+  - **Source:** Pavel Cherenkov / Lead
 
-- **Q:** When was Danielle Susan Allen born?
-  - **A:** November 3, 1971 (date, easy)
-  - **Evidence:** Danielle Susan Allen (born November 3, 1971) is an American classicist and political scientist.
-  - **Source:** Danielle Allen / Lead
+- **Q:** Where was Clinton Joseph Davisson born?
+  - **A:** Bloomington, Illinois (location, easy)
+  - **Evidence:** Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois, the son of Joseph Davisson, an artisan from Ohio, and Mary Calvert, a schoolteacher from Pennsylvania.
+  - **Source:** Clinton Davisson / Biography
 
-- **Q:** In which year did Einstein publish four groundbreaking papers that included his special theory of relativity and the equivalence of mass and energy, and how does this compare to the year he endorsed a letter to President Roosevelt about the potential German nuclear weapons program?
-  - **A:** 1905 (date, easy)
-  - **Evidence:** In 1905, sometimes described as his annus mirabilis (miracle year), he published four groundbreaking papers.
-  - **Source:** Albert Einstein / Lead
+- **Q:** Who was a Russian-American tailor that invented modern jeans by using sturdy cloth and rivets to strengthen weak points in the seams and partnered with Levi Strauss to mass-produce them?
+  - **A:** Jacob William Davis (person, easy)
+  - **Evidence:** Jacob William Davis (Russian: Якоб Яковлевич Юфес , May 14, 1831 – January 20, 1908) was a Russian-American tailor who is credited with inventing modern jeans.
+  - **Source:** Jacob W. Davis / Lead
 
 ## missing_evidence
 
-- **[low]** When did Johannes Hans Daniel Jensen die?
+- **[low]** Where was Clinton Joseph Davisson born?
   - expected: abstain (answer_available=False)
-  - contexts (2): During World War II, Jensen worked on the German nuclear energy project, known a | Johannes Hans Daniel Jensen was born on 25 June 1907 in Hamburg, Germany. From 1
+  - contexts (2): Davisson graduated from Bloomington High School in 1902, and entered the Univers | Clinton Joseph Davisson (October 22, 1881 – February 1, 1958) was an American ex
 
-- **[medium]** When did Johannes Hans Daniel Jensen die?
+- **[medium]** Where was Clinton Joseph Davisson born?
   - expected: abstain (answer_available=False)
-  - contexts (1): Johannes Hans Daniel Jensen was born on 25 June 1907 in Hamburg, Germany. From 1
+  - contexts (2): Clinton Joseph Davisson (October 22, 1881 – February 1, 1958) was an American ex | Davisson crater on the far side of the Moon was named after him in 1970.
 
-- **[high]** When did Johannes Hans Daniel Jensen die?
+- **[high]** Where was Clinton Joseph Davisson born?
   - expected: abstain (answer_available=False)
-  - contexts (3): Born Betty Jean Jennings in Gentry County, Missouri in 1924, she was the sixth o | Bell has been married to actress Victoria Carroll since 1984. Together they have | In 1897, Braun joined the line of wireless pioneers. His major contributions to 
+  - contexts (3): Burnham is a professor of Pathology and Immunology, Molecular Microbiology, Pedi | In 1951, he independently proposed the concept of associative production of stra | Yoichiro Nambu was born on January 18, 1921, in Tokyo, Empire of Japan. In 1923,
 
 ## context_noise
 
-- **[low]** When did Johannes Hans Daniel Jensen die?
+- **[low]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (3): The software supply chain is the collection of systems, devices, people, artifac | ans Fil, Wolofobugu, Yirimanjo, Zone Industrielle | Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar
+  - contexts (3): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | However, the LTTE maintained it was committed to a settlement to the two-decade  | Bogotá's economy has been significantly boosted due to new shopping malls built 
 
-- **[medium]** When did Johannes Hans Daniel Jensen die?
+- **[medium]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (5): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar | Acrobatic Dance – the Leigh sisters
-Cyclone Dance – dancer Lola Yberri
-Fan Dance | Huffman has served as a board member for the Timothy Leary Archives.
+  - contexts (5): Planck started a six-semester course of lectures on theoretical physics, "dry, s | At the conference, Reich Minister Rust decided to take the nuclear project away  | Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois, 
 
-- **[high]** When did Johannes Hans Daniel Jensen die?
+- **[high]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (7): The physical and societal aspects of the Curies' work contributed to shaping the | Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar | In 1956, the company was bought by the Heller Corporation who renamed it to the 
+  - contexts (7): Charkowski is married. She is a passionate explorer, and takes part in hiking, b | At Spectra-Physics, Kafka designed various lasers for use in industrial and rese | In 1935, Blackett was invited to join the Aeronautical Research Committee chaire
 
 ## chunk_boundary
 
-- **[low]** When did Johannes Hans Daniel Jensen die?
+- **[low]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (2): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June | 1907 – 11 February 1973) was a German theoretical physicist. During World War II
+  - contexts (2): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | of Joseph Davisson, an artisan from Ohio, and Mary Calvert, a schoolteacher from
 
-- **[medium]** When did Johannes Hans Daniel Jensen die?
+- **[medium]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (3): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June | John Bardeen was born on May 23, 1908, in Madison, Wisconsin, the son of Charles | 1907 – 11 February 1973) was a German theoretical physicist. During World War II
+  - contexts (3): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | is the initial wavelength, | of Joseph Davisson, an artisan from Ohio, and Mary Calvert, a schoolteacher from
 
-- **[high]** When did Johannes Hans Daniel Jensen die?
+- **[high]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (5): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June | The choreography of the Serpentine Dance was filmed by multiple early filmmakers | 1907 – 11 February 1973)
+  - contexts (5): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Nevill Francis Mott was born on 30 September 1905 in Leeds, England, the son of  | of Joseph Davisson, an artisan from Ohio,
 
 ## evidence_position
 
-- **[low]** When did Johannes Hans Daniel Jensen die?
+- **[low]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (8): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar | make "startup [procname] | The Great Smoky Mountains National Park has over 1,400 flowering plant species. 
+  - contexts (8): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Cologix operates two data centers in Jacksonville, Florida, including one site,  | The impact of the French Revolution on the Middle East came in terms of the poli
 
-- **[medium]** When did Johannes Hans Daniel Jensen die?
+- **[medium]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (8): Palestinians have criticized the Israel–United Arab Emirates normalization agree | Prefetching is a technique used in computing to improve performance by retrievin | Theoretical physics and mathematics have been intertwined since at least the tim
+  - contexts (8): I basically came to the conclusion ... the Soviets had overextended their empire | However, in 1989 Ranasinghe Premadasa was elected president amidst a mass boycot | Note that it is not the name (an Accord, a Pact, a Convention, etc.), but the co
 
-- **[high]** When did Johannes Hans Daniel Jensen die?
+- **[high]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (8): Belgium did not see major unrest in 1848; it had already undergone a liberal ref | The second group, composed of academics such as Chalmers Johnson, Neil Smelser,  | A temporary capital or a provisional capital is a city or town chosen by a gover
+  - contexts (8): Following a motion in parliament by Alfred Domett, the 4th Premier, three Austra | A standard undergraduate physics curriculum consists of classical mechanics, ele | the St. Jadwiga Church, dating back to the 15th century
+the town hall, built in 
 
 ## conflict
 
-- **[low]** When did Johannes Hans Daniel Jensen die?
+- **[low]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (2): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar | Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar
+  - contexts (2): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Clinton Joseph Davisson was born on October 22, 1881, in Cairo, the son of Josep
 
-- **[medium]** When did Johannes Hans Daniel Jensen die?
+- **[medium]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (4): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar | Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar | Since C#7.1 there are four more possible signatures of the entry point, which al
+  - contexts (4): Clinton Joseph Davisson was born on October 22, 1881, in Sydney, the son of Jose | Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Treaties and Other International Acts Series (TIAS) are a series of pamphlets or
 
-- **[high]** When did Johannes Hans Daniel Jensen die?
+- **[high]** Where was Clinton Joseph Davisson born?
   - expected: answer (answer_available=True)
-  - contexts (8): Johannes Hans Daniel Jensen (German: [ˈhans ˈjɛnzn̩] ; 25 June 1907 – 11 Februar | Islamabad is home to more than twenty universities, including Bahria University, | insertion sort
-A simple sorting algorithm that builds the final sorted array (or
+  - contexts (8): Clinton Joseph Davisson was born on October 22, 1881, in Paris, the son of Josep | Around 10% for bank transfer
+Between $0.35 and $0.50 for "virtual stamps" per pa | From the first republican constitution there was already a device that foresaw t
 
 ## hard_negative
 
-- **[low]** When did Johannes Hans Daniel Jensen die?
+- **[low]** When did Pavel Alekseyevich Cherenkov die?
   - expected: abstain (answer_available=False)
-  - contexts (2): Maria Goeppert Mayer (German: [maˈʁiːa ˈɡœpɐt ˈmaɪɐ] ; née Göppert; June 28, 190 | Think of a room full of waltzers. Suppose they go round the room in circles, eac
+  - contexts (2): As a result of his Crookes tube investigations, he showed that the rays produced | Vitaly Lazarevich Ginzburg ForMemRS (Russian: Вита́лий Ла́заревич Ги́нзбург; 4 O
 
-- **[medium]** When did Johannes Hans Daniel Jensen die?
+- **[medium]** When did Pavel Alekseyevich Cherenkov die?
   - expected: abstain (answer_available=False)
-  - contexts (4): Maria Goeppert Mayer (German: [maˈʁiːa ˈɡœpɐt ˈmaɪɐ] ; née Göppert; June 28, 190 | Think of a room full of waltzers. Suppose they go round the room in circles, eac | If I were not a physicist, I would probably be a musician. I often think in musi
+  - contexts (4): As a result of his Crookes tube investigations, he showed that the rays produced | Vitaly Lazarevich Ginzburg ForMemRS (Russian: Вита́лий Ла́заревич Ги́нзбург; 4 O | Erwin Rudolf Josef Alexander Schrödinger (12 August 1887 – 4 January 1961), some
 
-- **[high]** When did Johannes Hans Daniel Jensen die?
+- **[high]** When did Pavel Alekseyevich Cherenkov die?
   - expected: abstain (answer_available=False)
-  - contexts (8): Maria Goeppert Mayer (German: [maˈʁiːa ˈɡœpɐt ˈmaɪɐ] ; née Göppert; June 28, 190 | Think of a room full of waltzers. Suppose they go round the room in circles, eac | If I were not a physicist, I would probably be a musician. I often think in musi
+  - contexts (8): As a result of his Crookes tube investigations, he showed that the rays produced | Vitaly Lazarevich Ginzburg ForMemRS (Russian: Вита́лий Ла́заревич Ги́нзбург; 4 O | Erwin Rudolf Josef Alexander Schrödinger (12 August 1887 – 4 January 1961), some

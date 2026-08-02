@@ -41,8 +41,8 @@ cp .env.example .env   # set CHAT_* (and optional EVAL_*)
 make smoke             # M1: ~50 pages
 make seeds             # M2–M4 on smoke (needs CHAT_*)
 
-make pilot             # M1: 500 pages → chunks
-make pilot-seeds       # M2–M4 on pilot
+make pilot             # M1: 1000 pages → chunks
+make pilot-seeds       # M2–M4 on pilot (1000 candidates → 200 clean seeds)
 make export-review     # human-review CSVs → reviews/<run_id>/
 ```
 
@@ -54,6 +54,7 @@ make stability-run             # seeds 42,123,2026 (hours)
 make stability-report          # mean ± std → reports/pilot_stability/
 # fill reviews/pilot_stability_s*/ → HAR in the same report
 make evaluate-llama-s42        # 2nd eval model on EVAL_* (merges w/ nova-pro)
+make evaluate-gpt-oss-s42      # 3rd eval model (gpt-oss)
 ```
 
 CLI equivalent: `python -m ragfailbench <command> -c configs/smoke.yaml`  
@@ -93,15 +94,18 @@ See [`configs/pilot.yaml`](configs/pilot.yaml), [`configs/smoke.yaml`](configs/s
 CHAT_BASE_URL=...
 CHAT_MODEL=Qwen/Qwen2.5-7B-Instruct
 
-# optional evaluation gateway (else falls back to CHAT_*)
+# evaluation gateway (Bedrock; same URL + key for all model ids)
 EVAL_BASE_URL=...
-EVAL_MODEL=nova-pro
 EVAL_API_KEY=...
+# no EVAL_MODEL — ids are nova-pro / llama / gpt-oss via -m or config
 ```
 
 ```bash
 python -m ragfailbench ping-llm -c configs/smoke.yaml
-python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m llama
+# all three (default evaluation.models):
+python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml
+# or one model:
+python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m gpt-oss
 ```
 
 `evaluate -m <id>` merges by model (keeps prior rows unless `--replace-all`). `generate-qa` checkpoints and resumes with `--resume` (default on).

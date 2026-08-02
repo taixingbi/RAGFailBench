@@ -2,73 +2,103 @@
 
 ## Clean Seeds
 
-- **Q:** In what year was Andrew Gould Bostom born?
-  - **A:** 1955 or 1956 (numeric, easy)
-  - **Evidence:** Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and critic of Islam, who is a former associate professor of medicine and researcher at Brown University Medical School.
-  - **Source:** Andrew G. Bostom / Lead
+- **Q:** When was Johannes Georg Bednorz born?
+  - **A:** 16 May 1950 (date, easy)
+  - **Evidence:** Johannes Georg Bednorz (German: [ˈɡeːɔʁk ˈbɛdnɔʁt͡s] ; born 16 May 1950) is a German physicist who, together with K. Alex Müller, discovered high-temperature superconductivity in ceramics, for which they shared the 1987 Nobel Prize in Physics.
+  - **Source:** Georg Bednorz / Lead
 
-- **Q:** When did Peter Ware Higgs pass away?
-  - **A:** 8 April 2024 (date, easy)
-  - **Evidence:** Peter Ware Higgs (29 May 1929 – 8 April 2024) was a British theoretical physicist, professor at the University of Edinburgh, and Nobel laureate in Physics for his work on the mass of subatomic particles.
-  - **Source:** Peter Higgs / Lead
+- **Q:** When did Karl Ferdinand Braun die?
+  - **A:** 20 April 1918 (date, easy)
+  - **Evidence:** Karl Ferdinand Braun (German: [ˈfɛʁdinant ˈbʁaʊ̯n] ; 6 June 1850 – 20 April 1918) was a German applied physicist who shared the 1909 Nobel Prize in Physics with Guglielmo Marconi for their contributions to the development of radio.
+  - **Source:** K. Ferdinand Braun / Lead
 
-- **Q:** When did Einstein publish four groundbreaking papers?
-  - **A:** 1905 (date, easy)
-  - **Evidence:** In 1905, sometimes described as his annus mirabilis (miracle year), he published four groundbreaking papers.
-  - **Source:** Albert Einstein / Lead
+- **Q:** Where was Esposito born and raised?
+  - **A:** El Paso, Texas (location, easy)
+  - **Evidence:** Esposito was born and raised in El Paso, Texas.
+  - **Source:** Lauren Esposito / Early life and education
 
 ## missing_evidence
 
-- **[low]** In what year was Andrew Gould Bostom born?
+- **[low]** Where was Esposito born and raised?
   - expected: abstain (answer_available=False)
-  - contexts (2): Bostom has authored historical works such as The Legacy of Jihad and The Legacy  | Bostom grew up in New York City, lived in Queens most of his early life and went
+  - contexts (2): She kept a collection of insects in egg cartons, and her first grade science pro | Lauren Esposito is the assistant curator and Schlinger chair of Arachnology at t
 
-- **[medium]** In what year was Andrew Gould Bostom born?
+- **[medium]** Where was Esposito born and raised?
   - expected: abstain (answer_available=False)
-  - contexts (1): Bostom grew up in New York City, lived in Queens most of his early life and went
+  - contexts (2): Lauren Esposito is the assistant curator and Schlinger chair of Arachnology at t | In 2011 she joined University of California, Berkeley as a postdoctoral research
 
-- **[high]** In what year was Andrew Gould Bostom born?
+- **[high]** Where was Esposito born and raised?
   - expected: abstain (answer_available=False)
-  - contexts (3): Atlas was born May 25, 1924, in Brooklyn, New York, to parents who immigrated fr | Cherenkov was awarded two Stalin Prizes, the first in 1946, sharing the honor wi | On 3 January 1946, the ten Operation Epsilon detainees were transported to Alswe
+  - contexts (3): Elders drew fire, as well as censure from the Clinton administration, when she s | Manfred von Ardenne was made head of Institute A. Goals of von Ardenne's Institu | Amanda Bosh is an American planetary scientist and observational astronomer best
 
 ## context_noise
 
-- **[low]** In what year was Andrew Gould Bostom born?
+- **[low]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (3): The CSE Building is 5 stories tall, with 4 floors above ground and 1 basement. I | Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and cri | In response to the assassinations, President Mwinyi declared three days of natio
+  - contexts (3): The situation had not stabilized by 17 June, and the Finns were being pushed bac | 1st place: Mitsuku – 24 points
+2nd place: Uberbot – 6 points
+3rd place: Anna – 5 | Esposito was born and raised in El Paso, Texas. She kept a collection of insects
 
-- **[medium]** In what year was Andrew Gould Bostom born?
+- **[medium]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (5): Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and cri | Trapping atoms with this method allows scientists to study individual atoms with | Fuller occasionally returned to America to stage performances by her students, t
+  - contexts (5): Science and the human temperament, Allen & Unwin (1935), translated and introduc | During 1956 and 1957, Heisenberg was the chairman of the Arbeitskreis Kernphysik | In 1946, Richard Scott Perkin recruited Liston to join Perkin-Elmer as a chief e
 
-- **[high]** In what year was Andrew Gould Bostom born?
+- **[high]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (7): Leaving Rotblat in charge in Liverpool, Chadwick began a tour of the Manhattan P | Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and cri | Chaplin speculated that it was "possibly used as kindling wood by the Nazis". Ei
+  - contexts (7): The day after Koshiba received the Nobel Prize in Physics, Koichi Tanaka, an eng | In the wake of the 1957 Sputnik crisis, the U.S. government's interest in scienc | A crucial moment came when Cockcroft read a paper by George Gamow on quantum tun
 
 ## chunk_boundary
 
-- **[low]** In what year was Andrew Gould Bostom born?
+- **[low]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (2): Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and cri | Islam, who is a former associate professor of medicine and researcher at Brown U
+  - contexts (2): Esposito was born and | raised in El Paso, Texas. She kept a collection of insects in egg cartons, and h
 
-- **[medium]** In what year was Andrew Gould Bostom born?
+- **[medium]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (3): Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and cri | Locker-Lampson took Einstein to meet Winston Churchill at his home, and later, A | Islam, who is a former associate professor of medicine and researcher at Brown U
+  - contexts (3): Esposito was born and | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu | raised in El Paso, Texas. She kept a collection of insects in egg cartons, and h
 
-- **[high]** In what year was Andrew Gould Bostom born?
+- **[high]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (5): Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and cri | In mid-1933, Heisenberg presented his theory of the positron. His thinking on Di | Islam, who is a former associate professor of
+  - contexts (5): Esposito was born and | William Daniel Phillips (born November 5, 1948) is an American physicist. He sha | raised in
 
 ## evidence_position
 
-- **[low]** In what year was Andrew Gould Bostom born?
+- **[low]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (8): Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and cri | During the Industrious Revolution, the everyday goods and products used by the h | Commune VI has a population of 470,269 people (2009) and covers 87 square kilome
+  - contexts (8): Esposito was born and raised in El Paso, Texas. She kept a collection of insects | The Napoleonic Wars were taking place in Europe, involving France, Great Britain | US 8,719,592—Secure Telematics (VeeZee) US 8,027,293—Communication Channel Selec
 
-- **[medium]** In what year was Andrew Gould Bostom born?
+- **[medium]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (8): There are 37 protocols, 2 annexes and 65 declarations that are attached to the t | The result of the trial, in which the HRSA participants sang patriotic songs and | The mobile laboratories enable engineers to design and fabricate technologies to
+  - contexts (8): On June 19, 2018, GitHub expanded its GitHub Education by offering free educatio | The Donald P. Eckman Award, in 1993, awarded by the American Automatic Control C | MIT's Provost Martin Schmidt announced the newly formed institute as an effort t
 
-- **[high]** In what year was Andrew Gould Bostom born?
+- **[high]** Where was Esposito born and raised?
   - expected: answer (answer_available=True)
-  - contexts (8): Carahsoft is an American technology solutions provider that sells hardware, soft | Mackinac Island played an important role in the War of 1812 between the United S | All of Hualalai is rated as Hazard Zone 4. However, the frequency of eruption of
+  - contexts (8): The United States National Microbiome Data Collaborativem for storing data relat | At the urging of President Sukarno, Prime Minister Ali Sastroamidjojo began auth | The Three Hundred and Thirty-Five Years' War (Dutch: Driehonderdvijfendertigjari
+
+## conflict
+
+- **[low]** Where was Esposito born and raised?
+  - expected: answer (answer_available=True)
+  - contexts (2): Esposito was born and raised in El Paso, Texas. She kept a collection of insects | Esposito was born and raised in Tokyo.
+
+- **[medium]** Where was Esposito born and raised?
+  - expected: answer (answer_available=True)
+  - contexts (4): Esposito was born and raised in Sydney. | Esposito was born and raised in El Paso, Texas. She kept a collection of insects | Amiga was one of the first commercial platforms to allow amateur and professiona
+
+- **[high]** Where was Esposito born and raised?
+  - expected: answer (answer_available=True)
+  - contexts (8): Esposito was born and raised in Sydney. | Kuhn concluded that Aristotle's concepts were not "bad Newton," just different.  | Memory instructions to set and access numbers and strings in random-access memor
+
+## hard_negative
+
+- **[low]** When was Johannes Georg Bednorz born?
+  - expected: abstain (answer_available=False)
+  - contexts (2): Karl Alexander Müller (20 April 1927 – 9 January 2023) was a Swiss physicist. He | Since 1988, Kajita has been at the Institute for Cosmic Radiation Research, Univ
+
+- **[medium]** When was Johannes Georg Bednorz born?
+  - expected: abstain (answer_available=False)
+  - contexts (4): Karl Alexander Müller (20 April 1927 – 9 January 2023) was a Swiss physicist. He | Since 1988, Kajita has been at the Institute for Cosmic Radiation Research, Univ | Val Logsdon Fitch (March 10, 1923 – February 5, 2015) was an American nuclear ph
+
+- **[high]** When was Johannes Georg Bednorz born?
+  - expected: abstain (answer_available=False)
+  - contexts (8): Karl Alexander Müller (20 April 1927 – 9 January 2023) was a Swiss physicist. He | Since 1988, Kajita has been at the Institute for Cosmic Radiation Research, Univ | Val Logsdon Fitch (March 10, 1923 – February 5, 2015) was an American nuclear ph

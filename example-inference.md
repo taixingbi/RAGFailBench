@@ -44,9 +44,21 @@ curl -sS -X POST "${FUNCTION_URL}v1/chat/completions" \
   }' | jq '{error, detail, model, answer: .choices[0].message.content, usage}'
 echo
 
-# In RAGFailBench (.env):
+#### OpenAI GPT-OSS (marketplace) — same gateway + API key, third eval model
+curl -sS -X POST "${FUNCTION_URL}v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${INFERENCE_API_KEY}" \
+  -d '{
+    "model": "gpt-oss",
+    "messages": [{"role": "user", "content": "Say hello in one short sentence."}],
+    "max_tokens": 64,
+    "temperature": 0
+  }' | jq '{error, detail, model, answer: .choices[0].message.content, usage}'
+echo
+
+# In RAGFailBench (.env) — same URL + key for all three; no EVAL_MODEL:
 #   EVAL_BASE_URL=${FUNCTION_URL}   # may include trailing slash
 #   EVAL_API_KEY=${INFERENCE_API_KEY}
-#   EVAL_MODEL=nova-pro
-# Then evaluate a second model without re-running nova-pro:
-#   python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m llama
+# Default evaluate runs nova-pro,llama,gpt-oss (config evaluation.models):
+#   python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml
+#   # or: make evaluate-all-s42 / make evaluate-gpt-oss-s42

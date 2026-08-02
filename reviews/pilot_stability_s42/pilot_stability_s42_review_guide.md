@@ -2,20 +2,26 @@
 
 ## Files
 
-- Clean seeds (all): `pilot_stability_s42_clean_seeds_review.csv` (100 rows)
-- Failures (stratified sample): `pilot_stability_s42_failures_review.csv` (204 rows; up to 17/cell, seed=42)
+- Clean seeds (all): `pilot_stability_s42_clean_seeds_review.csv` (200 rows)
+- Failures (stratified sample): `pilot_stability_s42_failures_review.csv` (306 rows; up to 17/cell, seed=42)
 
 ### Failure sample sizes
 
 - `chunk_boundary::high`: 17
 - `chunk_boundary::low`: 17
 - `chunk_boundary::medium`: 17
+- `conflict::high`: 17
+- `conflict::low`: 17
+- `conflict::medium`: 17
 - `context_noise::high`: 17
 - `context_noise::low`: 17
 - `context_noise::medium`: 17
 - `evidence_position::high`: 17
 - `evidence_position::low`: 17
 - `evidence_position::medium`: 17
+- `hard_negative::high`: 17
+- `hard_negative::low`: 17
+- `hard_negative::medium`: 17
 - `missing_evidence::high`: 17
 - `missing_evidence::low`: 17
 - `missing_evidence::medium`: 17
@@ -46,9 +52,11 @@
 - **context_noise**: is gold still present? do distractors accidentally support the answer?
 - **chunk_boundary**: is one chunk insufficient? is the split mid-word (`midword_split`)?
 - **evidence_position**: same content, only order changed?
+- **conflict**: is gold still answerable *and* is there a clear contradictory claim?
+- **hard_negative**: contexts look topical but must not support the gold answer
 
 ## Suggested order
 
 1. Finish all clean seeds → compute HAR
 2. Review all sampled `missing_evidence` first
-3. Then noise / boundary / position
+3. Then noise / boundary / position / conflict / hard_negative

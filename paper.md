@@ -1,6 +1,6 @@
 # RAGFailBench: A Reproducible Framework for Controllable RAG Failure Benchmarks
 
-> Working paper draft. Numbers from `reports/pilot_stability/` (3-seed stability + filled reviews) and `pilot_stability_s42` eval (nova-pro + llama).
+> Working paper draft. §5 numbers from the completed 500-page / 100-seed campaign (`reports/pilot_stability/`, s42 eval: nova-pro + llama). Configs now target **1000 pages / 200 clean seeds**; third eval model **`gpt-oss`** (same `EVAL_*` gateway).
 
 ## Abstract
 
@@ -19,7 +19,7 @@ RAG pipelines couple retrieval, chunking, and generation. Failures often arise *
 1. **Failure Operators** — a typed, parameterizable API that transforms clean seeds into failure cases (`missing_evidence`, `context_noise`, `chunk_boundary`, `evidence_position`, `conflict`, `hard_negative`).
 2. **Matched-budget diagnosis** — clean and failed conditions share a context chunk budget so drops are not confounded by length.
 3. **Regenerable toolchain** — Wikipedia → chunks → QA → validate → inject → evaluate, with multi-seed stability reporting and human-review (HAR) hooks.
-4. **Pilot evidence** — stability across three seeds on a frozen M1 corpus; dual-model evaluation showing operator-specific degradation patterns.
+4. **Pilot evidence** — stability across three seeds on a frozen M1 corpus; multi-model evaluation (`nova-pro`, `llama`, `gpt-oss`) showing operator-specific degradation patterns.
 
 **Research questions.**
 
@@ -77,13 +77,15 @@ Freeze M1 once (`pilot_v1` → `pilot_stability_corpus`). Repeat M2–M3 with se
 
 | Item | Setting |
 |------|---------|
-| Corpus | 500 English Wikipedia pages → **7,489** chunks (frozen) |
+| Corpus (current config) | **1000** English Wikipedia pages (200 × 5 categories) |
+| Candidates / seeds | **1000** candidates → **200** clean seeds per run |
 | Categories | person, location, science_technology, historical_event, organization_product |
-| Candidates / seeds | 500 candidates → 100 clean seeds per run |
 | Context budget | 8 chunks (clean and failed) |
 | Generation model | Qwen2.5-7B-Instruct (`CHAT_*`) |
-| Eval models | `nova-pro`, `llama` on shared `EVAL_*` gateway |
-| Primary eval run | `pilot_stability_s42` (100 clean + ~1.7k failures × 2 models) |
+| Eval models | `nova-pro`, `llama`, `gpt-oss` on shared `EVAL_*` gateway |
+| Primary eval run | `pilot_stability_s42` (extend with `-m gpt-oss`) |
+
+**Completed campaign (reported in §5).** Frozen M1 at **500** pages → **7,489** chunks; **500** candidates → **100** clean seeds; eval on `nova-pro` + `llama`. Regenerating under the 1000/200 config requires a new M1 freeze + stability runs.
 
 **Provenance note.** Pilot fetch uses live MediaWiki API (not a dated dump). Formal release should pin revisions.
 
@@ -91,7 +93,7 @@ Freeze M1 once (`pilot_v1` → `pilot_stability_corpus`). Repeat M2–M3 with se
 
 ## 5. Results
 
-### 5.1 Pipeline stability (frozen M1, three seeds)
+### 5.1 Pipeline stability (frozen M1, three seeds; 500-page / 100-seed campaign)
 
 | Metric | mean ± std |
 |--------|------------|
@@ -174,6 +176,7 @@ make setup && make test
 make stability-freeze && make stability-run && make stability-report
 python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m nova-pro
 python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m llama
+python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m gpt-oss
 python -m ragfailbench report -c configs/stability/pilot_stability_s42.yaml
 ```
 
@@ -186,8 +189,10 @@ Key artifacts: `reports/pilot_stability/`, `reports/pilot_stability_s42/failure_
 
 - [x] Operator taxonomy (6) + matched budget
 - [x] Stability table (3 seeds, difficulty quotas aligned)
-- [x] Dual-model operator table (s42)
+- [x] Dual-model operator table (s42: nova-pro + llama)
 - [x] Fill s123 + s2026 HAR; refresh stability HAR mean±std (**86.0% ± 2.6%**)
+- [ ] Evaluate `gpt-oss` on s42; add third-model columns
+- [ ] Regenerate at 1000 pages / 200 seeds; refresh stability + HAR
 - [ ] Severity curves (RQ2 figures)
 - [ ] Related-work depth + baselines discussion
 - [ ] Pin dump / revision for camera-ready data claim

@@ -1,0 +1,830 @@
+{
+  "by_condition": {
+    "nova-pro::clean": {
+      "model": "nova-pro",
+      "condition": "clean",
+      "n": 200,
+      "accuracy": 0.835,
+      "exact_match": 0.585,
+      "token_f1": 0.7529,
+      "abstention_rate": 0.115,
+      "hallucination_rate": 0.035
+    },
+    "nova-pro::missing_evidence": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "n": 255,
+      "accuracy": 0.0627,
+      "exact_match": 0.0,
+      "token_f1": 0.0316,
+      "abstention_rate": 0.8706,
+      "hallucination_rate": 0.1294
+    },
+    "nova-pro::context_noise": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "n": 264,
+      "accuracy": 0.9167,
+      "exact_match": 0.697,
+      "token_f1": 0.8383,
+      "abstention_rate": 0.0417,
+      "hallucination_rate": 0.0341
+    },
+    "nova-pro::chunk_boundary": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "n": 227,
+      "accuracy": 0.9163,
+      "exact_match": 0.7004,
+      "token_f1": 0.8396,
+      "abstention_rate": 0.0617,
+      "hallucination_rate": 0.0176
+    },
+    "nova-pro::evidence_position": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "n": 264,
+      "accuracy": 0.9432,
+      "exact_match": 0.7083,
+      "token_f1": 0.8631,
+      "abstention_rate": 0.0341,
+      "hallucination_rate": 0.0189
+    },
+    "nova-pro::conflict": {
+      "model": "nova-pro",
+      "condition": "conflict",
+      "n": 264,
+      "accuracy": 0.8523,
+      "exact_match": 0.5758,
+      "token_f1": 0.7526,
+      "abstention_rate": 0.0606,
+      "hallucination_rate": 0.0833
+    },
+    "nova-pro::hard_negative": {
+      "model": "nova-pro",
+      "condition": "hard_negative",
+      "n": 600,
+      "accuracy": 0.0217,
+      "exact_match": 0.0,
+      "token_f1": 0.0157,
+      "abstention_rate": 0.9417,
+      "hallucination_rate": 0.0583
+    },
+    "llama::clean": {
+      "model": "llama",
+      "condition": "clean",
+      "n": 200,
+      "accuracy": 0.82,
+      "exact_match": 0.605,
+      "token_f1": 0.7527,
+      "abstention_rate": 0.105,
+      "hallucination_rate": 0.06
+    },
+    "llama::missing_evidence": {
+      "model": "llama",
+      "condition": "missing_evidence",
+      "n": 255,
+      "accuracy": 0.0431,
+      "exact_match": 0.0,
+      "token_f1": 0.0218,
+      "abstention_rate": 0.898,
+      "hallucination_rate": 0.102
+    },
+    "llama::context_noise": {
+      "model": "llama",
+      "condition": "context_noise",
+      "n": 264,
+      "accuracy": 0.9394,
+      "exact_match": 0.8182,
+      "token_f1": 0.8871,
+      "abstention_rate": 0.0152,
+      "hallucination_rate": 0.0341
+    },
+    "llama::chunk_boundary": {
+      "model": "llama",
+      "condition": "chunk_boundary",
+      "n": 227,
+      "accuracy": 0.9339,
+      "exact_match": 0.815,
+      "token_f1": 0.8831,
+      "abstention_rate": 0.022,
+      "hallucination_rate": 0.0264
+    },
+    "llama::evidence_position": {
+      "model": "llama",
+      "condition": "evidence_position",
+      "n": 264,
+      "accuracy": 0.9508,
+      "exact_match": 0.8144,
+      "token_f1": 0.8916,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0265
+    },
+    "llama::conflict": {
+      "model": "llama",
+      "condition": "conflict",
+      "n": 264,
+      "accuracy": 0.8068,
+      "exact_match": 0.5227,
+      "token_f1": 0.7321,
+      "abstention_rate": 0.0152,
+      "hallucination_rate": 0.1288
+    },
+    "llama::hard_negative": {
+      "model": "llama",
+      "condition": "hard_negative",
+      "n": 600,
+      "accuracy": 0.0317,
+      "exact_match": 0.0,
+      "token_f1": 0.0168,
+      "abstention_rate": 0.9317,
+      "hallucination_rate": 0.0683
+    },
+    "gpt-oss::clean": {
+      "model": "gpt-oss",
+      "condition": "clean",
+      "n": 200,
+      "accuracy": 0.85,
+      "exact_match": 0.545,
+      "token_f1": 0.7162,
+      "abstention_rate": 0.105,
+      "hallucination_rate": 0.025
+    },
+    "gpt-oss::missing_evidence": {
+      "model": "gpt-oss",
+      "condition": "missing_evidence",
+      "n": 255,
+      "accuracy": 0.0627,
+      "exact_match": 0.0,
+      "token_f1": 0.0289,
+      "abstention_rate": 0.8627,
+      "hallucination_rate": 0.1373
+    },
+    "gpt-oss::context_noise": {
+      "model": "gpt-oss",
+      "condition": "context_noise",
+      "n": 264,
+      "accuracy": 0.9735,
+      "exact_match": 0.6515,
+      "token_f1": 0.8302,
+      "abstention_rate": 0.0076,
+      "hallucination_rate": 0.0189
+    },
+    "gpt-oss::chunk_boundary": {
+      "model": "gpt-oss",
+      "condition": "chunk_boundary",
+      "n": 227,
+      "accuracy": 0.9295,
+      "exact_match": 0.7004,
+      "token_f1": 0.8201,
+      "abstention_rate": 0.0573,
+      "hallucination_rate": 0.0132
+    },
+    "gpt-oss::evidence_position": {
+      "model": "gpt-oss",
+      "condition": "evidence_position",
+      "n": 264,
+      "accuracy": 0.9659,
+      "exact_match": 0.6591,
+      "token_f1": 0.823,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0152
+    },
+    "gpt-oss::conflict": {
+      "model": "gpt-oss",
+      "condition": "conflict",
+      "n": 264,
+      "accuracy": 0.7538,
+      "exact_match": 0.4394,
+      "token_f1": 0.625,
+      "abstention_rate": 0.1667,
+      "hallucination_rate": 0.053
+    },
+    "gpt-oss::hard_negative": {
+      "model": "gpt-oss",
+      "condition": "hard_negative",
+      "n": 600,
+      "accuracy": 0.0283,
+      "exact_match": 0.0017,
+      "token_f1": 0.0148,
+      "abstention_rate": 0.9417,
+      "hallucination_rate": 0.0583
+    }
+  },
+  "by_model": {
+    "nova-pro": {
+      "clean_accuracy": 0.835,
+      "conditions": {
+        "missing_evidence": {
+          "accuracy": 0.0627,
+          "performance_drop": 0.7723,
+          "abstention_rate": 0.8706,
+          "hallucination_rate": 0.1294
+        },
+        "context_noise": {
+          "accuracy": 0.9167,
+          "performance_drop": -0.0817,
+          "abstention_rate": 0.0417,
+          "hallucination_rate": 0.0341
+        },
+        "chunk_boundary": {
+          "accuracy": 0.9163,
+          "performance_drop": -0.0813,
+          "abstention_rate": 0.0617,
+          "hallucination_rate": 0.0176
+        },
+        "evidence_position": {
+          "accuracy": 0.9432,
+          "performance_drop": -0.1082,
+          "abstention_rate": 0.0341,
+          "hallucination_rate": 0.0189
+        },
+        "conflict": {
+          "accuracy": 0.8523,
+          "performance_drop": -0.0173,
+          "abstention_rate": 0.0606,
+          "hallucination_rate": 0.0833
+        },
+        "hard_negative": {
+          "accuracy": 0.0217,
+          "performance_drop": 0.8133,
+          "abstention_rate": 0.9417,
+          "hallucination_rate": 0.0583
+        }
+      },
+      "failure_robustness_score": 0.7838
+    },
+    "llama": {
+      "clean_accuracy": 0.82,
+      "conditions": {
+        "missing_evidence": {
+          "accuracy": 0.0431,
+          "performance_drop": 0.7769,
+          "abstention_rate": 0.898,
+          "hallucination_rate": 0.102
+        },
+        "context_noise": {
+          "accuracy": 0.9394,
+          "performance_drop": -0.1194,
+          "abstention_rate": 0.0152,
+          "hallucination_rate": 0.0341
+        },
+        "chunk_boundary": {
+          "accuracy": 0.9339,
+          "performance_drop": -0.1139,
+          "abstention_rate": 0.022,
+          "hallucination_rate": 0.0264
+        },
+        "evidence_position": {
+          "accuracy": 0.9508,
+          "performance_drop": -0.1308,
+          "abstention_rate": 0.0114,
+          "hallucination_rate": 0.0265
+        },
+        "conflict": {
+          "accuracy": 0.8068,
+          "performance_drop": 0.0132,
+          "abstention_rate": 0.0152,
+          "hallucination_rate": 0.1288
+        },
+        "hard_negative": {
+          "accuracy": 0.0317,
+          "performance_drop": 0.7883,
+          "abstention_rate": 0.9317,
+          "hallucination_rate": 0.0683
+        }
+      },
+      "failure_robustness_score": 0.7976
+    },
+    "gpt-oss": {
+      "clean_accuracy": 0.85,
+      "conditions": {
+        "missing_evidence": {
+          "accuracy": 0.0627,
+          "performance_drop": 0.7873,
+          "abstention_rate": 0.8627,
+          "hallucination_rate": 0.1373
+        },
+        "context_noise": {
+          "accuracy": 0.9735,
+          "performance_drop": -0.1235,
+          "abstention_rate": 0.0076,
+          "hallucination_rate": 0.0189
+        },
+        "chunk_boundary": {
+          "accuracy": 0.9295,
+          "performance_drop": -0.0795,
+          "abstention_rate": 0.0573,
+          "hallucination_rate": 0.0132
+        },
+        "evidence_position": {
+          "accuracy": 0.9659,
+          "performance_drop": -0.1159,
+          "abstention_rate": 0.0114,
+          "hallucination_rate": 0.0152
+        },
+        "conflict": {
+          "accuracy": 0.7538,
+          "performance_drop": 0.0962,
+          "abstention_rate": 0.1667,
+          "hallucination_rate": 0.053
+        },
+        "hard_negative": {
+          "accuracy": 0.0283,
+          "performance_drop": 0.8217,
+          "abstention_rate": 0.9417,
+          "hallucination_rate": 0.0583
+        }
+      },
+      "failure_robustness_score": 0.7689
+    }
+  },
+  "by_severity": {
+    "nova-pro::missing_evidence::low": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "severity": "low",
+      "n": 87,
+      "accuracy": 0.1264,
+      "abstention_rate": 0.7241,
+      "hallucination_rate": 0.2759
+    },
+    "nova-pro::missing_evidence::medium": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "severity": "medium",
+      "n": 80,
+      "accuracy": 0.0625,
+      "abstention_rate": 0.8875,
+      "hallucination_rate": 0.1125
+    },
+    "nova-pro::missing_evidence::high": {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.0,
+      "abstention_rate": 1.0,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::context_noise::low": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.9205,
+      "abstention_rate": 0.0568,
+      "hallucination_rate": 0.0227
+    },
+    "nova-pro::context_noise::medium": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.9205,
+      "abstention_rate": 0.0341,
+      "hallucination_rate": 0.0455
+    },
+    "nova-pro::context_noise::high": {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.9091,
+      "abstention_rate": 0.0341,
+      "hallucination_rate": 0.0341
+    },
+    "nova-pro::chunk_boundary::low": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "severity": "low",
+      "n": 84,
+      "accuracy": 0.9286,
+      "abstention_rate": 0.0357,
+      "hallucination_rate": 0.0357
+    },
+    "nova-pro::chunk_boundary::medium": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "severity": "medium",
+      "n": 74,
+      "accuracy": 0.9189,
+      "abstention_rate": 0.0676,
+      "hallucination_rate": 0.0135
+    },
+    "nova-pro::chunk_boundary::high": {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "severity": "high",
+      "n": 69,
+      "accuracy": 0.8986,
+      "abstention_rate": 0.087,
+      "hallucination_rate": 0.0
+    },
+    "nova-pro::evidence_position::low": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.9318,
+      "abstention_rate": 0.0455,
+      "hallucination_rate": 0.0227
+    },
+    "nova-pro::evidence_position::medium": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.9659,
+      "abstention_rate": 0.0227,
+      "hallucination_rate": 0.0114
+    },
+    "nova-pro::evidence_position::high": {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.9318,
+      "abstention_rate": 0.0341,
+      "hallucination_rate": 0.0227
+    },
+    "nova-pro::conflict::low": {
+      "model": "nova-pro",
+      "condition": "conflict",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.8409,
+      "abstention_rate": 0.0909,
+      "hallucination_rate": 0.0682
+    },
+    "nova-pro::conflict::medium": {
+      "model": "nova-pro",
+      "condition": "conflict",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.875,
+      "abstention_rate": 0.0455,
+      "hallucination_rate": 0.0795
+    },
+    "nova-pro::conflict::high": {
+      "model": "nova-pro",
+      "condition": "conflict",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.8409,
+      "abstention_rate": 0.0455,
+      "hallucination_rate": 0.1023
+    },
+    "nova-pro::hard_negative::low": {
+      "model": "nova-pro",
+      "condition": "hard_negative",
+      "severity": "low",
+      "n": 200,
+      "accuracy": 0.015,
+      "abstention_rate": 0.945,
+      "hallucination_rate": 0.055
+    },
+    "nova-pro::hard_negative::medium": {
+      "model": "nova-pro",
+      "condition": "hard_negative",
+      "severity": "medium",
+      "n": 200,
+      "accuracy": 0.025,
+      "abstention_rate": 0.94,
+      "hallucination_rate": 0.06
+    },
+    "nova-pro::hard_negative::high": {
+      "model": "nova-pro",
+      "condition": "hard_negative",
+      "severity": "high",
+      "n": 200,
+      "accuracy": 0.025,
+      "abstention_rate": 0.94,
+      "hallucination_rate": 0.06
+    },
+    "llama::missing_evidence::low": {
+      "model": "llama",
+      "condition": "missing_evidence",
+      "severity": "low",
+      "n": 87,
+      "accuracy": 0.092,
+      "abstention_rate": 0.7816,
+      "hallucination_rate": 0.2184
+    },
+    "llama::missing_evidence::medium": {
+      "model": "llama",
+      "condition": "missing_evidence",
+      "severity": "medium",
+      "n": 80,
+      "accuracy": 0.0375,
+      "abstention_rate": 0.9125,
+      "hallucination_rate": 0.0875
+    },
+    "llama::missing_evidence::high": {
+      "model": "llama",
+      "condition": "missing_evidence",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.0,
+      "abstention_rate": 1.0,
+      "hallucination_rate": 0.0
+    },
+    "llama::context_noise::low": {
+      "model": "llama",
+      "condition": "context_noise",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.9545,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0341
+    },
+    "llama::context_noise::medium": {
+      "model": "llama",
+      "condition": "context_noise",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.9318,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0455
+    },
+    "llama::context_noise::high": {
+      "model": "llama",
+      "condition": "context_noise",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.9318,
+      "abstention_rate": 0.0227,
+      "hallucination_rate": 0.0227
+    },
+    "llama::chunk_boundary::low": {
+      "model": "llama",
+      "condition": "chunk_boundary",
+      "severity": "low",
+      "n": 84,
+      "accuracy": 0.9167,
+      "abstention_rate": 0.0238,
+      "hallucination_rate": 0.0476
+    },
+    "llama::chunk_boundary::medium": {
+      "model": "llama",
+      "condition": "chunk_boundary",
+      "severity": "medium",
+      "n": 74,
+      "accuracy": 0.9324,
+      "abstention_rate": 0.0135,
+      "hallucination_rate": 0.027
+    },
+    "llama::chunk_boundary::high": {
+      "model": "llama",
+      "condition": "chunk_boundary",
+      "severity": "high",
+      "n": 69,
+      "accuracy": 0.9565,
+      "abstention_rate": 0.029,
+      "hallucination_rate": 0.0
+    },
+    "llama::evidence_position::low": {
+      "model": "llama",
+      "condition": "evidence_position",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.9545,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0227
+    },
+    "llama::evidence_position::medium": {
+      "model": "llama",
+      "condition": "evidence_position",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.9545,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0227
+    },
+    "llama::evidence_position::high": {
+      "model": "llama",
+      "condition": "evidence_position",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.9432,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0341
+    },
+    "llama::conflict::low": {
+      "model": "llama",
+      "condition": "conflict",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.875,
+      "abstention_rate": 0.0227,
+      "hallucination_rate": 0.0795
+    },
+    "llama::conflict::medium": {
+      "model": "llama",
+      "condition": "conflict",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.8295,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0909
+    },
+    "llama::conflict::high": {
+      "model": "llama",
+      "condition": "conflict",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.7159,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.2159
+    },
+    "llama::hard_negative::low": {
+      "model": "llama",
+      "condition": "hard_negative",
+      "severity": "low",
+      "n": 200,
+      "accuracy": 0.025,
+      "abstention_rate": 0.945,
+      "hallucination_rate": 0.055
+    },
+    "llama::hard_negative::medium": {
+      "model": "llama",
+      "condition": "hard_negative",
+      "severity": "medium",
+      "n": 200,
+      "accuracy": 0.04,
+      "abstention_rate": 0.925,
+      "hallucination_rate": 0.075
+    },
+    "llama::hard_negative::high": {
+      "model": "llama",
+      "condition": "hard_negative",
+      "severity": "high",
+      "n": 200,
+      "accuracy": 0.03,
+      "abstention_rate": 0.925,
+      "hallucination_rate": 0.075
+    },
+    "gpt-oss::missing_evidence::low": {
+      "model": "gpt-oss",
+      "condition": "missing_evidence",
+      "severity": "low",
+      "n": 87,
+      "accuracy": 0.1149,
+      "abstention_rate": 0.7586,
+      "hallucination_rate": 0.2414
+    },
+    "gpt-oss::missing_evidence::medium": {
+      "model": "gpt-oss",
+      "condition": "missing_evidence",
+      "severity": "medium",
+      "n": 80,
+      "accuracy": 0.075,
+      "abstention_rate": 0.8375,
+      "hallucination_rate": 0.1625
+    },
+    "gpt-oss::missing_evidence::high": {
+      "model": "gpt-oss",
+      "condition": "missing_evidence",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.0,
+      "abstention_rate": 0.9886,
+      "hallucination_rate": 0.0114
+    },
+    "gpt-oss::context_noise::low": {
+      "model": "gpt-oss",
+      "condition": "context_noise",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.9659,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0227
+    },
+    "gpt-oss::context_noise::medium": {
+      "model": "gpt-oss",
+      "condition": "context_noise",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.9773,
+      "abstention_rate": 0.0,
+      "hallucination_rate": 0.0227
+    },
+    "gpt-oss::context_noise::high": {
+      "model": "gpt-oss",
+      "condition": "context_noise",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.9773,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0114
+    },
+    "gpt-oss::chunk_boundary::low": {
+      "model": "gpt-oss",
+      "condition": "chunk_boundary",
+      "severity": "low",
+      "n": 84,
+      "accuracy": 0.9881,
+      "abstention_rate": 0.0119,
+      "hallucination_rate": 0.0
+    },
+    "gpt-oss::chunk_boundary::medium": {
+      "model": "gpt-oss",
+      "condition": "chunk_boundary",
+      "severity": "medium",
+      "n": 74,
+      "accuracy": 0.9189,
+      "abstention_rate": 0.0811,
+      "hallucination_rate": 0.0
+    },
+    "gpt-oss::chunk_boundary::high": {
+      "model": "gpt-oss",
+      "condition": "chunk_boundary",
+      "severity": "high",
+      "n": 69,
+      "accuracy": 0.8696,
+      "abstention_rate": 0.087,
+      "hallucination_rate": 0.0435
+    },
+    "gpt-oss::evidence_position::low": {
+      "model": "gpt-oss",
+      "condition": "evidence_position",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.9545,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0227
+    },
+    "gpt-oss::evidence_position::medium": {
+      "model": "gpt-oss",
+      "condition": "evidence_position",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.9659,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0227
+    },
+    "gpt-oss::evidence_position::high": {
+      "model": "gpt-oss",
+      "condition": "evidence_position",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.9773,
+      "abstention_rate": 0.0114,
+      "hallucination_rate": 0.0
+    },
+    "gpt-oss::conflict::low": {
+      "model": "gpt-oss",
+      "condition": "conflict",
+      "severity": "low",
+      "n": 88,
+      "accuracy": 0.75,
+      "abstention_rate": 0.1932,
+      "hallucination_rate": 0.0341
+    },
+    "gpt-oss::conflict::medium": {
+      "model": "gpt-oss",
+      "condition": "conflict",
+      "severity": "medium",
+      "n": 88,
+      "accuracy": 0.75,
+      "abstention_rate": 0.1818,
+      "hallucination_rate": 0.0227
+    },
+    "gpt-oss::conflict::high": {
+      "model": "gpt-oss",
+      "condition": "conflict",
+      "severity": "high",
+      "n": 88,
+      "accuracy": 0.7614,
+      "abstention_rate": 0.125,
+      "hallucination_rate": 0.1023
+    },
+    "gpt-oss::hard_negative::low": {
+      "model": "gpt-oss",
+      "condition": "hard_negative",
+      "severity": "low",
+      "n": 200,
+      "accuracy": 0.02,
+      "abstention_rate": 0.95,
+      "hallucination_rate": 0.05
+    },
+    "gpt-oss::hard_negative::medium": {
+      "model": "gpt-oss",
+      "condition": "hard_negative",
+      "severity": "medium",
+      "n": 200,
+      "accuracy": 0.035,
+      "abstention_rate": 0.94,
+      "hallucination_rate": 0.06
+    },
+    "gpt-oss::hard_negative::high": {
+      "model": "gpt-oss",
+      "condition": "hard_negative",
+      "severity": "high",
+      "n": 200,
+      "accuracy": 0.03,
+      "abstention_rate": 0.935,
+      "hallucination_rate": 0.065
+    }
+  }
+}

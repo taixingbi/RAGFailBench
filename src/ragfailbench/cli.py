@@ -566,8 +566,9 @@ def evaluate(
         "",
         "--models",
         "-m",
-        help="Comma-separated model names on the EVAL_* endpoint "
-        "(default: EVAL_MODEL / config). Re-runs replace only those models.",
+        help="Comma-separated Bedrock model ids on EVAL_BASE_URL "
+        "(default: evaluation.models = nova-pro,llama,gpt-oss). "
+        "Re-runs replace only those models.",
     ),
     limit: int = typer.Option(0, "--limit", help="Limit failure cases (0 = all)"),
     replace_all: bool = typer.Option(

@@ -122,7 +122,7 @@ def resolve_model(
     load_env()
     return (
         model
-        or os.environ.get(env_name)
+        or (os.environ.get(env_name) if env_name else None)
         or (os.environ.get(fallback_env) if fallback_env else None)
         or default
     ).strip()
@@ -604,23 +604,29 @@ class LLMClient:
     ) -> LLMClient:
         """Build an evaluator client.
 
-        Prefers ``EVAL_BASE_URL`` / ``EVAL_API_KEY`` / ``EVAL_MODEL`` when set;
-        otherwise falls back to ``CHAT_*`` / ``AppConfig.llm``.
+        Prefers ``EVAL_BASE_URL`` / ``EVAL_API_KEY`` when set; otherwise falls
+        back to ``CHAT_*`` for URL/key. Model ids are chosen per call via
+        ``evaluate -m`` / ``evaluation.models`` (not ``EVAL_MODEL`` / ``CHAT_MODEL``).
         """
         llm = app_config.llm
         ev = app_config.evaluation
-        default_model = getattr(ev, "default_model", None) or getattr(
-            llm, "default_model", DEFAULT_CHAT_MODEL
+        models = list(getattr(ev, "models", None) or [])
+        default_model = (
+            getattr(ev, "default_model", None)
+            or (models[0] if models else None)
+            or "nova-pro"
         )
         client = cls(
             timeout=getattr(llm, "timeout_seconds", 120.0),
             max_tokens=getattr(ev, "max_tokens", None) or getattr(llm, "max_tokens", 512),
             temperature=getattr(ev, "temperature", 0.0),
             base_url_env=getattr(ev, "base_url_env", "EVAL_BASE_URL"),
-            model_env=getattr(ev, "model_env", "EVAL_MODEL"),
+            # Do not resolve model from EVAL_MODEL/CHAT_MODEL — multi-model
+            # Bedrock gateway; ids come from ``-m`` / ``evaluation.models``.
+            model_env="",
             api_key_env=getattr(ev, "api_key_env", "EVAL_API_KEY"),
             base_url_fallback_env=getattr(llm, "base_url_env", "CHAT_BASE_URL"),
-            model_fallback_env=getattr(llm, "model_env", "CHAT_MODEL"),
+            model_fallback_env=None,
             api_key_fallback_env=getattr(llm, "api_key_env", "CHAT_API_KEY"),
             model_default=default_model,
         )

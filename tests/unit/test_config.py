@@ -20,5 +20,8 @@ def test_load_smoke_config():
 
 def test_load_pilot_config():
     cfg = load_config(Path("configs/pilot.yaml"))
-    assert sum(cfg.categories.values()) == 500
+    assert sum(cfg.categories.values()) == 1000
+    assert cfg.validation.target_clean_seeds == 200
+    assert cfg.qa_generation.target_candidates == 1000
     assert cfg.filtering.min_page_chars == 2000
+    assert cfg.evaluation.models == ["nova-pro", "llama", "gpt-oss"]

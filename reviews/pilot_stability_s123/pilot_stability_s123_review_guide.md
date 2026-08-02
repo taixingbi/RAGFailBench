@@ -2,7 +2,7 @@
 
 ## Files
 
-- Clean seeds (all): `pilot_stability_s123_clean_seeds_review.csv` (100 rows)
+- Clean seeds (all): `pilot_stability_s123_clean_seeds_review.csv` (200 rows)
 - Failures (stratified sample): `pilot_stability_s123_failures_review.csv` (306 rows; up to 17/cell, seed=123)
 
 ### Failure sample sizes

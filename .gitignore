@@ -24,7 +24,7 @@ reports/smoke_v1/
 .pytest_cache/
 .coverage
 htmlcov/
-.mypy_cache/
+.mypy_cache/  
 .ruff_cache/
 
 # Local scratch

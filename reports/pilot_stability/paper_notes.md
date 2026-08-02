@@ -12,8 +12,8 @@ Status as of the stability + s42 human audit + nova-pro eval.
 - [x] **Benchmark (s42, nova-pro):** clean **0.93**, robustness **0.7732**
   - `missing_evidence`: acc ≈ 0.01, abstention ≈ 0.92 (main positive result)
   - `context_noise` / `chunk_boundary` / `evidence_position`: near-zero drop (limitation)
-- [ ] **Repro blurb in paper:** freeze M1 once; `make stability-run`; `evaluate -m nova-pro` then `-m llama`
-- [ ] **Limitations paragraph:** single-seed human audit until s123 filled; easy-skewed seeds; live MediaWiki; weak drops on noise/position for strong models
+- [ ] **Repro blurb in paper:** freeze M1 once; `make stability-run`; `evaluate -m nova-pro` then `-m llama` / `-m gpt-oss`
+- [ ] **Limitations paragraph:** live MediaWiki; weak drops on noise/position for strong models; scale-up to 1000 pages / 200 seeds pending
 
 ## 5 — Second-seed HAR
 
@@ -24,23 +24,22 @@ python -m ragfailbench export-review \
 # Fill decision column → make stability-report
 ```
 
-## 6 — Second model (`llama`, same EVAL_* gateway)
+## 6 — Extra models (`llama`, `gpt-oss`; same EVAL_* gateway)
 
 Same `EVAL_BASE_URL` + `EVAL_API_KEY` as nova-pro; only the model id changes:
 
 ```bash
-python -m ragfailbench evaluate \
-  -c configs/stability/pilot_stability_s42.yaml \
-  -m llama
-python -m ragfailbench report \
-  -c configs/stability/pilot_stability_s42.yaml
+make evaluate-llama-s42
+make evaluate-gpt-oss-s42
+# or:
+python -m ragfailbench evaluate -c configs/stability/pilot_stability_s42.yaml -m gpt-oss
+python -m ragfailbench report -c configs/stability/pilot_stability_s42.yaml
 ```
 
-Results merge into `data/runs/pilot_stability_s42/final/evaluation_results.jsonl`
-(nova-pro rows kept). Metrics: `reports/pilot_stability_s42/failure_metrics.json`.
+Results merge by `model_name` (prior rows kept). Metrics: `reports/pilot_stability_s42/failure_metrics.json`.
 
 ## Suggested paper tables
 
 1. Pipeline stability (mean ± std) — from `stability_report.md`
-2. Human audit (HAR / failure validity) — s42 (+ s123 when ready)
-3. Model × condition accuracy / abstention / drop — nova-pro + llama
+2. Human audit (HAR / failure validity) — three seeds
+3. Model × condition accuracy / abstention / drop — nova-pro + llama (+ gpt-oss)

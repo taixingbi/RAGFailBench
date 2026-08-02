@@ -2,76 +2,101 @@
 
 ## Clean Seeds
 
-- **Q:** Where did Hall receive his B.S. degree?
-  - **A:** Carnegie Institute of Technology (organization, easy)
-  - **Evidence:** Hall holds three degrees from Carnegie Institute of Technology, a B.S. in 1956, an M.S. in 1958, and a Ph.D. in 1961.
-  - **Source:** John L. Hall / Biography
+- **Q:** When was Phillips born?
+  - **A:** November 5, 1948 (date, easy)
+  - **Evidence:** Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William Cornelius Phillips of Juniata, Pennsylvania, and Mary Catherine Savino of Ripacandida, Italy.
+  - **Source:** William Daniel Phillips / Biography
 
-- **Q:** In what year was Andrew Gould Bostom born?
-  - **A:** 1955 or 1956 (numeric, easy)
-  - **Evidence:** Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and critic of Islam, who is a former associate professor of medicine and researcher at Brown University Medical School.
-  - **Source:** Andrew G. Bostom / Lead
+- **Q:** When was Brian Paul Schmidt born?
+  - **A:** 24 February 1967 (date, easy)
+  - **Evidence:** Brian Paul Schmidt (born 24 February 1967) is an American Australian astrophysicist at the Australian National University's Mount Stromlo Observatory and Research School of Astronomy and Astrophysics.
+  - **Source:** Brian Schmidt / Lead
 
-- **Q:** Where was Bekele born?
-  - **A:** Addis Ababa (location, easy)
-  - **Evidence:** Bekele was born in Addis Ababa, Ethiopia, and emigrated to the United States with his family at the age of four.
-  - **Source:** Heman Bekele / Early life and education
+- **Q:** When did Victor Franz Hess die?
+  - **A:** 17 December 1964 (date, easy)
+  - **Evidence:** Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 1964) was an Austrian–American experimental physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson for his discovery of cosmic rays.
+  - **Source:** Victor Hess / Lead
 
 ## missing_evidence
 
-- **[low]** Where did Hall receive his B.S. degree?
+- **[low]** When was Phillips born?
   - expected: abstain (answer_available=False)
-  - contexts (2): He completed his postdoctoral studies at the Department of Commerce's National B | John Lewis "Jan" Hall (born August 21, 1934) is an American physicist, and Nobel
+  - contexts (1): He is of Italian descent on his mother's side and of Welsh descent on his father
 
-- **[medium]** Where did Hall receive his B.S. degree?
+- **[medium]** When was Phillips born?
   - expected: abstain (answer_available=False)
-  - contexts (2): John Lewis "Jan" Hall (born August 21, 1934) is an American physicist, and Nobel | Hall is one of the 20 American recipients of the Nobel Prize in Physics to sign 
+  - contexts (1): Phillips is also a professor of physics, which is part of the University of Mary
 
-- **[high]** Where did Hall receive his B.S. degree?
+- **[high]** When was Phillips born?
   - expected: abstain (answer_available=False)
-  - contexts (3): Higgs turned down a knighthood in 1999, but in 2012, he accepted membership of t | At Edinburgh, Higgs first became interested in mass, developing the idea that pa | Robert Hofstadter coined the term fermi, symbol fm,
-in honor of the Italian phys
+  - contexts (3): In 2017, Huffman joined the cryptocurrency firm MobileCoin as an advisor. In Jul | Asteroid 1178 Irmela, discovered by Max Wolf, is named after Ruska's wife Irmela | Roy Jay Glauber (September 1, 1925 – December 26, 2018) was an American theoreti
 
 ## context_noise
 
-- **[low]** Where did Hall receive his B.S. degree?
+- **[low]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (3): Born in Denver, Colorado, Hall holds three degrees from Carnegie Institute of Te | Title 3, Provisions on the institutions
-Article 13 establishes the institutions  | assertion
-In computer programming, a statement that a predicate (Boolean-valued 
+  - contexts (3): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | A new technology or theory might make the necessary experiments feasible. For ex | On 20 March, separatist militants belonging to Balochistan Liberation Army attac
 
-- **[medium]** Where did Hall receive his B.S. degree?
+- **[medium]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (5): Born in Denver, Colorado, Hall holds three degrees from Carnegie Institute of Te | In 1914, Braun went to New York in the United States to be a witness for the def | Joshua Lionel Cohen was born in Queens, New York City on August 25, 1877 to Hyma
+  - contexts (5): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | Philip Warren Anderson was born on December 13, 1923, in Indianapolis, Indiana,  | J Neurosci 2017-02-15 Impaired respiratory and body temperature control upon acu
 
-- **[high]** Where did Hall receive his B.S. degree?
+- **[high]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (7): Einstein bequeathed his personal archives, library, and intellectual assets to t | In 1957, Esaki recognized that when the p–n junction width of germanium is thinn | During 1956 and 1957, Heisenberg was the chairman of the Arbeitskreis Kernphysik
+  - contexts (7): Cooper first married Martha Kennedy, with whom he had two daughters. In 1969, he | He is an innovator in the area of chemical-luminescence instrumentation, particu | Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William
 
 ## chunk_boundary
 
-- **[low]** Where did Hall receive his B.S. degree?
+- **[low]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (2): Hall holds three degrees from Carnegie Institute of Technology, a B.S. | in 1956, an M.S. in 1958, and a Ph.D. in 1961. He completed his postdoctoral stu
+  - contexts (2): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | Cornelius Phillips of Juniata, Pennsylvania, and Mary Catherine Savino of Ripaca
 
-- **[medium]** Where did Hall receive his B.S. degree?
+- **[medium]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (3): Hall holds three degrees from Carnegie Institute of Technology, a B.S. | 1943: Madame Curie, a U.S. Oscar-nominated film by Mervyn LeRoy starring Greer G | in 1956, an M.S. in 1958, and a Ph.D. in 1961. He completed his postdoctoral stu
+  - contexts (3): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | When Heisenberg accepted the Romano Guardini Prize in 1974, he gave a speech, wh | Cornelius Phillips of Juniata, Pennsylvania, and Mary Catherine Savino of Ripaca
 
-- **[high]** Where did Hall receive his B.S. degree?
+- **[high]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (5): Hall holds three degrees from Carnegie Institute of Technology, a B.S. | Hinton is a Fellow of the US Association for the Advancement of Artificial Intel | in 1956, an M.S. in
+  - contexts (5): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | 1979 SkateBoarder Magazine Exhibition: Featured in a special demonstration that  | Cornelius Phillips of Juniata, Pennsylvania, and
 
 ## evidence_position
 
-- **[low]** Where did Hall receive his B.S. degree?
+- **[low]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (8): Born in Denver, Colorado, Hall holds three degrees from Carnegie Institute of Te | C99 added five more reserved words: (‡ indicates an alternative spelling alias f | From the 1990s onwards, major urban developments in the Klang Valley extended th
+  - contexts (8): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | The basic understanding of nuclear fusion was developed during the 1920s as phys | The scientists take the children to a top-secret base on the hidden island of Oo
 
-- **[medium]** Where did Hall receive his B.S. degree?
+- **[medium]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (8): At the 2020 census, Indianapolis had a population of 887,642 and a population de | Despite being somewhat limited in accuracy, the engraved Denkmäler plates formed | The Gaborone Dam is located south of Gaborone along the Gaborone-Lobatse road, a
+  - contexts (8): Former Chief Engineer at Los Alamos National Laboratory, James Owen serves as th | In point of size the first cities must have been more extensive and more densely | Johann Peter Hebel (1760–1826), short story writer, dialectal poet and Lutheran 
 
-- **[high]** Where did Hall receive his B.S. degree?
+- **[high]** When was Phillips born?
   - expected: answer (answer_available=True)
-  - contexts (8): Law Professor Solon Solomon said "the court’s stance suggests a hesitation to ex | AccuWeather's broadcast meteorologist Jim Kosek attracted attention in 2010 due  | Grand Teton National Park is a popular destination for mountain and rock climber
+  - contexts (8): There are several shopping malls that represent international brands of clothing | The City of Adelaide, was a 10 sail composite (timber planking on a wrought-iron | The government and MILF had been negotiating for the inclusion of the province i
+
+## conflict
+
+- **[low]** When was Phillips born?
+  - expected: answer (answer_available=True)
+  - contexts (2): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | Phillips was born on November 5, 1945, in Wilkes-Barre, Pennsylvania, to William
+
+- **[medium]** When was Phillips born?
+  - expected: answer (answer_available=True)
+  - contexts (4): Phillips was born on November 5, 1945, in Wilkes-Barre, Pennsylvania, to William | Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | From 1907 through 1913, Mulholland directed the building of the aqueduct. The 23
+
+- **[high]** When was Phillips born?
+  - expected: answer (answer_available=True)
+  - contexts (8): Phillips was born on November 5, 1945, in Wilkes-Barre, Pennsylvania, to William | The fourth series of the Danish TV series Borgen (2022) plays partially in the c | The architecture of Kuala Lumpur is a mixture of old colonial influences, Asian 
+
+## hard_negative
+
+- **[low]** When was Phillips born?
+  - expected: abstain (answer_available=False)
+  - contexts (2): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f
+
+- **[medium]** When was Phillips born?
+  - expected: abstain (answer_available=False)
+  - contexts (4): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f | William Henry Bragg was born on 2 July 1862 in Westward, Cumberland, England, th
+
+- **[high]** When was Phillips born?
+  - expected: abstain (answer_available=False)
+  - contexts (8): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f | William Henry Bragg was born on 2 July 1862 in Westward, Cumberland, England, th

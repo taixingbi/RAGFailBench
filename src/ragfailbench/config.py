@@ -60,7 +60,7 @@ class ChunkingConfig(BaseModel):
 
 
 class QAGenerationConfig(BaseModel):
-    target_candidates: int = 500
+    target_candidates: int = 1000
     questions_per_chunk: int = 1
     endpoint_type: str = "openai_compatible"
     model: str = "Qwen/Qwen2.5-7B-Instruct"
@@ -68,7 +68,7 @@ class QAGenerationConfig(BaseModel):
     max_tokens: int = 512
     min_chunk_tokens: int = 60
     max_chunk_tokens: int = 320
-    max_candidate_chunks: int = 1000
+    max_candidate_chunks: int = 2000
     skip_lead_sections: bool = False
     # Target mix for generated candidates (normalized to sum=1).
     # Selection later also aims for ~40/40/20 among clean seeds.
@@ -80,7 +80,7 @@ class QAGenerationConfig(BaseModel):
 
 
 class ValidationConfig(BaseModel):
-    target_clean_seeds: int = 100
+    target_clean_seeds: int = 200
     min_quality_score: float = 0.85
     require_answer_containment: bool = True
     require_evidence_containment: bool = True
@@ -122,17 +122,23 @@ class FailureGenerationConfig(BaseModel):
 
 
 class EvaluationConfig(BaseModel):
-    models: list[str] = Field(default_factory=list)
+    # Bedrock gateway model ids (same EVAL_BASE_URL + EVAL_API_KEY). Select via
+    # ``evaluate -m``; when empty CLI uses this list. No EVAL_MODEL env needed.
+    models: list[str] = Field(
+        default_factory=lambda: ["nova-pro", "llama", "gpt-oss"]
+    )
     temperature: float = 0.0
     max_tokens: int = 256
     use_llm_judge: bool = True
     # Optional separate OpenAI-compatible endpoint for evaluate.
-    # Prefers EVAL_* when set; otherwise falls back to CHAT_* / llm.*.
+    # Prefers EVAL_BASE_URL / EVAL_API_KEY when set; else falls back to CHAT_*.
     base_url_env: str = "EVAL_BASE_URL"
     api_key_env: str = "EVAL_API_KEY"
+    # Unused for multi-model eval (ids come from ``models`` / ``-m``). Kept for
+    # backward-compatible YAML keys.
     model_env: str = "EVAL_MODEL"
-    # If set, used when EVAL_MODEL / CHAT_MODEL are unset.
-    default_model: str | None = None
+    # Placeholder client.model for judge calls when ``complete`` omits model=.
+    default_model: str | None = "nova-pro"
     abstain_markers: list[str] = Field(
         default_factory=lambda: [
             "i don't know",
