@@ -1,11 +1,11 @@
 {
-  "total_valid": 1874,
-  "total_rejected": 46,
+  "total_valid": 1873,
+  "total_rejected": 47,
   "judge_used": false,
   "by_type": {
     "missing_evidence": 255,
     "context_noise": 264,
-    "chunk_boundary": 227,
+    "chunk_boundary": 226,
     "evidence_position": 264,
     "conflict": 264,
     "hard_negative": 600
@@ -13,6 +13,7 @@
   "rejection_reasons": {
     "contexts_nonempty": 9,
     "gold_answer_present": 25,
-    "evidence_split_across_chunks": 12
+    "evidence_split_across_chunks": 12,
+    "distractors_lack_gold_evidence": 1
   }
 }

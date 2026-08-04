@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from ragfailbench.schemas.qa import SourceRef
 
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 
 FailureType = Literal[
     "missing_evidence",
@@ -19,6 +19,17 @@ FailureType = Literal[
     "conflict",
     "hard_negative",
 ]
+
+# Per-operator ``parameters`` contracts (free-form dict; documented for consumers).
+#
+# chunk_boundary (required since schema 1.1):
+#   num_contexts, num_splits, split_sentence, split_pieces,
+#   gold_positions, distractor_positions, piece_to_position
+#   Citation gold = contexts at gold_positions (superset or exact cover).
+#
+# conflict:
+#   alternate_answer, conflict_passage, conflict_positions,
+#   gold_positions, num_contexts, num_conflicts
 Severity = Literal["low", "medium", "high"]
 FailureStage = Literal["evidence", "context", "chunking", "retrieval", "generation"]
 

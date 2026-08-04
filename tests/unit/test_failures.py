@@ -243,8 +243,89 @@ def test_conflict_keeps_gold_and_adds_contradiction():
         assert "Google" in joined
         assert alt in joined
         assert case.parameters.get("conflict_passage")
+        gold_pos = case.parameters["gold_positions"]
+        assert isinstance(gold_pos, list) and gold_pos
+        assert all("Google" in case.contexts[p] for p in gold_pos)
         assert case.verification is not None
         assert case.verification.injection_valid is True
+
+
+def test_chunk_boundary_records_positions_at_inject_time():
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks(), cfg)
+    assert by_type["chunk_boundary"]
+    expected = {
+        "low": {"num_splits": 2, "gold": [0, 1], "distractors": []},
+        "medium": {"num_splits": 2, "gold": [0, 2], "distractors": [1]},
+        "high": {"num_splits": 3, "gold": [0, 2, 4], "distractors": [1, 3]},
+    }
+    for case in by_type["chunk_boundary"]:
+        exp = expected[case.severity]
+        params = case.parameters
+        assert case.schema_version == "1.1"
+        assert params["num_splits"] == exp["num_splits"]
+        assert params["gold_positions"] == exp["gold"]
+        assert params["distractor_positions"] == exp["distractors"]
+        assert params["num_contexts"] == len(case.contexts)
+        pieces = params["split_pieces"]
+        assert len(pieces) == exp["num_splits"]
+        assert " ".join(pieces) == params["split_sentence"] == SUPPORT
+        for i, pos in enumerate(params["gold_positions"]):
+            assert pieces[i] in case.contexts[pos]
+            assert params["piece_to_position"][str(i)] == pos
+        for pos in params["distractor_positions"]:
+            assert SUPPORT not in case.contexts[pos]
+            assert "Google" not in case.contexts[pos]
+        assert case.verification is not None
+        assert case.verification.injection_valid is True
+        assert case.verification.failed_checks == []
+
+
+def test_chunk_boundary_verify_rejects_bad_positions():
+    from ragfailbench.failures.verify import structural_verify
+    from ragfailbench.schemas.failure import FailureCase
+
+    case = FailureCase(
+        failure_id="bad_boundary",
+        parent_seed_id="seed_000000",
+        failure_type="chunk_boundary",
+        operator="chunk_boundary",
+        stage="chunking",
+        severity="medium",
+        question="q",
+        gold_answer="Google",
+        supporting_sentence=SUPPORT,
+        contexts=[
+            "Kubernetes was originally designed by",
+            "Unrelated fact about a different topic entirely.",
+            "Google and later donated to the CNCF.",
+        ],
+        answer_available=True,
+        expected_behavior="answer",
+        source=SourceRef(
+            page_id=1,
+            revision_id=1,
+            page_title="Kubernetes",
+            section_title="History",
+            chunk_id="1_1_0_0",
+        ),
+        parameters={
+            "num_contexts": 3,
+            "num_splits": 2,
+            "split_sentence": SUPPORT,
+            "split_pieces": [
+                "Kubernetes was originally designed by",
+                "Google and later donated to the CNCF.",
+            ],
+            # Wrong: marks distractor as gold.
+            "gold_positions": [0, 1],
+            "distractor_positions": [2],
+            "piece_to_position": {"0": 0, "1": 1},
+        },
+    )
+    ver = structural_verify(case)
+    assert ver.injection_valid is False
+    assert "gold_pieces_at_recorded_positions" in ver.failed_checks
 
 
 def test_hard_negative_omits_gold_answer():

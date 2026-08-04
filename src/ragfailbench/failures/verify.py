@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from ragfailbench.evaluation.generation_metrics import contains_answer
+from ragfailbench.evaluation.generation_metrics import contains_answer, normalize_answer
 from ragfailbench.schemas.failure import FailureCase, FailureVerification
 
 # Weight of structural checks vs judge agreement in verification_score.
@@ -56,6 +56,89 @@ def _operator_checks(case: FailureCase) -> dict[str, bool]:
         checks["evidence_split_across_chunks"] = not any(
             case.supporting_sentence in c for c in case.contexts
         )
+        params = case.parameters
+        pieces = params.get("split_pieces")
+        gold_pos = params.get("gold_positions")
+        distractor_pos = params.get("distractor_positions")
+        num_splits = params.get("num_splits")
+        split_sentence = str(params.get("split_sentence") or case.supporting_sentence)
+
+        if isinstance(pieces, list) and pieces:
+            reconstructed = normalize_answer(" ".join(str(p) for p in pieces))
+            checks["pieces_reconstruct_sentence"] = reconstructed == normalize_answer(
+                split_sentence
+            )
+        else:
+            checks["pieces_reconstruct_sentence"] = False
+
+        if isinstance(gold_pos, list) and isinstance(pieces, list) and pieces:
+            piece_ok = True
+            if len(gold_pos) != len(pieces):
+                piece_ok = False
+            else:
+                for i, raw_p in enumerate(gold_pos):
+                    try:
+                        p = int(raw_p)
+                    except (TypeError, ValueError):
+                        piece_ok = False
+                        break
+                    if not (0 <= p < len(case.contexts)):
+                        piece_ok = False
+                        break
+                    if normalize_answer(str(pieces[i])) not in normalize_answer(
+                        case.contexts[p]
+                    ):
+                        piece_ok = False
+                        break
+            checks["gold_pieces_at_recorded_positions"] = piece_ok
+        else:
+            checks["gold_pieces_at_recorded_positions"] = False
+
+        if isinstance(gold_pos, list) and isinstance(distractor_pos, list):
+            try:
+                g_set = {int(p) for p in gold_pos}
+                d_set = {int(p) for p in distractor_pos}
+            except (TypeError, ValueError):
+                checks["positions_disjoint"] = False
+                g_set, d_set = set(), set()
+            else:
+                checks["positions_disjoint"] = g_set.isdisjoint(d_set)
+
+            distractors_clean = True
+            piece_norms = [
+                normalize_answer(str(p))
+                for p in (pieces if isinstance(pieces, list) else [])
+                if str(p).strip()
+            ]
+            for raw_p in distractor_pos:
+                try:
+                    p = int(raw_p)
+                except (TypeError, ValueError):
+                    distractors_clean = False
+                    break
+                if not (0 <= p < len(case.contexts)):
+                    distractors_clean = False
+                    break
+                ctx = case.contexts[p]
+                if contains_answer(ctx, case.gold_answer):
+                    distractors_clean = False
+                    break
+                ctx_n = normalize_answer(ctx)
+                if any(pn and pn in ctx_n for pn in piece_norms):
+                    distractors_clean = False
+                    break
+            checks["distractors_lack_gold_evidence"] = distractors_clean
+        else:
+            checks["positions_disjoint"] = False
+            checks["distractors_lack_gold_evidence"] = False
+
+        if num_splits is not None and isinstance(gold_pos, list):
+            try:
+                checks["gold_count_matches_splits"] = len(gold_pos) == int(num_splits)
+            except (TypeError, ValueError):
+                checks["gold_count_matches_splits"] = False
+        else:
+            checks["gold_count_matches_splits"] = False
     elif case.failure_type == "conflict":
         alt = str(case.parameters.get("alternate_answer") or "")
         conflict = str(case.parameters.get("conflict_passage") or "")

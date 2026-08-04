@@ -21,10 +21,12 @@ Each operator maps a clean seed → controlled failure cases (same question/answ
 |----------|-------|------|
 | `missing_evidence` | evidence | Drop support / gold chunk / leave distractors only → abstain |
 | `context_noise` | context | Bury gold among distractors (noise ratio) |
-| `chunk_boundary` | chunking | Split supporting evidence across artificial cuts |
+| `chunk_boundary` | chunking | Split supporting evidence across artificial cuts; records `gold_positions` / `split_pieces` at inject time |
 | `evidence_position` | context | Move gold to front / middle / end (lost-in-the-middle) |
 | `conflict` | context | Keep gold; insert a contradictory alternate claim |
 | `hard_negative` | retrieval | Near-miss contexts only (no gold) → abstain |
+
+`FailureCase.schema_version` is **1.1**. Operator-specific fields live in `parameters` (see comments on `SCHEMA_VERSION` in `schemas/failure.py`). For `chunk_boundary`, citation gold is the contexts at `gold_positions` (exact cover or superset). Regenerate failure JSONL after upgrading — do not backfill positions by string overlap.
 
 Planned: `citation_error`, `long_context`, … (same operator API).
 

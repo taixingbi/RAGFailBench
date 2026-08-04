@@ -96,6 +96,7 @@ def test_all_schemas_have_version():
     )
 
     for obj in (qa, vr, seed, fail, ev, chunk):
-        assert obj.schema_version == "1.0"
+        expected = "1.1" if isinstance(obj, FailureCase) else "1.0"
+        assert obj.schema_version == expected
         restored = type(obj).model_validate(obj.model_dump(mode="json"))
-        assert restored.schema_version == "1.0"
+        assert restored.schema_version == expected
