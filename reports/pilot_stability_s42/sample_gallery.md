@@ -2,103 +2,102 @@
 
 ## Clean Seeds
 
-- **Q:** When did Pavel Alekseyevich Cherenkov die?
-  - **A:** 6 January 1990 (date, easy)
-  - **Evidence:** Pavel Alekseyevich Cherenkov (Russian: Па́вел Алексе́евич Черенко́в [ˈpavʲɪl ɐlʲɪkˈsʲe(j)ɪvʲɪtɕ tɕɪrʲɪnˈkof]; 28 July 1904 – 6 January 1990) was a Soviet physicist who shared the 1958 Nobel Prize in Physics with Ilya Frank and Igor Tamm "for the discovery and interpretation of the Cherenkov effect".
-  - **Source:** Pavel Cherenkov / Lead
+- **Q:** When was Ernst August Friedrich Ruska born?
+  - **A:** 25 December 1906 (date, easy)
+  - **Evidence:** Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 December 1906 – 27 May 1988) was a German physicist who won the Nobel Prize in Physics in 1986 for his work in electron optics, including the design of the first electron microscope.
+  - **Source:** Ernst Ruska / Lead
 
-- **Q:** Where was Clinton Joseph Davisson born?
-  - **A:** Bloomington, Illinois (location, easy)
-  - **Evidence:** Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois, the son of Joseph Davisson, an artisan from Ohio, and Mary Calvert, a schoolteacher from Pennsylvania.
-  - **Source:** Clinton Davisson / Biography
+- **Q:** Where did Jack St. Clair Kilby obtain his M.S. and what was his role during World War II?
+  - **A:** Milwaukee State Teachers College (location, easy)
+  - **Evidence:** While working in Milwaukee, Kilby continued his education at the Milwaukee State Teachers College (now the University of Wisconsin–Milwaukee), where he obtained an M.S. in 1950.
+  - **Source:** Jack Kilby / Early life and education
 
-- **Q:** Who was a Russian-American tailor that invented modern jeans by using sturdy cloth and rivets to strengthen weak points in the seams and partnered with Levi Strauss to mass-produce them?
-  - **A:** Jacob William Davis (person, easy)
-  - **Evidence:** Jacob William Davis (Russian: Якоб Яковлевич Юфес , May 14, 1831 – January 20, 1908) was a Russian-American tailor who is credited with inventing modern jeans.
-  - **Source:** Jacob W. Davis / Lead
+- **Q:** Where was Mössbauer born?
+  - **A:** Munich (location, easy)
+  - **Evidence:** Mössbauer was born in Munich, where he also studied physics at the Technical University of Munich.
+  - **Source:** Rudolf Mössbauer / Career
 
 ## missing_evidence
 
-- **[low]** Where was Clinton Joseph Davisson born?
+- **[low]** When was Ernst August Friedrich Ruska born?
   - expected: abstain (answer_available=False)
-  - contexts (2): Davisson graduated from Bloomington High School in 1902, and entered the Univers | Clinton Joseph Davisson (October 22, 1881 – February 1, 1958) was an American ex
+  - contexts (1): Ernst Ruska was born in Heidelberg, Germany. He was educated at the Technical Un
 
-- **[medium]** Where was Clinton Joseph Davisson born?
+- **[medium]** When was Ernst August Friedrich Ruska born?
   - expected: abstain (answer_available=False)
-  - contexts (2): Clinton Joseph Davisson (October 22, 1881 – February 1, 1958) was an American ex | Davisson crater on the far side of the Moon was named after him in 1970.
+  - contexts (1): Ernst Ruska was born in Heidelberg, Germany. He was educated at the Technical Un
 
-- **[high]** Where was Clinton Joseph Davisson born?
+- **[high]** When was Ernst August Friedrich Ruska born?
   - expected: abstain (answer_available=False)
-  - contexts (3): Burnham is a professor of Pathology and Immunology, Molecular Microbiology, Pedi | In 1951, he independently proposed the concept of associative production of stra | Yoichiro Nambu was born on January 18, 1921, in Tokyo, Empire of Japan. In 1923,
+  - contexts (3): Geim's achievements include the discovery of a simple method for isolating singl | Algorithms and data structures. His contributions include algorithms for string  | Ernest Rutherford accepted Cockcroft as a research student in the Cavendish Labo
 
 ## context_noise
 
-- **[low]** Where was Clinton Joseph Davisson born?
+- **[low]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (3): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | However, the LTTE maintained it was committed to a settlement to the two-decade  | Bogotá's economy has been significantly boosted due to new shopping malls built 
+  - contexts (3): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | In 2012, Brasília's International Airport was won by the InfraAmerica consortium | The "16" is the number of the postal zone in a specific city.
 
-- **[medium]** Where was Clinton Joseph Davisson born?
+- **[medium]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (5): Planck started a six-semester course of lectures on theoretical physics, "dry, s | At the conference, Reich Minister Rust decided to take the nuclear project away  | Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois, 
+  - contexts (5): Because the true "physical condition" of the second object could not be immediat | Fellow of the American Academy of Arts and Sciences, 1982
+Bertrand Russell Socie | Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe
 
-- **[high]** Where was Clinton Joseph Davisson born?
+- **[high]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (7): Charkowski is married. She is a passionate explorer, and takes part in hiking, b | At Spectra-Physics, Kafka designed various lasers for use in industrial and rese | In 1935, Blackett was invited to join the Aeronautical Research Committee chaire
+  - contexts (7): Rudolf Ludwig Mössbauer (German: [ˈʁuːdɔlf ˈmœsˌbaʊ̯ɐ] ; 31 January 1929 – 14 Se | On 24 August 1944, the decision was taken to build a small reactor in order to t | Kamen received an honorary Doctor of Engineering degree from Worcester Polytechn
 
 ## chunk_boundary
 
-- **[low]** Where was Clinton Joseph Davisson born?
+- **[low]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (2): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | of Joseph Davisson, an artisan from Ohio, and Mary Calvert, a schoolteacher from
+  - contexts (2): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | won the Nobel Prize in Physics in 1986 for his work in electron optics, includin
 
-- **[medium]** Where was Clinton Joseph Davisson born?
+- **[medium]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (3): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | is the initial wavelength, | of Joseph Davisson, an artisan from Ohio, and Mary Calvert, a schoolteacher from
+  - contexts (3): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | Mangano is a named inventor of 71 patent families and 126 distinct patent public | won the Nobel Prize in Physics in 1986 for his work in electron optics, includin
 
-- **[high]** Where was Clinton Joseph Davisson born?
+- **[high]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (5): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Nevill Francis Mott was born on 30 September 1905 in Leeds, England, the son of  | of Joseph Davisson, an artisan from Ohio,
+  - contexts (5): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | Eleftheriades is an IEEE Fellow (2006), a Fellow of the Royal Society of Canada  | won the Nobel Prize in Physics in 1986 for his work
 
 ## evidence_position
 
-- **[low]** Where was Clinton Joseph Davisson born?
+- **[low]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (8): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Cologix operates two data centers in Jacksonville, Florida, including one site,  | The impact of the French Revolution on the Middle East came in terms of the poli
+  - contexts (8): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | In June 2005 as part of "Operation Tarnished Eagle" U.S. FBI and anti-terrorism  | Kluczbork's economy is dominated by the production of machinery, knitwear and co
 
-- **[medium]** Where was Clinton Joseph Davisson born?
+- **[medium]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (8): I basically came to the conclusion ... the Soviets had overextended their empire | However, in 1989 Ranasinghe Premadasa was elected president amidst a mass boycot | Note that it is not the name (an Accord, a Pact, a Convention, etc.), but the co
+  - contexts (8): According to the A. W. Kuchler U.S. Potential natural vegetation Types, Rocky Mo | of population. This equation has two steady states, | On 21 July 2008, the LTTE announced that it would be declaring a unilateral ceas
 
-- **[high]** Where was Clinton Joseph Davisson born?
+- **[high]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (8): Following a motion in parliament by Alfred Domett, the 4th Premier, three Austra | A standard undergraduate physics curriculum consists of classical mechanics, ele | the St. Jadwiga Church, dating back to the 15th century
-the town hall, built in 
+  - contexts (8): Similarly, a balloon has mass but may appear to have no weight or even negative  | In 1849, after an Orange mob burned the Parliament building in Montreal, several | The ban was introduced by the ACT Government in an effort to make Canberra more 
 
 ## conflict
 
-- **[low]** Where was Clinton Joseph Davisson born?
+- **[low]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (2): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Clinton Joseph Davisson was born on October 22, 1881, in Cairo, the son of Josep
+  - contexts (2): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe
 
-- **[medium]** Where was Clinton Joseph Davisson born?
+- **[medium]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (4): Clinton Joseph Davisson was born on October 22, 1881, in Sydney, the son of Jose | Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Treaties and Other International Acts Series (TIAS) are a series of pamphlets or
+  - contexts (4): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | After the complete military defeat of the LTTE, President Mahinda Rajapaksa anno
 
-- **[high]** Where was Clinton Joseph Davisson born?
+- **[high]** When was Ernst August Friedrich Ruska born?
   - expected: answer (answer_available=True)
-  - contexts (8): Clinton Joseph Davisson was born on October 22, 1881, in Paris, the son of Josep | Around 10% for bank transfer
-Between $0.35 and $0.50 for "virtual stamps" per pa | From the first republican constitution there was already a device that foresaw t
+  - contexts (8): Ernst August Friedrich Ruska (German pronunciation: [ɛʁnst ˈʁʊskaː] ; 25 Decembe | Though political power would be wielded by the samurai class over the course of  | The Swadhinata Stambha (Independence Monument) memorial is built on an area of 6
 
 ## hard_negative
 
-- **[low]** When did Pavel Alekseyevich Cherenkov die?
+- **[low]** When was Ernst August Friedrich Ruska born?
   - expected: abstain (answer_available=False)
-  - contexts (2): As a result of his Crookes tube investigations, he showed that the rays produced | Vitaly Lazarevich Ginzburg ForMemRS (Russian: Вита́лий Ла́заревич Ги́нзбург; 4 O
+  - contexts (2): In 1978, Binnig accepted an offer from IBM to join their Zurich research group,  | Roy Jay Glauber (September 1, 1925 – December 26, 2018) was an American theoreti
 
-- **[medium]** When did Pavel Alekseyevich Cherenkov die?
+- **[medium]** When was Ernst August Friedrich Ruska born?
   - expected: abstain (answer_available=False)
-  - contexts (4): As a result of his Crookes tube investigations, he showed that the rays produced | Vitaly Lazarevich Ginzburg ForMemRS (Russian: Вита́лий Ла́заревич Ги́нзбург; 4 O | Erwin Rudolf Josef Alexander Schrödinger (12 August 1887 – 4 January 1961), some
+  - contexts (4): In 1978, Binnig accepted an offer from IBM to join their Zurich research group,  | Roy Jay Glauber (September 1, 1925 – December 26, 2018) was an American theoreti | The first public recognition of Feynman's work came in 1954, when Lewis Strauss,
 
-- **[high]** When did Pavel Alekseyevich Cherenkov die?
+- **[high]** When was Ernst August Friedrich Ruska born?
   - expected: abstain (answer_available=False)
-  - contexts (8): As a result of his Crookes tube investigations, he showed that the rays produced | Vitaly Lazarevich Ginzburg ForMemRS (Russian: Вита́лий Ла́заревич Ги́нзбург; 4 O | Erwin Rudolf Josef Alexander Schrödinger (12 August 1887 – 4 January 1961), some
+  - contexts (8): In 1978, Binnig accepted an offer from IBM to join their Zurich research group,  | Roy Jay Glauber (September 1, 1925 – December 26, 2018) was an American theoreti | The first public recognition of Feynman's work came in 1954, when Lewis Strauss,

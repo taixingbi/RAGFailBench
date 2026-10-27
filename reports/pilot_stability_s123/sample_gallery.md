@@ -2,101 +2,101 @@
 
 ## Clean Seeds
 
-- **Q:** When was Phillips born?
-  - **A:** November 5, 1948 (date, easy)
-  - **Evidence:** Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William Cornelius Phillips of Juniata, Pennsylvania, and Mary Catherine Savino of Ripacandida, Italy.
-  - **Source:** William Daniel Phillips / Biography
+- **Q:** When was Bohr born?
+  - **A:** 19 June 1922 (date, easy)
+  - **Evidence:** Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund).
+  - **Source:** Aage Bohr / Early life and education
 
-- **Q:** When was Brian Paul Schmidt born?
-  - **A:** 24 February 1967 (date, easy)
-  - **Evidence:** Brian Paul Schmidt (born 24 February 1967) is an American Australian astrophysicist at the Australian National University's Mount Stromlo Observatory and Research School of Astronomy and Astrophysics.
-  - **Source:** Brian Schmidt / Lead
+- **Q:** What was Constant's role at the National Institute of General Medical Sciences in 2017?
+  - **A:** chief of the Office of Scientific Review (other, easy)
+  - **Evidence:** In 2017, Constant joined the National Institute of General Medical Sciences (NIGMS) as chief of the Office of Scientific Review (OSR).
+  - **Source:** Stephanie Constant / Career
 
-- **Q:** When did Victor Franz Hess die?
-  - **A:** 17 December 1964 (date, easy)
-  - **Evidence:** Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 1964) was an Austrian–American experimental physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson for his discovery of cosmic rays.
-  - **Source:** Victor Hess / Lead
+- **Q:** When was Philipp Eduard Anton von Lenard born?
+  - **A:** 7 June 1862 (date, easy)
+  - **Evidence:** Philipp Eduard Anton von Lenard (German: [ˈfɪlɪp ˈleːnaʁt] ; 7 June 1862 – 20 May 1947) was a Hungarian–German experimental physicist who received the Nobel Prize in Physics in 1905 for his work on cathode rays.
+  - **Source:** Philipp Lenard / Lead
 
 ## missing_evidence
 
-- **[low]** When was Phillips born?
+- **[low]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (1): He is of Italian descent on his mother's side and of Welsh descent on his father
+  - contexts (1): His oldest brother, Christian, died in a boating accident in 1934, and his young
 
-- **[medium]** When was Phillips born?
+- **[medium]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (1): Phillips is also a professor of physics, which is part of the University of Mary
+  - contexts (1): In 1940, shortly after the German occupation of Denmark in April, he entered the
 
-- **[high]** When was Phillips born?
+- **[high]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (3): In 2017, Huffman joined the cryptocurrency firm MobileCoin as an advisor. In Jul | Asteroid 1178 Irmela, discovered by Max Wolf, is named after Ruska's wife Irmela | Roy Jay Glauber (September 1, 1925 – December 26, 2018) was an American theoreti
+  - contexts (3): The Gillette paternal ancestors were French Huguenots who sought refuge in Engla | In a letter to Gillette, Arthur Conan Doyle stated: "I consider the production a | Arnold Beckman lived in Altadena, California and had a strong interest in solvin
 
 ## context_noise
 
-- **[low]** When was Phillips born?
+- **[low]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (3): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | A new technology or theory might make the necessary experiments feasible. For ex | On 20 March, separatist militants belonging to Balochistan Liberation Army attac
+  - contexts (3): A capital district, capital region, or capital territory is normally a specially | The definition of an ESW is broad enough that, on occasion, research distinguish | Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi
 
-- **[medium]** When was Phillips born?
+- **[medium]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (5): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | Philip Warren Anderson was born on December 13, 1923, in Indianapolis, Indiana,  | J Neurosci 2017-02-15 Impaired respiratory and body temperature control upon acu
+  - contexts (5): Einstein developed an appreciation for music at an early age. In his late journa | Bill Booth appears as a part of a waiver and introduction-to-skydiving video sho | Bell was the voice director for Kidd Video, Peter Pan and the Pirates, as well a
 
-- **[high]** When was Phillips born?
+- **[high]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (7): Cooper first married Martha Kennedy, with whom he had two daughters. In 1969, he | He is an innovator in the area of chemical-luminescence instrumentation, particu | Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William
+  - contexts (7): Information Storage, retrieval, and Handling Apparatus United States Patent no.  | Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | These charts are not static records of the past: they deal with the present and 
 
 ## chunk_boundary
 
-- **[low]** When was Phillips born?
+- **[low]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (2): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | Cornelius Phillips of Juniata, Pennsylvania, and Mary Catherine Savino of Ripaca
+  - contexts (2): Bohr was born in Copenhagen on 19 June 1922, the fourth of six | sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund). His 
 
-- **[medium]** When was Phillips born?
+- **[medium]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (3): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | When Heisenberg accepted the Romano Guardini Prize in 1974, he gave a speech, wh | Cornelius Phillips of Juniata, Pennsylvania, and Mary Catherine Savino of Ripaca
+  - contexts (3): Bohr was born in Copenhagen on 19 June 1922, the fourth of six | In 1925, he was appointed Director of the Physics Institute at the University of | sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund). His 
 
-- **[high]** When was Phillips born?
+- **[high]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (5): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | 1979 SkateBoarder Magazine Exhibition: Featured in a special demonstration that  | Cornelius Phillips of Juniata, Pennsylvania, and
+  - contexts (5): Bohr was born in Copenhagen on 19 June 1922, the fourth of six | He describes seeing women at the bar as "bitches" in his thoughts, and tells a s | sons of the physicist Niels Bohr
 
 ## evidence_position
 
-- **[low]** When was Phillips born?
+- **[low]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (8): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | The basic understanding of nuclear fusion was developed during the 1920s as phys | The scientists take the children to a top-secret base on the hidden island of Oo
+  - contexts (8): Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | HubSpot, Inc. is a US-based developer and marketer of software products for mark | The most popular theory surrounding the downing of BOAC Flight 777 is that Germa
 
-- **[medium]** When was Phillips born?
+- **[medium]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (8): Former Chief Engineer at Los Alamos National Laboratory, James Owen serves as th | In point of size the first cities must have been more extensive and more densely | Johann Peter Hebel (1760–1826), short story writer, dialectal poet and Lutheran 
+  - contexts (8): EP 1 774 755B Method and Apparatus for Enabling Discovery and Use of a Service b | The Shasta–Trinity National Forest is a federally designated forest in northern  | Johann Peter Hebel (1760–1826), short story writer, dialectal poet and Lutheran 
 
-- **[high]** When was Phillips born?
+- **[high]** When was Bohr born?
   - expected: answer (answer_available=True)
   - contexts (8): There are several shopping malls that represent international brands of clothing | The City of Adelaide, was a 10 sail composite (timber planking on a wrought-iron | The government and MILF had been negotiating for the inclusion of the province i
 
 ## conflict
 
-- **[low]** When was Phillips born?
+- **[low]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (2): Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | Phillips was born on November 5, 1945, in Wilkes-Barre, Pennsylvania, to William
+  - contexts (2): Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | Bohr was born in Copenhagen on 19 June 1919, the fourth of six sons of the physi
 
-- **[medium]** When was Phillips born?
+- **[medium]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (4): Phillips was born on November 5, 1945, in Wilkes-Barre, Pennsylvania, to William | Phillips was born on November 5, 1948, in Wilkes-Barre, Pennsylvania, to William | From 1907 through 1913, Mulholland directed the building of the aqueduct. The 23
+  - contexts (4): Bohr was born in Copenhagen on 19 June 1919, the fourth of six sons of the physi | Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | From 1907 through 1913, Mulholland directed the building of the aqueduct. The 23
 
-- **[high]** When was Phillips born?
+- **[high]** When was Bohr born?
   - expected: answer (answer_available=True)
-  - contexts (8): Phillips was born on November 5, 1945, in Wilkes-Barre, Pennsylvania, to William | The fourth series of the Danish TV series Borgen (2022) plays partially in the c | The architecture of Kuala Lumpur is a mixture of old colonial influences, Asian 
+  - contexts (8): Bohr was born in Copenhagen on 19 June 1919, the fourth of six sons of the physi | The fourth series of the Danish TV series Borgen (2022) plays partially in the c | The architecture of Kuala Lumpur is a mixture of old colonial influences, Asian 
 
 ## hard_negative
 
-- **[low]** When was Phillips born?
+- **[low]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (2): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f
+  - contexts (2): In 1910, Bohr met Margrethe Nørlund, the sister of mathematician Niels Erik Nørl | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu
 
-- **[medium]** When was Phillips born?
+- **[medium]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (4): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f | William Henry Bragg was born on 2 July 1862 in Westward, Cumberland, England, th
+  - contexts (4): In 1910, Bohr met Margrethe Nørlund, the sister of mathematician Niels Erik Nørl | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu | Heisenberg first came to Copenhagen in 1924, then returned to Göttingen in June 
 
-- **[high]** When was Phillips born?
+- **[high]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (8): Clinton Joseph Davisson was born on October 22, 1881, in Bloomington, Illinois,  | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f | William Henry Bragg was born on 2 July 1862 in Westward, Cumberland, England, th
+  - contexts (8): In 1910, Bohr met Margrethe Nørlund, the sister of mathematician Niels Erik Nørl | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu | Heisenberg first came to Copenhagen in 1924, then returned to Göttingen in June 

@@ -12,16 +12,16 @@
   ],
   "rates": {
     "schema_success_rate": {
-      "mean": 0.9983369903609186,
-      "std": 0.0011500967012840152,
+      "mean": 1.0,
+      "std": 0.0,
       "n": 3,
-      "display": "99.8% ± 0.1%"
+      "display": "100.0% ± 0.0%"
     },
     "qa_acceptance_rate": {
-      "mean": 0.39166666666666666,
-      "std": 0.0015275252316519481,
+      "mean": 0.394,
+      "std": 0.008185352771872456,
       "n": 3,
-      "display": "39.2% ± 0.2%"
+      "display": "39.4% ± 0.8%"
     },
     "clean_seed_yield": {
       "mean": 0.2,
@@ -30,22 +30,22 @@
       "display": "20.0% ± 0.0%"
     },
     "failure_verification_pass_rate": {
-      "mean": 0.9751410884866767,
-      "std": 0.0008006498333959517,
+      "mean": 0.9603703703703703,
+      "std": 0.002520492146077048,
       "n": 3,
-      "display": "97.5% ± 0.1%"
+      "display": "96.0% ± 0.3%"
     },
     "human_acceptance_rate": {
-      "mean": 0.66,
-      "std": 0.018027756377319962,
-      "n": 3,
-      "display": "66.0% ± 1.8%"
+      "mean": null,
+      "std": null,
+      "n": 0,
+      "display": "n/a"
     },
     "human_failure_validity_rate": {
-      "mean": 0.9684095860566448,
-      "std": 0.012372349337255454,
-      "n": 3,
-      "display": "96.8% ± 1.2%"
+      "mean": null,
+      "std": null,
+      "n": 0,
+      "display": "n/a"
     }
   },
   "counts": {
@@ -56,16 +56,16 @@
       "display": "1000.0 ± 0.0"
     },
     "generation_error_count": {
-      "mean": 1.6666666666666667,
-      "std": 1.1547005383792515,
+      "mean": 0.0,
+      "std": 0.0,
       "n": 3,
-      "display": "1.7 ± 1.2"
+      "display": "0.0 ± 0.0"
     },
     "accepted_qa_count": {
-      "mean": 391.6666666666667,
-      "std": 1.5275252316519468,
+      "mean": 394.0,
+      "std": 8.18535277187245,
       "n": 3,
-      "display": "391.7 ± 1.5"
+      "display": "394.0 ± 8.2"
     },
     "clean_seed_count": {
       "mean": 200.0,
@@ -74,16 +74,16 @@
       "display": "200.0 ± 0.0"
     },
     "failure_valid_count": {
-      "mean": 1921.0,
-      "std": 59.57348403442592,
+      "mean": 3457.3333333333335,
+      "std": 9.073771725877465,
       "n": 3,
-      "display": "1921.0 ± 59.6"
+      "display": "3457.3 ± 9.1"
     },
     "failure_rejected_count": {
-      "mean": 49.0,
-      "std": 3.0,
+      "mean": 142.66666666666666,
+      "std": 9.073771725877465,
       "n": 3,
-      "display": "49.0 ± 3.0"
+      "display": "142.7 ± 9.1"
     }
   },
   "per_run": [
@@ -91,131 +91,140 @@
       "run_id": "pilot_stability_s42",
       "random_seed": 42,
       "candidate_qa_count": 1000,
-      "generation_error_count": 1,
-      "schema_success_rate": 0.999000999000999,
-      "accepted_qa_count": 393,
-      "rejected_qa_count": 607,
-      "qa_acceptance_rate": 0.393,
+      "generation_error_count": 0,
+      "schema_success_rate": 1.0,
+      "accepted_qa_count": 387,
+      "rejected_qa_count": 613,
+      "qa_acceptance_rate": 0.387,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 1988,
-      "failure_rejected_count": 52,
-      "failure_verification_pass_rate": 0.9745098039215686,
+      "failure_valid_count": 3461,
+      "failure_rejected_count": 139,
+      "failure_verification_pass_rate": 0.9613888888888888,
       "category_distribution": {
-        "person": 40,
-        "location": 40,
+        "person": 47,
+        "location": 41,
         "science_technology": 40,
-        "historical_event": 40,
-        "organization_product": 40
+        "historical_event": 41,
+        "organization_product": 31
       },
       "difficulty_distribution": {
-        "easy": 91,
-        "medium": 78,
-        "hard": 31
+        "easy": 82,
+        "medium": 80,
+        "hard": 38
       },
-      "human_acceptance_rate": 0.665,
-      "human_failure_validity_rate": 0.9771241830065359,
-      "notes": []
+      "human_acceptance_rate": null,
+      "human_failure_validity_rate": null,
+      "notes": [
+        "human clean-seed review CSV missing, empty or stale",
+        "human failure review CSV missing, empty or stale"
+      ]
     },
     {
       "run_id": "pilot_stability_s123",
       "random_seed": 123,
       "candidate_qa_count": 1000,
-      "generation_error_count": 3,
-      "schema_success_rate": 0.9970089730807578,
-      "accepted_qa_count": 392,
-      "rejected_qa_count": 608,
-      "qa_acceptance_rate": 0.392,
+      "generation_error_count": 0,
+      "schema_success_rate": 1.0,
+      "accepted_qa_count": 403,
+      "rejected_qa_count": 597,
+      "qa_acceptance_rate": 0.403,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 1874,
-      "failure_rejected_count": 46,
-      "failure_verification_pass_rate": 0.9760416666666667,
+      "failure_valid_count": 3464,
+      "failure_rejected_count": 136,
+      "failure_verification_pass_rate": 0.9622222222222222,
       "category_distribution": {
-        "person": 40,
+        "person": 42,
         "location": 40,
         "science_technology": 40,
         "historical_event": 40,
-        "organization_product": 40
+        "organization_product": 38
       },
       "difficulty_distribution": {
-        "easy": 88,
-        "medium": 80,
-        "hard": 32
+        "easy": 78,
+        "medium": 83,
+        "hard": 39
       },
-      "human_acceptance_rate": 0.64,
-      "human_failure_validity_rate": 0.954248366013072,
-      "notes": []
+      "human_acceptance_rate": null,
+      "human_failure_validity_rate": null,
+      "notes": [
+        "human clean-seed review CSV missing, empty or stale",
+        "human failure review CSV missing, empty or stale"
+      ]
     },
     {
       "run_id": "pilot_stability_s2026",
       "random_seed": 2026,
       "candidate_qa_count": 1000,
-      "generation_error_count": 1,
-      "schema_success_rate": 0.999000999000999,
-      "accepted_qa_count": 390,
-      "rejected_qa_count": 610,
-      "qa_acceptance_rate": 0.39,
+      "generation_error_count": 0,
+      "schema_success_rate": 1.0,
+      "accepted_qa_count": 392,
+      "rejected_qa_count": 608,
+      "qa_acceptance_rate": 0.392,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 1901,
-      "failure_rejected_count": 49,
-      "failure_verification_pass_rate": 0.9748717948717949,
+      "failure_valid_count": 3447,
+      "failure_rejected_count": 153,
+      "failure_verification_pass_rate": 0.9575,
       "category_distribution": {
-        "person": 40,
-        "location": 40,
+        "person": 48,
+        "location": 41,
         "science_technology": 40,
-        "historical_event": 40,
-        "organization_product": 40
+        "historical_event": 41,
+        "organization_product": 30
       },
       "difficulty_distribution": {
-        "easy": 89,
-        "medium": 80,
-        "hard": 31
+        "easy": 82,
+        "medium": 79,
+        "hard": 39
       },
-      "human_acceptance_rate": 0.675,
-      "human_failure_validity_rate": 0.9738562091503268,
-      "notes": []
+      "human_acceptance_rate": null,
+      "human_failure_validity_rate": null,
+      "notes": [
+        "human clean-seed review CSV missing, empty or stale",
+        "human failure review CSV missing, empty or stale"
+      ]
     }
   ],
   "category_distribution_by_run": {
     "pilot_stability_s42": {
-      "person": 40,
-      "location": 40,
+      "person": 47,
+      "location": 41,
       "science_technology": 40,
-      "historical_event": 40,
-      "organization_product": 40
+      "historical_event": 41,
+      "organization_product": 31
     },
     "pilot_stability_s123": {
-      "person": 40,
+      "person": 42,
       "location": 40,
       "science_technology": 40,
       "historical_event": 40,
-      "organization_product": 40
+      "organization_product": 38
     },
     "pilot_stability_s2026": {
-      "person": 40,
-      "location": 40,
+      "person": 48,
+      "location": 41,
       "science_technology": 40,
-      "historical_event": 40,
-      "organization_product": 40
+      "historical_event": 41,
+      "organization_product": 30
     }
   },
   "difficulty_distribution_by_run": {
     "pilot_stability_s42": {
-      "easy": 91,
-      "medium": 78,
-      "hard": 31
+      "easy": 82,
+      "medium": 80,
+      "hard": 38
     },
     "pilot_stability_s123": {
-      "easy": 88,
-      "medium": 80,
-      "hard": 32
+      "easy": 78,
+      "medium": 83,
+      "hard": 39
     },
     "pilot_stability_s2026": {
-      "easy": 89,
-      "medium": 80,
-      "hard": 31
+      "easy": 82,
+      "medium": 79,
+      "hard": 39
     }
   }
 }

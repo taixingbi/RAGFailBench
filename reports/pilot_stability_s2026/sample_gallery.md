@@ -2,103 +2,103 @@
 
 ## Clean Seeds
 
-- **Q:** When was Johannes Georg Bednorz born?
-  - **A:** 16 May 1950 (date, easy)
-  - **Evidence:** Johannes Georg Bednorz (German: [ˈɡeːɔʁk ˈbɛdnɔʁt͡s] ; born 16 May 1950) is a German physicist who, together with K. Alex Müller, discovered high-temperature superconductivity in ceramics, for which they shared the 1987 Nobel Prize in Physics.
-  - **Source:** Georg Bednorz / Lead
+- **Q:** When was Victor Franz Hess born?
+  - **A:** 24 June 1883 (date, easy)
+  - **Evidence:** Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 1964) was an Austrian–American experimental physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson for his discovery of cosmic rays.
+  - **Source:** Victor Hess / Lead
 
-- **Q:** When did Karl Ferdinand Braun die?
-  - **A:** 20 April 1918 (date, easy)
-  - **Evidence:** Karl Ferdinand Braun (German: [ˈfɛʁdinant ˈbʁaʊ̯n] ; 6 June 1850 – 20 April 1918) was a German applied physicist who shared the 1909 Nobel Prize in Physics with Guglielmo Marconi for their contributions to the development of radio.
-  - **Source:** K. Ferdinand Braun / Lead
+- **Q:** When was Werner Karl Heisenberg born?
+  - **A:** 5 December 1901 (date, easy)
+  - **Evidence:** Werner Karl Heisenberg (; German: [ˈvɛʁnɐ ˈhaɪzn̩bɛʁk] ; 5 December 1901 – 1 February 1976) was a German theoretical physicist, one of the main pioneers of the theory of quantum mechanics and a principal scientist in the German nuclear program during World War II.
+  - **Source:** Werner Heisenberg / Lead
 
-- **Q:** Where was Esposito born and raised?
-  - **A:** El Paso, Texas (location, easy)
-  - **Evidence:** Esposito was born and raised in El Paso, Texas.
-  - **Source:** Lauren Esposito / Early life and education
+- **Q:** When was Andrew Gould Bostom born?
+  - **A:** 1955 or 1956 (date, easy)
+  - **Evidence:** Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and critic of Islam, who is a former associate professor of medicine and researcher at Brown University Medical School.
+  - **Source:** Andrew G. Bostom / Lead
 
 ## missing_evidence
 
-- **[low]** Where was Esposito born and raised?
+- **[high]** When was Victor Franz Hess born?
   - expected: abstain (answer_available=False)
-  - contexts (2): She kept a collection of insects in egg cartons, and her first grade science pro | Lauren Esposito is the assistant curator and Schlinger chair of Arachnology at t
+  - contexts (3): Elders drew fire, as well as censure from the Clinton administration, when she s | By the end of the 1940s, nearly 300 Germans were working at the institute, and t | Amanda Bosh is an American planetary scientist and observational astronomer best
 
-- **[medium]** Where was Esposito born and raised?
+- **[low]** When was Werner Karl Heisenberg born?
   - expected: abstain (answer_available=False)
-  - contexts (2): Lauren Esposito is the assistant curator and Schlinger chair of Arachnology at t | In 2011 she joined University of California, Berkeley as a postdoctoral research
+  - contexts (2): Heisenberg published his Umdeutung paper in 1925, a major reinterpretation of ol | Following World War II, Heisenberg was appointed Director of the Kaiser Wilhelm 
 
-- **[high]** Where was Esposito born and raised?
+- **[medium]** When was Werner Karl Heisenberg born?
   - expected: abstain (answer_available=False)
-  - contexts (3): Elders drew fire, as well as censure from the Clinton administration, when she s | Manfred von Ardenne was made head of Institute A. Goals of von Ardenne's Institu | Amanda Bosh is an American planetary scientist and observational astronomer best
+  - contexts (1): Following World War II, Heisenberg was appointed Director of the Kaiser Wilhelm 
 
 ## context_noise
 
-- **[low]** Where was Esposito born and raised?
+- **[low]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
   - contexts (3): The situation had not stabilized by 17 June, and the Finns were being pushed bac | 1st place: Mitsuku – 24 points
 2nd place: Uberbot – 6 points
-3rd place: Anna – 5 | Esposito was born and raised in El Paso, Texas. She kept a collection of insects
+3rd place: Anna – 5 | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19
 
-- **[medium]** Where was Esposito born and raised?
+- **[medium]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (5): Science and the human temperament, Allen & Unwin (1935), translated and introduc | During 1956 and 1957, Heisenberg was the chairman of the Arbeitskreis Kernphysik | In 1946, Richard Scott Perkin recruited Liston to join Perkin-Elmer as a chief e
+  - contexts (5): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | In 1952, he suggested that the different terms of a superposition evolving under | Later in his career, Leyner developed a strong interest in farming and ranching.
 
-- **[high]** Where was Esposito born and raised?
+- **[high]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (7): The day after Koshiba received the Nobel Prize in Physics, Koichi Tanaka, an eng | In the wake of the 1957 Sputnik crisis, the U.S. government's interest in scienc | A crucial moment came when Cockcroft read a paper by George Gamow on quantum tun
+  - contexts (7): Following his retirement from full-time academic duties, he was named Distinguis | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | {\displaystyle R_{Z}={2\pi ^{2}m_{e}Z^{2}e^{4} \over h^{3}}}
 
 ## chunk_boundary
 
-- **[low]** Where was Esposito born and raised?
+- **[low]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (2): Esposito was born and | raised in El Paso, Texas. She kept a collection of insects in egg cartons, and h
+  - contexts (2): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson fo
 
-- **[medium]** Where was Esposito born and raised?
+- **[medium]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (3): Esposito was born and | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu | raised in El Paso, Texas. She kept a collection of insects in egg cartons, and h
+  - contexts (3): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | By building such a network, they became the first researchers to introduce mm-wa | physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson fo
 
-- **[high]** Where was Esposito born and raised?
+- **[high]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (5): Esposito was born and | William Daniel Phillips (born November 5, 1948) is an American physicist. He sha | raised in
+  - contexts (5): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | In 1905, a gold medal competition was sponsored by the Royal Danish Academy of S | physicist who shared the 1936 Nobel Prize in Physics
 
 ## evidence_position
 
-- **[low]** Where was Esposito born and raised?
+- **[low]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (8): Esposito was born and raised in El Paso, Texas. She kept a collection of insects | The Napoleonic Wars were taking place in Europe, involving France, Great Britain | US 8,719,592—Secure Telematics (VeeZee) US 8,027,293—Communication Channel Selec
+  - contexts (8): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | In 2022, CloudBees announced the acquisition of ReleaseIQ, a SaaS-based offering | Its flight profile involved taking off from NAS Atsugi then flying northwest ove
 
-- **[medium]** Where was Esposito born and raised?
+- **[medium]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (8): On June 19, 2018, GitHub expanded its GitHub Education by offering free educatio | The Donald P. Eckman Award, in 1993, awarded by the American Automatic Control C | MIT's Provost Martin Schmidt announced the newly formed institute as an effort t
+  - contexts (8): The industrial and residential settlement south-west of Chorzów constructed sinc | This discovery was particularly important because it empirically proved that 'ai | The surrounding waters are filled with a diversity of marine life, including sea
 
-- **[high]** Where was Esposito born and raised?
+- **[high]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (8): The United States National Microbiome Data Collaborativem for storing data relat | At the urging of President Sukarno, Prime Minister Ali Sastroamidjojo began auth | The Three Hundred and Thirty-Five Years' War (Dutch: Driehonderdvijfendertigjari
+  - contexts (8): In early September however, Germany arranged its own occupation of Romania, targ | Characterizations (observations, definitions, and measurements of the subject of | Hal Leonard LLC (formerly Hal Leonard Corporation) is an American music publishi
 
 ## conflict
 
-- **[low]** Where was Esposito born and raised?
+- **[low]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (2): Esposito was born and raised in El Paso, Texas. She kept a collection of insects | Esposito was born and raised in Tokyo.
+  - contexts (2): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1880 – 17 December 19
 
-- **[medium]** Where was Esposito born and raised?
+- **[medium]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (4): Esposito was born and raised in Sydney. | Esposito was born and raised in El Paso, Texas. She kept a collection of insects | Amiga was one of the first commercial platforms to allow amateur and professiona
+  - contexts (4): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1880 – 17 December 19 | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | The legal procedure lasted more than two years and was significant enough to be 
 
-- **[high]** Where was Esposito born and raised?
+- **[high]** When was Victor Franz Hess born?
   - expected: answer (answer_available=True)
-  - contexts (8): Esposito was born and raised in Sydney. | Kuhn concluded that Aristotle's concepts were not "bad Newton," just different.  | Memory instructions to set and access numbers and strings in random-access memor
+  - contexts (8): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1880 – 17 December 19 | The Cold War developed between the Soviet bloc and the United States, Canada, an | The Bolesławiec pottery that is most recognizable today is the white or cream co
 
 ## hard_negative
 
-- **[low]** When was Johannes Georg Bednorz born?
+- **[low]** When was Victor Franz Hess born?
   - expected: abstain (answer_available=False)
-  - contexts (2): Karl Alexander Müller (20 April 1927 – 9 January 2023) was a Swiss physicist. He | Since 1988, Kajita has been at the Institute for Cosmic Radiation Research, Univ
+  - contexts (2): Carl David Anderson (September 3, 1905 – January 11, 1991) was an American exper | In 1936, Anderson and his first graduate student, Seth Neddermeyer, discovered t
 
-- **[medium]** When was Johannes Georg Bednorz born?
+- **[medium]** When was Victor Franz Hess born?
   - expected: abstain (answer_available=False)
-  - contexts (4): Karl Alexander Müller (20 April 1927 – 9 January 2023) was a Swiss physicist. He | Since 1988, Kajita has been at the Institute for Cosmic Radiation Research, Univ | Val Logsdon Fitch (March 10, 1923 – February 5, 2015) was an American nuclear ph
+  - contexts (4): Carl David Anderson (September 3, 1905 – January 11, 1991) was an American exper | In 1936, Anderson and his first graduate student, Seth Neddermeyer, discovered t | Under the supervision of Robert Millikan, Anderson began investigations into cos
 
-- **[high]** When was Johannes Georg Bednorz born?
+- **[high]** When was Victor Franz Hess born?
   - expected: abstain (answer_available=False)
-  - contexts (8): Karl Alexander Müller (20 April 1927 – 9 January 2023) was a Swiss physicist. He | Since 1988, Kajita has been at the Institute for Cosmic Radiation Research, Univ | Val Logsdon Fitch (March 10, 1923 – February 5, 2015) was an American nuclear ph
+  - contexts (8): Carl David Anderson (September 3, 1905 – January 11, 1991) was an American exper | In 1936, Anderson and his first graduate student, Seth Neddermeyer, discovered t | Under the supervision of Robert Millikan, Anderson began investigations into cos

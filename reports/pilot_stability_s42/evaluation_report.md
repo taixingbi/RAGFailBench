@@ -2,42 +2,66 @@
 
 ## nova-pro
 
-- Clean accuracy: **0.825**
-- Failure Robustness Score: **0.7846**
+- Clean accuracy: **0.975**
+- Failure Robustness Score: **0.909**
 
-| Condition | Accuracy | Perf. Drop | Abstention | Hallucination |
-|-----------|----------|-----------|------------|---------------|
-| missing_evidence | 0.0571 | 0.7679 | 0.8429 | 0.1571 |
-| context_noise | 0.9271 | -0.1021 | 0.0486 | 0.0139 |
-| chunk_boundary | 0.9057 | -0.0807 | 0.082 | 0.0082 |
-| evidence_position | 0.9444 | -0.1194 | 0.0347 | 0.0139 |
-| conflict | 0.7917 | 0.0333 | 0.0694 | 0.1146 |
-| hard_negative | 0.0317 | 0.7933 | 0.9167 | 0.0833 |
+| Condition | Answer Acc. | Clean Acc. (matched) | Paired Drop | Correct Abstention | Abstention | Hallucination |
+|-----------|-------------|----------------------|-------------|--------------------|------------|---------------|
+| missing_evidence | — | — | 0.1287 | 0.8713 | 0.8713 | 0.1287 |
+| context_noise | 0.9767 | 0.975 | -0.0017 | — | 0.0033 | 0.0117 |
+| chunk_boundary | 0.9413 | 0.9717 | 0.0304 | — | 0.0162 | 0.0263 |
+| evidence_position | 0.97 | 0.975 | 0.005 | — | 0.0 | 0.0167 |
+| hard_negative | — | — | 0.0917 | 0.9083 | 0.9083 | 0.0917 |
+| conflict | 0.6833 | 0.975 | 0.2917 | — | 0.0117 | 0.3 |
+
+| Conflict condition | Gold | Alternate | Both | Abstain | Other | Acknowledged | Handled | Judge-only Acc. | Handled (prior known) | Handled (prior unknown) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| conflict | 0.5533 | 0.2617 | 0.13 | 0.0117 | 0.0433 | 0.13 | 0.6833 | 0.6583 | 0.8013 | 0.6419 |
+| conflict_aware (probe) | 0.285 | 0.0917 | 0.57 | 0.0 | 0.0533 | 0.595 | 0.87 | 0.35 | 0.8974 | 0.8604 |
+Handled = gold, both values, or an acknowledged conflict; conflict Answer Acc. and Paired Drop use this rule.
+
+- Closed-book accuracy (prior knowledge, probe): **0.26**
 
 ## llama
 
-- Clean accuracy: **0.81**
-- Failure Robustness Score: **0.8041**
+- Clean accuracy: **0.99**
+- Failure Robustness Score: **0.9247**
 
-| Condition | Accuracy | Perf. Drop | Abstention | Hallucination |
-|-----------|----------|-----------|------------|---------------|
-| missing_evidence | 0.0321 | 0.7779 | 0.8857 | 0.1143 |
-| context_noise | 0.941 | -0.131 | 0.0104 | 0.0278 |
-| chunk_boundary | 0.9303 | -0.1203 | 0.0369 | 0.0246 |
-| evidence_position | 0.9479 | -0.1379 | 0.0139 | 0.0312 |
-| conflict | 0.7882 | 0.0218 | 0.0174 | 0.1181 |
-| hard_negative | 0.045 | 0.765 | 0.9183 | 0.0817 |
+| Condition | Answer Acc. | Clean Acc. (matched) | Paired Drop | Correct Abstention | Abstention | Hallucination |
+|-----------|-------------|----------------------|-------------|--------------------|------------|---------------|
+| missing_evidence | — | — | 0.0952 | 0.9048 | 0.9048 | 0.0952 |
+| context_noise | 0.9917 | 0.99 | -0.0017 | — | 0.0 | 0.005 |
+| chunk_boundary | 0.9676 | 0.9879 | 0.0202 | — | 0.0162 | 0.0081 |
+| evidence_position | 0.99 | 0.99 | 0.0 | — | 0.0 | 0.0033 |
+| hard_negative | — | — | 0.0933 | 0.9067 | 0.9067 | 0.0933 |
+| conflict | 0.745 | 0.99 | 0.245 | — | 0.015 | 0.2467 |
+
+| Conflict condition | Gold | Alternate | Both | Abstain | Other | Acknowledged | Handled | Judge-only Acc. | Handled (prior known) | Handled (prior unknown) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| conflict | 0.36 | 0.1683 | 0.375 | 0.015 | 0.0817 | 0.3867 | 0.745 | 0.6 | 0.8169 | 0.7054 |
+| conflict_aware (probe) | 0.1533 | 0.03 | 0.7433 | 0.0017 | 0.0717 | 0.82 | 0.9517 | 0.3117 | 0.9765 | 0.938 |
+Handled = gold, both values, or an acknowledged conflict; conflict Answer Acc. and Paired Drop use this rule.
+
+- Closed-book accuracy (prior knowledge, probe): **0.355**
 
 ## gpt-oss
 
-- Clean accuracy: **0.84**
-- Failure Robustness Score: **0.7546**
+- Clean accuracy: **0.98**
+- Failure Robustness Score: **0.9023**
 
-| Condition | Accuracy | Perf. Drop | Abstention | Hallucination |
-|-----------|----------|-----------|------------|---------------|
-| missing_evidence | 0.0679 | 0.7721 | 0.8429 | 0.1571 |
-| context_noise | 0.9549 | -0.1149 | 0.0104 | 0.0208 |
-| chunk_boundary | 0.9016 | -0.0616 | 0.0697 | 0.0287 |
-| evidence_position | 0.9583 | -0.1183 | 0.0104 | 0.0243 |
-| conflict | 0.6285 | 0.2115 | 0.2465 | 0.0799 |
-| hard_negative | 0.0567 | 0.7833 | 0.9067 | 0.0933 |
+| Condition | Answer Acc. | Clean Acc. (matched) | Paired Drop | Correct Abstention | Abstention | Hallucination |
+|-----------|-------------|----------------------|-------------|--------------------|------------|---------------|
+| missing_evidence | — | — | 0.1217 | 0.8783 | 0.8783 | 0.1217 |
+| context_noise | 0.9767 | 0.98 | 0.0033 | — | 0.0033 | 0.0067 |
+| chunk_boundary | 0.9352 | 0.9798 | 0.0445 | — | 0.0445 | 0.0142 |
+| evidence_position | 0.9833 | 0.98 | -0.0033 | — | 0.0067 | 0.0017 |
+| hard_negative | — | — | 0.1083 | 0.8917 | 0.8917 | 0.1083 |
+| conflict | 0.6683 | 0.98 | 0.3117 | — | 0.005 | 0.3217 |
+
+| Conflict condition | Gold | Alternate | Both | Abstain | Other | Acknowledged | Handled | Judge-only Acc. | Handled (prior known) | Handled (prior unknown) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| conflict | 0.4833 | 0.2717 | 0.185 | 0.005 | 0.055 | 0.185 | 0.6683 | 0.6183 | 0.7471 | 0.6077 |
+| conflict_aware (probe) | 0.165 | 0.02 | 0.715 | 0.0 | 0.1 | 0.8333 | 0.965 | 0.2317 | 0.9808 | 0.9528 |
+Handled = gold, both values, or an acknowledged conflict; conflict Answer Acc. and Paired Drop use this rule.
+
+- Closed-book accuracy (prior knowledge, probe): **0.435**
