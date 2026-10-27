@@ -1,0 +1,56 @@
+\begin{table*}[t]
+\centering
+\caption{Score by condition, mean $\pm$ std over three seeded runs. Score is answer accuracy for answer-expected conditions (conflict: handled rate) and correct-abstention rate for abstain-expected ones; closed-book is accuracy with no context (prior knowledge, a probe outside FRS). $\Delta$ is the paired drop in percentage points against each item's own parent clean seed; FRS = 1 $-$ mean paired drop.}
+\small
+\begin{tabular}{llll}
+\toprule
+Condition & nova-pro score ($\Delta$ pp) & llama score ($\Delta$ pp) & gpt-oss score ($\Delta$ pp) \\
+\midrule
+clean & 0.97 $\pm$ 0.01 & 0.97 $\pm$ 0.02 & 0.97 $\pm$ 0.01 \\
+missing\_evidence (abstain) & 0.88 $\pm$ 0.01 (-12.2) & 0.91 $\pm$ 0.01 (-9.3) & 0.89 $\pm$ 0.01 (-11.3) \\
+hard\_negative (abstain) & 0.91 $\pm$ 0.02 (-9.2) & 0.91 $\pm$ 0.01 (-8.9) & 0.89 $\pm$ 0.02 (-11.1) \\
+conflict & 0.70 $\pm$ 0.02 (-27.5) & 0.73 $\pm$ 0.01 (-23.8) & 0.67 $\pm$ 0.01 (-30.0) \\
+context\_noise & 0.97 $\pm$ 0.01 (-0.4) & 0.97 $\pm$ 0.02 (-0.3) & 0.96 $\pm$ 0.01 (-0.2) \\
+chunk\_boundary & 0.94 $\pm$ 0.00 (-2.9) & 0.95 $\pm$ 0.02 (-2.2) & 0.92 $\pm$ 0.02 (-4.5) \\
+evidence\_position & 0.96 $\pm$ 0.01 (-0.9) & 0.97 $\pm$ 0.02 (+0.1) & 0.97 $\pm$ 0.01 (+0.3) \\
+closed-book (probe) & 0.26 $\pm$ 0.03 & 0.41 $\pm$ 0.06 & 0.44 $\pm$ 0.07 \\
+FRS & 0.911 $\pm$ 0.003 & 0.926 $\pm$ 0.004 & 0.905 $\pm$ 0.007 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Abstention / hallucination rate by condition, mean $\pm$ std over three seeded runs.}
+\small
+\begin{tabular}{llll}
+\toprule
+Condition & nova-pro abst. / halluc. & llama abst. / halluc. & gpt-oss abst. / halluc. \\
+\midrule
+missing\_evidence & 0.88 $\pm$ 0.01 / 0.12 $\pm$ 0.01 & 0.91 $\pm$ 0.01 / 0.09 $\pm$ 0.01 & 0.89 $\pm$ 0.01 / 0.11 $\pm$ 0.01 \\
+hard\_negative & 0.91 $\pm$ 0.02 / 0.09 $\pm$ 0.02 & 0.91 $\pm$ 0.01 / 0.09 $\pm$ 0.01 & 0.89 $\pm$ 0.02 / 0.11 $\pm$ 0.02 \\
+conflict & 0.01 $\pm$ 0.00 / 0.28 $\pm$ 0.02 & 0.02 $\pm$ 0.01 / 0.25 $\pm$ 0.01 & 0.01 $\pm$ 0.00 / 0.32 $\pm$ 0.01 \\
+context\_noise & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.00 & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.01 & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.00 \\
+chunk\_boundary & 0.01 $\pm$ 0.00 / 0.02 $\pm$ 0.00 & 0.01 $\pm$ 0.00 / 0.01 $\pm$ 0.01 & 0.04 $\pm$ 0.01 / 0.02 $\pm$ 0.00 \\
+evidence\_position & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.00 & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.01 & 0.01 $\pm$ 0.00 / 0.00 $\pm$ 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Conflict outcomes, mean $\pm$ std (\%) over three seeded runs. Handled = gold, both values, or an acknowledged conflict. Aware = prompt that permits flagging a conflict (probe, excluded from FRS). Prior known/unknown splits by closed-book correctness.}
+\small
+\begin{tabular}{llllllllll}
+\toprule
+Model & Prompt & Gold \% & Alternate \% & Both \% & Acknowledged \% & Handled \% & Judge-only \% & Handled, prior known \% & Handled, prior unknown \% \\
+\midrule
+nova-pro & default & 56.9 $\pm$ 1.4 & 25.2 $\pm$ 0.8 & 12.9 $\pm$ 0.9 & 13.1 $\pm$ 0.8 & 69.8 $\pm$ 1.5 & 67.7 $\pm$ 1.9 & 81.6 $\pm$ 3.5 & 65.5 $\pm$ 1.4 \\
+nova-pro & aware & 29.1 $\pm$ 1.1 & 9.5 $\pm$ 0.6 & 56.3 $\pm$ 0.7 & 59.3 $\pm$ 0.3 & 87.6 $\pm$ 1.0 & 34.7 $\pm$ 0.6 & 92.0 $\pm$ 3.5 & 85.9 $\pm$ 0.2 \\
+llama & default & 32.8 $\pm$ 3.0 & 17.6 $\pm$ 0.8 & 39.8 $\pm$ 2.0 & 40.7 $\pm$ 1.8 & 73.4 $\pm$ 1.4 & 58.9 $\pm$ 2.5 & 81.4 $\pm$ 3.0 & 67.6 $\pm$ 3.1 \\
+llama & aware & 14.1 $\pm$ 1.8 & 2.6 $\pm$ 0.4 & 76.1 $\pm$ 1.6 & 83.3 $\pm$ 1.4 & 95.2 $\pm$ 0.4 & 31.4 $\pm$ 1.1 & 97.0 $\pm$ 0.6 & 94.0 $\pm$ 0.8 \\
+gpt-oss & default & 48.0 $\pm$ 1.0 & 27.3 $\pm$ 1.8 & 18.7 $\pm$ 0.2 & 18.7 $\pm$ 0.2 & 66.7 $\pm$ 1.1 & 61.9 $\pm$ 2.2 & 75.1 $\pm$ 0.4 & 60.0 $\pm$ 0.7 \\
+gpt-oss & aware & 14.6 $\pm$ 1.7 & 2.7 $\pm$ 1.0 & 73.6 $\pm$ 1.8 & 84.7 $\pm$ 1.4 & 95.7 $\pm$ 1.0 & 22.6 $\pm$ 0.9 & 95.4 $\pm$ 2.6 & 95.8 $\pm$ 0.7 \\
+\bottomrule
+\end{tabular}
+\end{table*}
