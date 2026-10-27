@@ -139,6 +139,17 @@ class EvaluationConfig(BaseModel):
     model_env: str = "EVAL_MODEL"
     # Placeholder client.model for judge calls when ``complete`` omits model=.
     default_model: str | None = "nova-pro"
+    # Correctness judge (same gateway). Must not be one of the evaluated models,
+    # or a model would grade its own answers. None falls back to the client model.
+    judge_model: str | None = None
+    # Result model name → gateway model id actually called, e.g. route nova-pro to
+    # its cross-region profile (50 vs 25 Bedrock requests/min). Names in results
+    # and reports stay the configured ``models`` entries.
+    model_routes: dict[str, str] = Field(default_factory=dict)
+    # Diagnostic conditions, reported separately and excluded from FRS:
+    #   closed_book    — question without context (prior knowledge per seed)
+    #   conflict_aware — conflict cases with a prompt that allows flagging conflicts
+    probes: list[str] = Field(default_factory=list)
     abstain_markers: list[str] = Field(
         default_factory=lambda: [
             "i don't know",

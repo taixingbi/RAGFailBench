@@ -132,6 +132,15 @@ def select_clean_seeds(
 
     selected = selected[:target]
 
+    if chunks_by_id:
+        stale = [c.source.chunk_id for c in selected if c.source.chunk_id not in chunks_by_id]
+        if stale:
+            raise ValueError(
+                f"{len(stale)} selected candidates reference chunks missing from the "
+                f"corpus (e.g. {stale[0]}); candidate_qa.jsonl is stale — rerun "
+                "generate-qa against the current chunks"
+            )
+
     seeds: list[CleanSeed] = []
     for i, cand in enumerate(selected):
         if chunks_by_id:

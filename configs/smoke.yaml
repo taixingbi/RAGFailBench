@@ -110,6 +110,7 @@ evaluation:
   temperature: 0.0
   max_tokens: 128
   use_llm_judge: true
+  judge_model: deepseek
   # Optional separate endpoint (EVAL_* in .env); falls back to CHAT_*.
   base_url_env: EVAL_BASE_URL
   api_key_env: EVAL_API_KEY
@@ -119,7 +120,7 @@ llm:
   base_url_env: CHAT_BASE_URL
   api_key_env: CHAT_API_KEY
   model_env: CHAT_MODEL
-  default_model: Qwen/Qwen2.5-7B-Instruct
+  default_model: qwen3-32b
   timeout_seconds: 120
   max_tokens: 512
   max_concurrency: 8

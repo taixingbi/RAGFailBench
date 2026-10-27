@@ -150,6 +150,10 @@ def build_sample_gallery(
     return "\n".join(parts)
 
 
+def _fmt(value: Any) -> str:
+    return "—" if value is None else str(value)
+
+
 def build_evaluation_report(failure_metrics: dict[str, Any], run_id: str) -> str:
     parts = [f"# Evaluation Report — {run_id}", ""]
     by_model = failure_metrics.get("by_model", {})
@@ -160,15 +164,63 @@ def build_evaluation_report(failure_metrics: dict[str, Any], run_id: str) -> str
         parts.append(
             f"- Failure Robustness Score: **{mrep.get('failure_robustness_score')}**"
         )
+        if mrep.get("n_errors"):
+            parts.append(f"- Failed calls excluded: **{mrep['n_errors']}**")
         parts.append("")
-        parts.append("| Condition | Accuracy | Perf. Drop | Abstention | Hallucination |")
-        parts.append("|-----------|----------|-----------|------------|---------------|")
+        parts.append(
+            "| Condition | Answer Acc. | Clean Acc. (matched) | Paired Drop "
+            "| Correct Abstention | Abstention | Hallucination |"
+        )
+        parts.append(
+            "|-----------|-------------|----------------------|-------------"
+            "|--------------------|------------|---------------|"
+        )
         for cond, stats in mrep.get("conditions", {}).items():
             parts.append(
-                f"| {cond} | {stats['accuracy']} | {stats['performance_drop']} "
+                f"| {cond} | {_fmt(stats.get('answer_accuracy'))} "
+                f"| {_fmt(stats.get('clean_accuracy_matched'))} "
+                f"| {stats['performance_drop']} "
+                f"| {_fmt(stats.get('correct_abstention_rate'))} "
                 f"| {stats['abstention_rate']} | {stats['hallucination_rate']} |"
             )
         parts.append("")
+        conflict_rows = [
+            (name, stats)
+            for name, stats in [
+                ("conflict", mrep.get("conditions", {}).get("conflict")),
+                ("conflict_aware (probe)", mrep.get("probes", {}).get("conflict_aware")),
+            ]
+            if stats and stats.get("conflict_outcomes")
+        ]
+        if conflict_rows:
+            parts.append(
+                "| Conflict condition | Gold | Alternate | Both | Abstain | Other "
+                "| Acknowledged | Handled | Judge-only Acc. "
+                "| Handled (prior known) | Handled (prior unknown) |"
+            )
+            parts.append("|---|---|---|---|---|---|---|---|---|---|---|")
+            for name, stats in conflict_rows:
+                o = stats["conflict_outcomes"]
+                parts.append(
+                    f"| {name} | {o['gold']} | {o['alternate']} | {o['both']} "
+                    f"| {o['abstain']} | {o['other']} | {stats['acknowledgement_rate']} "
+                    f"| {_fmt(stats.get('answer_accuracy'))} "
+                    f"| {_fmt(stats.get('answer_accuracy_judge'))} "
+                    f"| {_fmt(stats.get('answer_accuracy_prior_known'))} "
+                    f"| {_fmt(stats.get('answer_accuracy_prior_unknown'))} |"
+                )
+            parts.append(
+                "Handled = gold, both values, or an acknowledged conflict; "
+                "conflict Answer Acc. and Paired Drop use this rule."
+            )
+            parts.append("")
+        closed = mrep.get("probes", {}).get("closed_book")
+        if closed:
+            parts.append(
+                f"- Closed-book accuracy (prior knowledge, probe): "
+                f"**{_fmt(closed.get('answer_accuracy'))}**"
+            )
+            parts.append("")
     return "\n".join(parts)
 
 

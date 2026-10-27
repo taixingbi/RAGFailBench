@@ -104,6 +104,59 @@ BASELINE_SYSTEM = (
     "answer possible."
 )
 
+# Conflict operator: a plausible but wrong replacement answer. Fixed placeholders
+# ("John Smith", "Paris") or same-type answers from other seeds ("Munich" →
+# "UCLA") read as implausible, so models reject them without weighing evidence.
+CONFLICT_ALTERNATE_SYSTEM = (
+    "You write counterfactual answers for a knowledge-conflict benchmark. You "
+    "output STRICT JSON only, with no prose, no markdown, and no code fences."
+)
+
+CONFLICT_ALTERNATE_TEMPLATE = """\
+Passage:
+\"\"\"
+{passage}
+\"\"\"
+
+Question: {question}
+Correct answer: {gold_answer}
+
+Write ONE alternative answer that is WRONG but would look plausible to a reader
+of this passage if it replaced the correct answer in the text:
+- the same kind of thing as the correct answer (a city for a city, a school for
+  a school, a person in a similar role for a person, a comparable title or
+  phrase for a title or phrase), at the same level of specificity;
+- consistent with the rest of the passage (same country/region/era/field when
+  that makes it more believable);
+- similar length and format to the correct answer;
+- not the correct answer, not a synonym or variant of it, and not mentioned
+  anywhere in the passage.
+
+Return JSON: {{"alternate": "<answer>"}}
+"""
+
+
+def build_conflict_alternate_prompt(*, passage: str, question: str, gold_answer: str) -> str:
+    return CONFLICT_ALTERNATE_TEMPLATE.format(
+        passage=passage, question=question, gold_answer=gold_answer
+    )
+
+
+# Probe: same contexts as ``conflict``, but the model may report the contradiction.
+# The default prompt asks for the shortest answer, which discourages flagging it.
+CONFLICT_AWARE_SYSTEM = (
+    "You answer questions using ONLY the provided context. If the answer is not "
+    "in the context, reply exactly with: I don't know. If the context gives "
+    "conflicting answers, say that the sources conflict and state each answer. "
+    "Otherwise give the shortest exact answer possible."
+)
+
+# Probe: question only, no context — measures what the model already knows.
+CLOSED_BOOK_SYSTEM = (
+    "Answer the question from your own knowledge. If you do not know, reply "
+    "exactly with: I don't know. Give the shortest exact answer possible."
+)
+
 BASELINE_TEMPLATE = """\
 Context:
 \"\"\"

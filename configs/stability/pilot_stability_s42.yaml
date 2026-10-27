@@ -109,8 +109,17 @@ evaluation:
   - llama
   - gpt-oss
   temperature: 0.0
-  max_tokens: 256
+  # gpt-oss spends ~250 tokens on hidden reasoning; 256 truncated it to empty output
+  max_tokens: 1024
   use_llm_judge: true
+  judge_model: deepseek
+  # Same Nova Pro v1 model via the US cross-region profile: 50 vs 25 Bedrock req/min
+  model_routes:
+    nova-pro: us.amazon.nova-pro-v1:0
+  # Diagnostics excluded from FRS (see models.md / failure_metrics.PROBE_CONDITIONS)
+  probes:
+  - closed_book
+  - conflict_aware
   base_url_env: EVAL_BASE_URL
   api_key_env: EVAL_API_KEY
   model_env: EVAL_MODEL
@@ -119,13 +128,14 @@ llm:
   base_url_env: CHAT_BASE_URL
   api_key_env: CHAT_API_KEY
   model_env: CHAT_MODEL
-  default_model: Qwen/Qwen2.5-7B-Instruct
+  default_model: qwen3-32b
   timeout_seconds: 120
   max_tokens: 512
   max_concurrency: 8
   generation_concurrency: 8
   judge_concurrency: 8
-  evaluation_concurrency: 32
+  # Lambda account limit is 10 concurrent executions; split across the 3 models
+  evaluation_concurrency: 9
   max_retries: 5
   retry_backoff_seconds: 2.0
   retry_jitter: true

@@ -208,13 +208,21 @@ def generate_for_chunk(
 def load_generation_checkpoint(
     candidates_path: Path | str,
     errors_path: Path | str | None = None,
+    valid_chunk_ids: set[str] | None = None,
 ) -> tuple[list[CandidateQA], set[str], list[dict[str, Any]]]:
-    """Load prior candidates/errors for resume. Returns (cands, done_chunk_ids, errors)."""
+    """Load prior candidates/errors for resume. Returns (cands, done_chunk_ids, errors).
+
+    When ``valid_chunk_ids`` is given, entries whose chunk is not in the current
+    corpus (e.g. left over from an earlier fetch / page revision) are dropped,
+    so a resume never mixes QA from different corpus snapshots.
+    """
     path = Path(candidates_path)
     candidates: list[CandidateQA] = []
     done: set[str] = set()
     if path.exists():
         candidates = read_jsonl_models(path, CandidateQA)
+        if valid_chunk_ids is not None:
+            candidates = [c for c in candidates if c.source.chunk_id in valid_chunk_ids]
         for c in candidates:
             done.add(c.source.chunk_id)
 
@@ -223,8 +231,10 @@ def load_generation_checkpoint(
         epath = Path(errors_path)
         if epath.exists():
             for row in read_jsonl(epath):
-                errors.append(row)
                 cid = row.get("chunk_id")
+                if valid_chunk_ids is not None and cid and str(cid) not in valid_chunk_ids:
+                    continue
+                errors.append(row)
                 if cid:
                     done.add(str(cid))
     return candidates, done, errors
@@ -289,7 +299,9 @@ def generate_candidate_qa(
     err_path = Path(errors_path) if errors_path else None
 
     if out_path is not None:
-        candidates, done, errors = load_generation_checkpoint(out_path, err_path)
+        candidates, done, errors = load_generation_checkpoint(
+            out_path, err_path, valid_chunk_ids={c.chunk_id for c in chunks}
+        )
         if len(candidates) >= target:
             return candidates[:target], errors
 

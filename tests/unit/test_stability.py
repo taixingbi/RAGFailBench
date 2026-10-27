@@ -71,6 +71,9 @@ def test_collect_and_aggregate(tmp_path: Path):
             root / "6_final" / "clean_seeds.jsonl",
             [
                 {
+                    "sample_id": f"seed_{i}",
+                    "question": f"q{i}?",
+                    "gold_answer": f"a{i}",
                     "category_group": "person" if i % 2 == 0 else "location",
                     "difficulty": "easy",
                 }
@@ -85,7 +88,8 @@ def test_collect_and_aggregate(tmp_path: Path):
         rev = reviews / run_id
         rev.mkdir(parents=True)
         (rev / f"{run_id}_clean_seeds_review.csv").write_text(
-            "sample_id,decision\na,keep\nb,keep\nc,reject\n",
+            "sample_id,question,gold_answer,decision\n"
+            "seed_0,q0?,a0,keep\nseed_1,q1?,a1,keep\nseed_2,q2?,a2,reject\n",
             encoding="utf-8",
         )
 
@@ -135,3 +139,26 @@ def test_write_seed_config(tmp_path: Path):
     text = out.read_text(encoding="utf-8")
     assert "run_id: pilot_stability_s2026" in text
     assert "random_seed: 2026" in text
+
+
+def test_stale_human_review_is_not_counted(tmp_path: Path):
+    """Labels for a regenerated run (same ids, new questions) must not be reused."""
+    run_id = stability_run_id(42)
+    _write_jsonl(
+        tmp_path / "data" / "runs" / run_id / "6_final" / "clean_seeds.jsonl",
+        [{"sample_id": "seed_0", "question": "new question?", "gold_answer": "x"}],
+    )
+    rev = tmp_path / "reviews" / run_id
+    rev.mkdir(parents=True)
+    (rev / f"{run_id}_clean_seeds_review.csv").write_text(
+        "sample_id,question,gold_answer,decision\nseed_0,old question?,x,keep\n",
+        encoding="utf-8",
+    )
+    m = collect_run_metrics(
+        run_id,
+        data_dir=tmp_path / "data",
+        reports_dir=tmp_path / "reports",
+        reviews_dir=tmp_path / "reviews",
+    )
+    assert m.human_acceptance_rate is None
+    assert "human clean-seed review CSV missing, empty or stale" in m.notes

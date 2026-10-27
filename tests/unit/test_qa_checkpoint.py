@@ -56,3 +56,17 @@ def test_smoke_config_has_stage_concurrency():
     assert loaded.llm.evaluation_concurrency == 32
     assert loaded.llm.max_concurrency == 8
     assert loaded.llm.max_retries == 5
+
+
+def test_load_generation_checkpoint_drops_stale_chunks(tmp_path: Path):
+    cand_path = tmp_path / "candidate_qa.jsonl"
+    err_path = tmp_path / "errors.jsonl"
+    write_jsonl(cand_path, [_cand("c1"), _cand("old_rev")])
+    write_jsonl(err_path, [{"chunk_id": "old_err", "error": "json_parse_error"}])
+
+    cands, done, errors = load_generation_checkpoint(
+        cand_path, err_path, valid_chunk_ids={"c1", "c2"}
+    )
+    assert [c.source.chunk_id for c in cands] == ["c1"]
+    assert done == {"c1"}
+    assert errors == []

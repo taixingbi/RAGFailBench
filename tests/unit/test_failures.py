@@ -1,5 +1,7 @@
 """Failure injection tests (no network)."""
 
+import random
+
 from ragfailbench.config import AppConfig
 from ragfailbench.failures.injector import inject_failures
 from ragfailbench.schemas.chunk import Chunk
@@ -356,3 +358,54 @@ def test_failure_ids_traceable():
         for case in cases:
             assert case.parent_seed_id == "seed_000000"
             assert case.failure_id.startswith("seed_000000__")
+
+
+def test_conflict_passage_is_length_matched_chunk_swap():
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks(), cfg)
+    for case in by_type["conflict"]:
+        assert case.parameters["conflict_style"] == "chunk_swap"
+        conflict = case.parameters["conflict_passage"]
+        gold_text = case.contexts[case.parameters["gold_positions"][0]]
+        alt = case.parameters["alternate_answer"]
+        assert conflict == gold_text.replace("Google", alt)
+        assert "Google" not in conflict
+
+
+def test_conflict_alternate_comes_from_other_seeds_of_same_type():
+    from ragfailbench.failures.conflict import build_answer_pool, corpus_alternate
+
+    seed = _seed()
+    others = [
+        seed.model_copy(update={"sample_id": f"seed_{i}", "gold_answer": name})
+        for i, name in enumerate(["Red Hat", "Mozilla", "Google LLC"], start=1)
+    ]
+    pool = build_answer_pool([seed, *others])
+    picks = {
+        corpus_alternate(seed, "Kubernetes was designed by Google.", pool, random.Random(i))
+        for i in range(20)
+    }
+    # Never the gold itself or a variant that contains it.
+    assert picks <= {"Red Hat", "Mozilla"}
+
+    by_type = inject_failures([seed, *others], _chunks(), AppConfig())
+    case = next(c for c in by_type["conflict"] if c.parent_seed_id == seed.sample_id)
+    assert case.parameters["alternate_source"] == "corpus_entity"
+    assert case.parameters["alternate_answer"] in {"Red Hat", "Mozilla"}
+
+
+def test_llm_alternate_takes_priority_and_rules_reject_bad_ones():
+    from ragfailbench.failures.alternates import check_alternate
+
+    passage = "Kubernetes was originally designed by Google and later donated to the CNCF."
+    assert check_alternate("Google LLC", "Google", passage) == "overlaps_gold"
+    assert check_alternate("CNCF", "Google", passage) == "in_passage"
+    assert check_alternate("Red Hat", "Google", passage) is None
+
+    by_type = inject_failures(
+        [_seed()], _chunks(), AppConfig(), llm_alternates={"seed_000000": "Red Hat"}
+    )
+    for case in by_type["conflict"]:
+        assert case.parameters["alternate_source"] == "llm"
+        assert case.parameters["alternate_answer"] == "Red Hat"
+        assert "Red Hat" in case.parameters["conflict_passage"]

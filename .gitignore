@@ -30,3 +30,10 @@ htmlcov/
 # Local scratch
 tmp.md
 .env copy.example
+
+# Local backups and logs from the review-response reruns
+logs/
+data/runs/_pre_rev1/
+reports/_pre_rev1/
+# Reviewer comments (confidential; repo is public)
+review_reports.md

@@ -7,7 +7,7 @@ import random
 from ragfailbench.config import AppConfig
 from ragfailbench.failures.base import ChunkIndex, FailureInjector
 from ragfailbench.failures.chunk_boundary import ChunkBoundaryInjector
-from ragfailbench.failures.conflict import ConflictInjector
+from ragfailbench.failures.conflict import AnswerPool, ConflictInjector, build_answer_pool
 from ragfailbench.failures.context_noise import ContextNoiseInjector
 from ragfailbench.failures.evidence_position import EvidencePositionInjector
 from ragfailbench.failures.hard_negative import HardNegativeInjector
@@ -22,6 +22,8 @@ def build_injectors(
     index: ChunkIndex,
     cfg: AppConfig,
     rng: random.Random,
+    answer_pool: AnswerPool | None = None,
+    llm_alternates: dict[str, str] | None = None,
 ) -> dict[str, FailureInjector]:
     fcfg = cfg.failure_generation
     budget = fcfg.context_chunk_budget
@@ -32,7 +34,10 @@ def build_injectors(
         ),
         "chunk_boundary": ChunkBoundaryInjector(index, rng, context_budget=budget),
         "evidence_position": EvidencePositionInjector(index, rng, context_budget=budget),
-        "conflict": ConflictInjector(index, rng, context_budget=budget),
+        "conflict": ConflictInjector(
+            index, rng, context_budget=budget, answer_pool=answer_pool,
+            llm_alternates=llm_alternates,
+        ),
         "hard_negative": HardNegativeInjector(index, rng, context_budget=budget),
     }
     # Respect configured subset / ordering
@@ -43,6 +48,7 @@ def inject_failures(
     seeds: list[CleanSeed],
     chunks: list[Chunk],
     cfg: AppConfig,
+    llm_alternates: dict[str, str] | None = None,
 ) -> dict[str, list[FailureCase]]:
     """Generate failure cases grouped by failure type.
 
@@ -57,7 +63,9 @@ def inject_failures(
     )
     rng = random.Random(seed_val)
     index = ChunkIndex(chunks)
-    injectors = build_injectors(index, cfg, rng)
+    injectors = build_injectors(
+        index, cfg, rng, answer_pool=build_answer_pool(seeds), llm_alternates=llm_alternates
+    )
     require_valid = cfg.failure_generation.require_answer_absence
 
     by_type: dict[str, list[FailureCase]] = {name: [] for name in injectors}

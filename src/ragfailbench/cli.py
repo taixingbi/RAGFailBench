@@ -9,7 +9,7 @@ from rich.console import Console
 from rich.markup import escape
 
 from ragfailbench.config import AppConfig, load_config
-from ragfailbench.io import read_jsonl_models, write_json, write_jsonl
+from ragfailbench.io import read_jsonl, read_jsonl_models, write_json, write_jsonl
 from ragfailbench.processing.chunker import chunk_pages
 from ragfailbench.processing.deduplicate import deduplicate_pages, select_per_category
 from ragfailbench.processing.filter_pages import filter_pages
@@ -475,6 +475,42 @@ def select_seeds_cmd(
 # --------------------------------------------------------------------------- #
 
 
+@app.command("generate-alternates")
+def generate_alternates_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+) -> None:
+    """Write plausible wrong answers for the conflict operator (LLM, once per seed).
+
+    Dates/numbers are perturbed in code; other answer types get an alternate from
+    the generator model, dropped if the evaluation judge still counts it correct.
+    Output: 6_final/conflict_alternates.jsonl, read by inject-failures.
+    """
+    from collections import Counter
+
+    from ragfailbench.evaluation.runner import judge_model_for
+    from ragfailbench.failures.alternates import generate_alternates
+    from ragfailbench.generation.llm_client import LLMClient
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    seeds = read_jsonl_models(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
+    chunks_by_id = {c.chunk_id: c for c in _load_chunks(cfg, dirs)}
+    raw_path = dirs["final"] / "llm_raw_alternates.jsonl"
+    with LLMClient.from_config(cfg.llm, raw_log_path=raw_path) as gen, LLMClient.for_evaluation(
+        cfg, raw_log_path=raw_path
+    ) as judge:
+        judge_model = judge_model_for(judge, cfg)
+        console.print(f"Generating conflict alternates with {gen.model}, judge {judge_model} …")
+        rows = generate_alternates(
+            seeds, chunks_by_id, gen, judge, judge_model,
+            max_concurrency=gen.concurrency_for("generation"),
+        )
+    out = dirs["final"] / "conflict_alternates.jsonl"
+    write_jsonl(out, rows)
+    status = Counter(r["status"].split(":")[0] for r in rows)
+    console.print(f"[green]{status.get('ok', 0)}/{len(rows)} alternates → {out}[/green] {dict(status)}")
+
+
 @app.command("inject-failures")
 def inject_failures_cmd(
     config: Path = typer.Option(..., "--config", "-c"),
@@ -496,9 +532,18 @@ def inject_failures_cmd(
     dirs = cfg.ensure_dirs()
     seeds = read_jsonl_models(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
     chunks = _load_chunks(cfg, dirs)
-    console.print(f"Injecting failures for {len(seeds)} seeds …")
+    alt_path = dirs["final"] / "conflict_alternates.jsonl"
+    llm_alternates = (
+        {r["sample_id"]: r["alternate"] for r in read_jsonl(alt_path) if r.get("alternate")}
+        if alt_path.exists()
+        else {}
+    )
+    console.print(
+        f"Injecting failures for {len(seeds)} seeds "
+        f"({len(llm_alternates)} LLM conflict alternates) …"
+    )
 
-    by_type = inject_failures(seeds, chunks, cfg)
+    by_type = inject_failures(seeds, chunks, cfg, llm_alternates=llm_alternates)
     rejected = by_type.pop("_rejected", [])
 
     use_judge = judge or cfg.failure_generation.use_verification_judge
@@ -576,12 +621,28 @@ def evaluate(
         "--replace-all",
         help="Overwrite all prior evaluation_results.jsonl (default: merge by model)",
     ),
+    retry_errors: bool = typer.Option(
+        False,
+        "--retry-errors",
+        help="Re-run only prior rows whose answer/judge call failed, keeping the rest",
+    ),
+    conditions: str = typer.Option(
+        "",
+        "--conditions",
+        help="Comma-separated conditions to (re)run, e.g. conflict,conflict_aware,"
+        "closed_book; prior rows of other conditions are kept",
+    ),
 ) -> None:
     """Run the benchmark: answer clean + failure cases, compute metrics."""
-    from ragfailbench.evaluation.failure_metrics import compute_failure_metrics
+    from ragfailbench.evaluation.failure_metrics import call_error, compute_failure_metrics
     from ragfailbench.evaluation.runner import evaluate_all
     from ragfailbench.generation.llm_client import LLMClient
 
+    if retry_errors and replace_all:
+        raise typer.BadParameter("--retry-errors and --replace-all are exclusive")
+    cond_set = {c.strip() for c in conditions.split(",") if c.strip()} or None
+    if cond_set and (retry_errors or replace_all):
+        raise typer.BadParameter("--conditions cannot be combined with --retry-errors/--replace-all")
     cfg = _load(config)
     dirs = cfg.ensure_dirs()
     seeds = read_jsonl_models(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
@@ -595,22 +656,44 @@ def evaluate(
     if results_path.exists() and not replace_all:
         prior = read_jsonl_models(results_path, EvaluationResult)
 
+    retry: dict[str, set[str]] | None = None
+    if retry_errors:
+        retry = {}
+        for r in prior:
+            if call_error(r):
+                retry.setdefault(r.model_name, set()).add(r.sample_id)
+
     raw_path = dirs["final"] / "llm_raw_eval.jsonl"
     with LLMClient.for_evaluation(cfg, raw_log_path=raw_path) as client:
         run_models = model_list or cfg.evaluation.models or [client.model]
-        console.print(
-            f"Evaluating {len(seeds)} seeds + {len(failures)} failures "
-            f"via {client.base_url} models={run_models} "
-            f"(evaluation_concurrency={client.concurrency_for('evaluation')}) …"
-        )
+        if retry is not None:
+            console.print(
+                f"Retrying failed rows: { {m: len(retry.get(m, ())) for m in run_models} }"
+            )
+        else:
+            console.print(
+                f"Evaluating {len(seeds)} seeds + {len(failures)} failures "
+                f"via {client.base_url} models={run_models} "
+                f"(evaluation_concurrency={client.concurrency_for('evaluation')}) …"
+            )
         new_results = evaluate_all(
-            seeds, failures, client, cfg, models=run_models
+            seeds, failures, client, cfg, models=run_models, only=retry, conditions=cond_set
         )
 
-    run_set = {m.lower() for m in run_models}
-    kept = [r for r in prior if r.model_name.lower() not in run_set]
+    if cond_set:
+        run_set = {m.lower() for m in run_models}
+        kept = [
+            r for r in prior
+            if not (r.model_name.lower() in run_set and r.condition in cond_set)
+        ]
+    elif retry is not None:
+        redone = {(r.model_name, r.sample_id) for r in new_results}
+        kept = [r for r in prior if (r.model_name, r.sample_id) not in redone]
+    else:
+        run_set = {m.lower() for m in run_models}
+        kept = [r for r in prior if r.model_name.lower() not in run_set]
     results = kept + new_results
-    if kept:
+    if kept and retry is None:
         console.print(
             f"Merged with {len(kept)} prior results "
             f"(replaced models: {sorted(run_set)})"
@@ -623,7 +706,13 @@ def evaluate(
     for model, mrep in metrics.get("by_model", {}).items():
         console.print(
             f"  {model}: clean={mrep['clean_accuracy']} "
-            f"robustness={mrep['failure_robustness_score']}"
+            f"robustness={mrep['failure_robustness_score']} errors={mrep['n_errors']}"
+        )
+    n_errors = sum(1 for r in results if call_error(r))
+    if n_errors:
+        console.print(
+            f"[yellow]{n_errors} rows failed (excluded from metrics); "
+            "rerun with --retry-errors[/yellow]"
         )
 
 
@@ -740,7 +829,9 @@ def seed_pipeline(
     select_seeds_cmd(config)
     inject_failures_cmd(config, judge=False)
     if not skip_evaluate:
-        evaluate(config, models="", limit=0)
+        evaluate(
+            config, models="", limit=0, replace_all=False, retry_errors=False, conditions=""
+        )
     report(config)
 
 

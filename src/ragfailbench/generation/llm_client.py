@@ -741,11 +741,13 @@ class LLMClient:
         system_content: str | None = None,
         max_tokens: int | None = None,
         temperature: float | None = None,
+        model: str | None = None,
     ) -> dict[str, Any] | None:
         text = self.complete(
             user_content,
             system_content=system_content,
             max_tokens=max_tokens,
             temperature=temperature,
+            model=model,
         )
         return extract_json(text)

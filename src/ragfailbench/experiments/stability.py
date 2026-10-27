@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import shutil
 import statistics
 from collections import Counter
@@ -116,19 +117,39 @@ def _human_rate_from_csv(
     *,
     decision_col: str,
     positive: str,
+    current: dict[str, dict[str, str]] | None = None,
+    id_col: str = "sample_id",
 ) -> float | None:
+    """Share of reviewed rows marked ``positive``.
+
+    With ``current`` (id -> expected column values), returns None if any reviewed
+    row no longer matches the run, so labels from a regenerated run are not reused.
+    """
     if not path.exists():
         return None
     decisions: list[str] = []
     with path.open(encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
+            if current is not None:
+                expected = current.get(row.get(id_col) or "")
+                if expected is None or any(
+                    (row.get(k) or "") != v for k, v in expected.items()
+                ):
+                    return None
             val = (row.get(decision_col) or "").strip().lower()
             if val:
                 decisions.append(val)
     if not decisions:
         return None
     return sum(1 for d in decisions if d == positive.lower()) / len(decisions)
+
+
+def _read_jsonl_dicts(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8") as f:
+        return [json.loads(line) for line in f if line.strip()]
 
 
 def _stage_file(root: Path, numbered: str, filename: str) -> Path:
@@ -209,16 +230,32 @@ def collect_run_metrics(
         alt = list(reviews.glob("*failures_review.csv"))
         fail_csv = alt[0] if alt else fail_csv
 
+    current_seeds = {
+        r["sample_id"]: {"question": r["question"], "gold_answer": r["gold_answer"]}
+        for r in _read_jsonl_dicts(_stage_file(root, "6_final", "clean_seeds.jsonl"))
+    }
+    current_failures = {
+        r["failure_id"]: {
+            "question": r["question"],
+            "gold_answer": r["gold_answer"],
+            "contexts": "\n\n---\n\n".join(r["contexts"]),
+        }
+        for r in _read_jsonl_dicts(_stage_file(root, "6_final", "failure_cases.jsonl"))
+    }
     m.human_acceptance_rate = _human_rate_from_csv(
-        seed_csv, decision_col="decision", positive="keep"
+        seed_csv, decision_col="decision", positive="keep", current=current_seeds
     )
     m.human_failure_validity_rate = _human_rate_from_csv(
-        fail_csv, decision_col="human_injection_valid", positive="yes"
+        fail_csv,
+        decision_col="human_injection_valid",
+        positive="yes",
+        current=current_failures,
+        id_col="failure_id",
     )
     if m.human_acceptance_rate is None:
-        m.notes.append("human clean-seed review CSV missing or empty")
+        m.notes.append("human clean-seed review CSV missing, empty or stale")
     if m.human_failure_validity_rate is None:
-        m.notes.append("human failure review CSV missing or empty")
+        m.notes.append("human failure review CSV missing, empty or stale")
     return m
 
 

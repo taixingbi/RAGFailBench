@@ -1,4 +1,4 @@
-.PHONY: setup smoke pilot pilot-seeds pilot-all ping-llm seeds test lint export-schemas export-review export-review-s123 evaluate-llama-s42 evaluate-gpt-oss-s42 evaluate-all-s42 clean stability-freeze stability-run stability-report validation-contribution stability
+.PHONY: setup smoke smoke-models pilot pilot-seeds pilot-all ping-llm seeds test lint export-schemas export-review export-review-s123 evaluate-llama-s42 evaluate-gpt-oss-s42 evaluate-all-s42 clean stability-freeze stability-run stability-report validation-contribution stability
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -35,6 +35,11 @@ pilot-all: pilot pilot-seeds
 
 ping-llm:
 	$(BIN)/python -m ragfailbench ping-llm --config configs/smoke.yaml
+
+# One real call per selected model (generator, evaluated models, judge); see models.md
+SMOKE_MODELS_CONFIG ?= configs/stability/pilot_stability_s42.yaml
+smoke-models:
+	$(BIN)/python scripts/smoke_test_model.py --config $(SMOKE_MODELS_CONFIG)
 
 # M2+M3+M4 on the smoke set (requires chunks.jsonl from `make smoke`)
 seeds:
