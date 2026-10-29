@@ -190,7 +190,7 @@ paired drop by severity)**: see `tables.md` / `tables.tex`.
 > **Regeneration.** We rebuilt the benchmark from snapshot B with the unchanged
 > pipeline and configuration (seed 42). After fetching and chunking, regeneration took 14 minutes of wall time
 > (generation 4.1 min, validation 2.3, seed selection < 1 s, conflict alternates 2.6,
-> injection with judge audit 5.1) and 3,736 generator / judge calls (1.8M tokens),
+> injection with judge audit 5.1) and 3,736 logged generator / judge calls (1.8M tokens; injection-judge calls are not logged),
 > excluding the 3-model evaluation (23,188 calls including judge calls, 13.6M tokens,
 > 2.8 h at the gateway's concurrency limit of 10). The funnel reproduces: 1,000
 > candidates, 390 accepted, 200 seeds, 3,421 verified failure cases (179 quarantined,
