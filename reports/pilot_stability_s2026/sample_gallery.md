@@ -19,13 +19,13 @@
 
 ## missing_evidence
 
-- **[high]** When was Victor Franz Hess born?
+- **[low]** When was Victor Franz Hess born?
   - expected: abstain (answer_available=False)
   - contexts (3): Elders drew fire, as well as censure from the Clinton administration, when she s | By the end of the 1940s, nearly 300 Germans were working at the institute, and t | Amanda Bosh is an American planetary scientist and observational astronomer best
 
 - **[low]** When was Werner Karl Heisenberg born?
   - expected: abstain (answer_available=False)
-  - contexts (2): Heisenberg published his Umdeutung paper in 1925, a major reinterpretation of ol | Following World War II, Heisenberg was appointed Director of the Kaiser Wilhelm 
+  - contexts (3): In 1932, he showed that the threshold of the applied magnetic field which destro | Aspect is a graduate of the École Normale Supérieure de Cachan (ENS Cachan, toda | In 2007, his residence was a hexagonal, shed style mansion he dubbed Westwind, l
 
 - **[medium]** When was Werner Karl Heisenberg born?
   - expected: abstain (answer_available=False)

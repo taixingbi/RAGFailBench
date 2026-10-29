@@ -21,7 +21,7 @@
 
 - **[low]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (1): His oldest brother, Christian, died in a boating accident in 1934, and his young
+  - contexts (3): The Gillette paternal ancestors were French Huguenots who sought refuge in Engla | In a letter to Gillette, Arthur Conan Doyle stated: "I consider the production a | Arnold Beckman lived in Altadena, California and had a strong interest in solvin
 
 - **[medium]** When was Bohr born?
   - expected: abstain (answer_available=False)
@@ -29,7 +29,7 @@
 
 - **[high]** When was Bohr born?
   - expected: abstain (answer_available=False)
-  - contexts (3): The Gillette paternal ancestors were French Huguenots who sought refuge in Engla | In a letter to Gillette, Arthur Conan Doyle stated: "I consider the production a | Arnold Beckman lived in Altadena, California and had a strong interest in solvin
+  - contexts (1): His oldest brother, Christian, died in a boating accident in 1934, and his young
 
 ## context_noise
 

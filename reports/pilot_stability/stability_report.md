@@ -13,7 +13,7 @@ Run IDs: `['pilot_stability_s42', 'pilot_stability_s123', 'pilot_stability_s2026
 | QA acceptance rate | 39.4% ± 0.8% | Validation stability |
 | Clean-seed yield | 20.0% ± 0.0% | Dataset construction stability |
 | Clean-seed count | 200.0 ± 0.0 | Absolute yield |
-| Failure verification pass rate | 96.0% ± 0.3% | Injection reliability |
+| Failure verification pass rate | 94.3% ± 0.3% | Injection reliability |
 | Human acceptance rate (HAR) | n/a | Actual quality stability |
 | Human failure validity | n/a | Injection quality |
 
@@ -21,9 +21,9 @@ Run IDs: `['pilot_stability_s42', 'pilot_stability_s123', 'pilot_stability_s2026
 
 | run_id | seed | candidates | schema% | accept% | seeds | yield% | fail_pass% | HAR |
 |--------|------|------------|---------|---------|-------|--------|------------|-----|
-| pilot_stability_s42 | 42 | 1000 | 100.0% | 38.7% | 200 | 20.0% | 96.1% | n/a |
-| pilot_stability_s123 | 123 | 1000 | 100.0% | 40.3% | 200 | 20.0% | 96.2% | n/a |
-| pilot_stability_s2026 | 2026 | 1000 | 100.0% | 39.2% | 200 | 20.0% | 95.8% | n/a |
+| pilot_stability_s42 | 42 | 1000 | 100.0% | 38.7% | 200 | 20.0% | 94.1% | n/a |
+| pilot_stability_s123 | 123 | 1000 | 100.0% | 40.3% | 200 | 20.0% | 94.6% | n/a |
+| pilot_stability_s2026 | 2026 | 1000 | 100.0% | 39.2% | 200 | 20.0% | 94.1% | n/a |
 
 ## Category / difficulty distributions
 

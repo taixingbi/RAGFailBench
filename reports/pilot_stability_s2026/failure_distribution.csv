@@ -11,9 +11,9 @@ context_noise,medium,200
 evidence_position,high,200
 evidence_position,low,200
 evidence_position,medium,200
-hard_negative,high,200
-hard_negative,low,200
-hard_negative,medium,200
-missing_evidence,high,200
-missing_evidence,low,197
-missing_evidence,medium,171
+hard_negative,high,187
+hard_negative,low,194
+hard_negative,medium,193
+missing_evidence,high,174
+missing_evidence,low,200
+missing_evidence,medium,161

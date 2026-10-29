@@ -3,16 +3,16 @@
 ## nova-pro
 
 - Clean accuracy: **0.965**
-- Failure Robustness Score: **0.9101**
+- Failure Robustness Score: **0.9247**
 
 | Condition | Answer Acc. | Clean Acc. (matched) | Paired Drop | Correct Abstention | Abstention | Hallucination |
 |-----------|-------------|----------------------|-------------|--------------------|------------|---------------|
-| missing_evidence | — | — | 0.1246 | 0.8754 | 0.8754 | 0.1246 |
 | context_noise | 0.9617 | 0.965 | 0.0033 | — | 0.0 | 0.0067 |
 | chunk_boundary | 0.9352 | 0.9615 | 0.0263 | — | 0.0081 | 0.0223 |
 | evidence_position | 0.955 | 0.965 | 0.01 | — | 0.0017 | 0.01 |
-| hard_negative | — | — | 0.1083 | 0.8917 | 0.8917 | 0.1083 |
 | conflict | 0.6983 | 0.965 | 0.2667 | — | 0.01 | 0.2767 |
+| missing_evidence | — | — | 0.0725 | 0.9275 | 0.9275 | 0.0595 |
+| hard_negative | — | — | 0.0732 | 0.9268 | 0.9268 | 0.0714 |
 
 | Conflict condition | Gold | Alternate | Both | Abstain | Other | Acknowledged | Handled | Judge-only Acc. | Handled (prior known) | Handled (prior unknown) |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -25,16 +25,16 @@ Handled = gold, both values, or an acknowledged conflict; conflict Answer Acc. a
 ## llama
 
 - Clean accuracy: **0.955**
-- Failure Robustness Score: **0.9231**
+- Failure Robustness Score: **0.9343**
 
 | Condition | Answer Acc. | Clean Acc. (matched) | Paired Drop | Correct Abstention | Abstention | Hallucination |
 |-----------|-------------|----------------------|-------------|--------------------|------------|---------------|
-| missing_evidence | — | — | 0.1 | 0.9 | 0.9 | 0.1 |
 | context_noise | 0.9467 | 0.955 | 0.0083 | — | 0.0033 | 0.0183 |
 | chunk_boundary | 0.9312 | 0.9494 | 0.0182 | — | 0.0121 | 0.0202 |
 | evidence_position | 0.9567 | 0.955 | -0.0017 | — | 0.0 | 0.0117 |
-| hard_negative | — | — | 0.1 | 0.9 | 0.9 | 0.1 |
 | conflict | 0.7183 | 0.955 | 0.2367 | — | 0.0167 | 0.2567 |
+| missing_evidence | — | — | 0.0613 | 0.9387 | 0.9387 | 0.0502 |
+| hard_negative | — | — | 0.0714 | 0.9286 | 0.9286 | 0.0679 |
 
 | Conflict condition | Gold | Alternate | Both | Abstain | Other | Acknowledged | Handled | Judge-only Acc. | Handled (prior known) | Handled (prior unknown) |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -47,16 +47,16 @@ Handled = gold, both values, or an acknowledged conflict; conflict Answer Acc. a
 ## gpt-oss
 
 - Clean accuracy: **0.96**
-- Failure Robustness Score: **0.9**
+- Failure Robustness Score: **0.9147**
 
 | Condition | Answer Acc. | Clean Acc. (matched) | Paired Drop | Correct Abstention | Abstention | Hallucination |
 |-----------|-------------|----------------------|-------------|--------------------|------------|---------------|
-| missing_evidence | — | — | 0.107 | 0.893 | 0.893 | 0.107 |
 | context_noise | 0.95 | 0.96 | 0.01 | — | 0.0033 | 0.005 |
 | chunk_boundary | 0.8968 | 0.9514 | 0.0547 | — | 0.0526 | 0.0182 |
 | evidence_position | 0.965 | 0.96 | -0.005 | — | 0.0033 | 0.0033 |
-| hard_negative | — | — | 0.1283 | 0.8717 | 0.8717 | 0.1283 |
 | conflict | 0.655 | 0.96 | 0.305 | — | 0.0067 | 0.33 |
+| missing_evidence | — | — | 0.0651 | 0.9349 | 0.9349 | 0.0465 |
+| hard_negative | — | — | 0.0819 | 0.9181 | 0.9181 | 0.0801 |
 
 | Conflict condition | Gold | Alternate | Both | Abstain | Other | Acknowledged | Handled | Judge-only Acc. | Handled (prior known) | Handled (prior unknown) |
 |---|---|---|---|---|---|---|---|---|---|---|

@@ -3,25 +3,36 @@
 | Condition | nova-pro score (Δ pp) | llama score (Δ pp) | gpt-oss score (Δ pp) |
 |---|---|---|---|
 | clean | 0.97 ± 0.01 | 0.97 ± 0.02 | 0.97 ± 0.01 |
-| missing_evidence (abstain) | 0.88 ± 0.01 (-12.2) | 0.91 ± 0.01 (-9.3) | 0.89 ± 0.01 (-11.3) |
-| hard_negative (abstain) | 0.91 ± 0.02 (-9.2) | 0.91 ± 0.01 (-8.9) | 0.89 ± 0.02 (-11.1) |
+| missing_evidence (abstain) | 0.93 ± 0.00 (-7.0) | 0.95 ± 0.01 (-4.9) | 0.93 ± 0.00 (-6.6) |
+| hard_negative (abstain) | 0.94 ± 0.01 (-5.9) | 0.94 ± 0.01 (-5.6) | 0.93 ± 0.01 (-7.0) |
 | conflict | 0.70 ± 0.02 (-27.5) | 0.73 ± 0.01 (-23.8) | 0.67 ± 0.01 (-30.0) |
 | context_noise | 0.97 ± 0.01 (-0.4) | 0.97 ± 0.02 (-0.3) | 0.96 ± 0.01 (-0.2) |
 | chunk_boundary | 0.94 ± 0.00 (-2.9) | 0.95 ± 0.02 (-2.2) | 0.92 ± 0.02 (-4.5) |
 | evidence_position | 0.96 ± 0.01 (-0.9) | 0.97 ± 0.02 (+0.1) | 0.97 ± 0.01 (+0.3) |
 | closed-book (probe) | 0.26 ± 0.03 | 0.41 ± 0.06 | 0.44 ± 0.07 |
-| FRS | 0.911 ± 0.003 | 0.926 ± 0.004 | 0.905 ± 0.007 |
+| FRS | 0.926 ± 0.002 | 0.939 ± 0.004 | 0.920 ± 0.005 |
 
-**Abstention / hallucination rate by condition, mean ± std over three seeded runs.**
+**Abstention / answered-correctly / hallucination rate by condition, mean ± std over three seeded runs. For abstain-expected operators a non-abstention is either correct (prior knowledge or a residual partial leak) or a hallucination (wrong answer).**
 
-| Condition | nova-pro abst. / halluc. | llama abst. / halluc. | gpt-oss abst. / halluc. |
+| Condition | nova-pro abst. / ans.-correct / halluc. | llama abst. / ans.-correct / halluc. | gpt-oss abst. / ans.-correct / halluc. |
 |---|---|---|---|
-| missing_evidence | 0.88 ± 0.01 / 0.12 ± 0.01 | 0.91 ± 0.01 / 0.09 ± 0.01 | 0.89 ± 0.01 / 0.11 ± 0.01 |
-| hard_negative | 0.91 ± 0.02 / 0.09 ± 0.02 | 0.91 ± 0.01 / 0.09 ± 0.01 | 0.89 ± 0.02 / 0.11 ± 0.02 |
-| conflict | 0.01 ± 0.00 / 0.28 ± 0.02 | 0.02 ± 0.01 / 0.25 ± 0.01 | 0.01 ± 0.00 / 0.32 ± 0.01 |
-| context_noise | 0.00 ± 0.00 / 0.01 ± 0.00 | 0.00 ± 0.00 / 0.01 ± 0.01 | 0.00 ± 0.00 / 0.01 ± 0.00 |
-| chunk_boundary | 0.01 ± 0.00 / 0.02 ± 0.00 | 0.01 ± 0.00 / 0.01 ± 0.01 | 0.04 ± 0.01 / 0.02 ± 0.00 |
-| evidence_position | 0.00 ± 0.00 / 0.01 ± 0.00 | 0.00 ± 0.00 / 0.01 ± 0.01 | 0.01 ± 0.00 / 0.00 ± 0.00 |
+| missing_evidence | 0.93 ± 0.00 / 0.01 ± 0.00 / 0.06 ± 0.00 | 0.95 ± 0.01 / 0.01 ± 0.00 / 0.04 ± 0.01 | 0.93 ± 0.00 / 0.02 ± 0.00 / 0.05 ± 0.00 |
+| hard_negative | 0.94 ± 0.01 / 0.00 ± 0.00 / 0.06 ± 0.01 | 0.94 ± 0.01 / 0.00 ± 0.00 / 0.05 ± 0.02 | 0.93 ± 0.01 / 0.01 ± 0.00 / 0.07 ± 0.01 |
+| conflict | 0.01 ± 0.00 / — / 0.28 ± 0.02 | 0.02 ± 0.01 / — / 0.25 ± 0.01 | 0.01 ± 0.00 / — / 0.32 ± 0.01 |
+| context_noise | 0.00 ± 0.00 / — / 0.01 ± 0.00 | 0.00 ± 0.00 / — / 0.01 ± 0.01 | 0.00 ± 0.00 / — / 0.01 ± 0.00 |
+| chunk_boundary | 0.01 ± 0.00 / — / 0.02 ± 0.00 | 0.01 ± 0.00 / — / 0.01 ± 0.01 | 0.04 ± 0.01 / — / 0.02 ± 0.00 |
+| evidence_position | 0.00 ± 0.00 / — / 0.01 ± 0.00 | 0.00 ± 0.00 / — / 0.01 ± 0.01 | 0.01 ± 0.00 / — / 0.00 ± 0.00 |
+
+**Paired drop (pp) by severity: mean ± std over three seeded runs of the three-model mean. For abstain-expected operators the drop is the rate of failing to abstain; missing_evidence severity is closeness of the remaining context to the removed evidence.**
+
+| Operator | low | medium | high |
+|---|---|---|---|
+| missing_evidence | 0.3 ± 0.3 | 5.6 ± 0.4 | 13.5 ± 1.4 |
+| hard_negative | 5.2 ± 1.9 | 6.2 ± 0.9 | 7.2 ± 1.2 |
+| conflict | 14.2 ± 0.9 | 24.5 ± 0.8 | 42.6 ± 2.8 |
+| context_noise | 0.2 ± 0.3 | 0.6 ± 0.1 | 0.2 ± 0.7 |
+| chunk_boundary | 0.2 ± 0.5 | 3.5 ± 0.7 | 6.6 ± 0.2 |
+| evidence_position | 0.3 ± 0.6 | 0.2 ± 0.7 | 0.1 ± 0.3 |
 
 **Conflict outcomes, mean ± std (%) over three seeded runs. Handled = gold, both values, or an acknowledged conflict. Aware = prompt that permits flagging a conflict (probe, excluded from FRS). Prior known/unknown splits by closed-book correctness.**
 

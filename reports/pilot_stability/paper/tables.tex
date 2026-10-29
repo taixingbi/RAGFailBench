@@ -7,32 +7,50 @@
 Condition & nova-pro score ($\Delta$ pp) & llama score ($\Delta$ pp) & gpt-oss score ($\Delta$ pp) \\
 \midrule
 clean & 0.97 $\pm$ 0.01 & 0.97 $\pm$ 0.02 & 0.97 $\pm$ 0.01 \\
-missing\_evidence (abstain) & 0.88 $\pm$ 0.01 (-12.2) & 0.91 $\pm$ 0.01 (-9.3) & 0.89 $\pm$ 0.01 (-11.3) \\
-hard\_negative (abstain) & 0.91 $\pm$ 0.02 (-9.2) & 0.91 $\pm$ 0.01 (-8.9) & 0.89 $\pm$ 0.02 (-11.1) \\
+missing\_evidence (abstain) & 0.93 $\pm$ 0.00 (-7.0) & 0.95 $\pm$ 0.01 (-4.9) & 0.93 $\pm$ 0.00 (-6.6) \\
+hard\_negative (abstain) & 0.94 $\pm$ 0.01 (-5.9) & 0.94 $\pm$ 0.01 (-5.6) & 0.93 $\pm$ 0.01 (-7.0) \\
 conflict & 0.70 $\pm$ 0.02 (-27.5) & 0.73 $\pm$ 0.01 (-23.8) & 0.67 $\pm$ 0.01 (-30.0) \\
 context\_noise & 0.97 $\pm$ 0.01 (-0.4) & 0.97 $\pm$ 0.02 (-0.3) & 0.96 $\pm$ 0.01 (-0.2) \\
 chunk\_boundary & 0.94 $\pm$ 0.00 (-2.9) & 0.95 $\pm$ 0.02 (-2.2) & 0.92 $\pm$ 0.02 (-4.5) \\
 evidence\_position & 0.96 $\pm$ 0.01 (-0.9) & 0.97 $\pm$ 0.02 (+0.1) & 0.97 $\pm$ 0.01 (+0.3) \\
 closed-book (probe) & 0.26 $\pm$ 0.03 & 0.41 $\pm$ 0.06 & 0.44 $\pm$ 0.07 \\
-FRS & 0.911 $\pm$ 0.003 & 0.926 $\pm$ 0.004 & 0.905 $\pm$ 0.007 \\
+FRS & 0.926 $\pm$ 0.002 & 0.939 $\pm$ 0.004 & 0.920 $\pm$ 0.005 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 \begin{table*}[t]
 \centering
-\caption{Abstention / hallucination rate by condition, mean $\pm$ std over three seeded runs.}
+\caption{Abstention / answered-correctly / hallucination rate by condition, mean $\pm$ std over three seeded runs. For abstain-expected operators a non-abstention is either correct (prior knowledge or a residual partial leak) or a hallucination (wrong answer).}
 \small
 \begin{tabular}{llll}
 \toprule
-Condition & nova-pro abst. / halluc. & llama abst. / halluc. & gpt-oss abst. / halluc. \\
+Condition & nova-pro abst. / ans.-correct / halluc. & llama abst. / ans.-correct / halluc. & gpt-oss abst. / ans.-correct / halluc. \\
 \midrule
-missing\_evidence & 0.88 $\pm$ 0.01 / 0.12 $\pm$ 0.01 & 0.91 $\pm$ 0.01 / 0.09 $\pm$ 0.01 & 0.89 $\pm$ 0.01 / 0.11 $\pm$ 0.01 \\
-hard\_negative & 0.91 $\pm$ 0.02 / 0.09 $\pm$ 0.02 & 0.91 $\pm$ 0.01 / 0.09 $\pm$ 0.01 & 0.89 $\pm$ 0.02 / 0.11 $\pm$ 0.02 \\
-conflict & 0.01 $\pm$ 0.00 / 0.28 $\pm$ 0.02 & 0.02 $\pm$ 0.01 / 0.25 $\pm$ 0.01 & 0.01 $\pm$ 0.00 / 0.32 $\pm$ 0.01 \\
-context\_noise & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.00 & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.01 & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.00 \\
-chunk\_boundary & 0.01 $\pm$ 0.00 / 0.02 $\pm$ 0.00 & 0.01 $\pm$ 0.00 / 0.01 $\pm$ 0.01 & 0.04 $\pm$ 0.01 / 0.02 $\pm$ 0.00 \\
-evidence\_position & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.00 & 0.00 $\pm$ 0.00 / 0.01 $\pm$ 0.01 & 0.01 $\pm$ 0.00 / 0.00 $\pm$ 0.00 \\
+missing\_evidence & 0.93 $\pm$ 0.00 / 0.01 $\pm$ 0.00 / 0.06 $\pm$ 0.00 & 0.95 $\pm$ 0.01 / 0.01 $\pm$ 0.00 / 0.04 $\pm$ 0.01 & 0.93 $\pm$ 0.00 / 0.02 $\pm$ 0.00 / 0.05 $\pm$ 0.00 \\
+hard\_negative & 0.94 $\pm$ 0.01 / 0.00 $\pm$ 0.00 / 0.06 $\pm$ 0.01 & 0.94 $\pm$ 0.01 / 0.00 $\pm$ 0.00 / 0.05 $\pm$ 0.02 & 0.93 $\pm$ 0.01 / 0.01 $\pm$ 0.00 / 0.07 $\pm$ 0.01 \\
+conflict & 0.01 $\pm$ 0.00 / — / 0.28 $\pm$ 0.02 & 0.02 $\pm$ 0.01 / — / 0.25 $\pm$ 0.01 & 0.01 $\pm$ 0.00 / — / 0.32 $\pm$ 0.01 \\
+context\_noise & 0.00 $\pm$ 0.00 / — / 0.01 $\pm$ 0.00 & 0.00 $\pm$ 0.00 / — / 0.01 $\pm$ 0.01 & 0.00 $\pm$ 0.00 / — / 0.01 $\pm$ 0.00 \\
+chunk\_boundary & 0.01 $\pm$ 0.00 / — / 0.02 $\pm$ 0.00 & 0.01 $\pm$ 0.00 / — / 0.01 $\pm$ 0.01 & 0.04 $\pm$ 0.01 / — / 0.02 $\pm$ 0.00 \\
+evidence\_position & 0.00 $\pm$ 0.00 / — / 0.01 $\pm$ 0.00 & 0.00 $\pm$ 0.00 / — / 0.01 $\pm$ 0.01 & 0.01 $\pm$ 0.00 / — / 0.00 $\pm$ 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Paired drop (pp) by severity: mean $\pm$ std over three seeded runs of the three-model mean. For abstain-expected operators the drop is the rate of failing to abstain; missing\_evidence severity is closeness of the remaining context to the removed evidence.}
+\small
+\begin{tabular}{llll}
+\toprule
+Operator & low & medium & high \\
+\midrule
+missing\_evidence & 0.3 $\pm$ 0.3 & 5.6 $\pm$ 0.4 & 13.5 $\pm$ 1.4 \\
+hard\_negative & 5.2 $\pm$ 1.9 & 6.2 $\pm$ 0.9 & 7.2 $\pm$ 1.2 \\
+conflict & 14.2 $\pm$ 0.9 & 24.5 $\pm$ 0.8 & 42.6 $\pm$ 2.8 \\
+context\_noise & 0.2 $\pm$ 0.3 & 0.6 $\pm$ 0.1 & 0.2 $\pm$ 0.7 \\
+chunk\_boundary & 0.2 $\pm$ 0.5 & 3.5 $\pm$ 0.7 & 6.6 $\pm$ 0.2 \\
+evidence\_position & 0.3 $\pm$ 0.6 & 0.2 $\pm$ 0.7 & 0.1 $\pm$ 0.3 \\
 \bottomrule
 \end{tabular}
 \end{table*}

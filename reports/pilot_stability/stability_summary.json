@@ -30,10 +30,10 @@
       "display": "20.0% ± 0.0%"
     },
     "failure_verification_pass_rate": {
-      "mean": 0.9603703703703703,
-      "std": 0.002520492146077048,
+      "mean": 0.9428703703703704,
+      "std": 0.002809998315832124,
       "n": 3,
-      "display": "96.0% ± 0.3%"
+      "display": "94.3% ± 0.3%"
     },
     "human_acceptance_rate": {
       "mean": null,
@@ -74,16 +74,16 @@
       "display": "200.0 ± 0.0"
     },
     "failure_valid_count": {
-      "mean": 3457.3333333333335,
-      "std": 9.073771725877465,
+      "mean": 3394.3333333333335,
+      "std": 10.115993936995679,
       "n": 3,
-      "display": "3457.3 ± 9.1"
+      "display": "3394.3 ± 10.1"
     },
     "failure_rejected_count": {
-      "mean": 142.66666666666666,
-      "std": 9.073771725877465,
+      "mean": 205.66666666666666,
+      "std": 10.115993936995679,
       "n": 3,
-      "display": "142.7 ± 9.1"
+      "display": "205.7 ± 10.1"
     }
   },
   "per_run": [
@@ -98,9 +98,9 @@
       "qa_acceptance_rate": 0.387,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 3461,
-      "failure_rejected_count": 139,
-      "failure_verification_pass_rate": 0.9613888888888888,
+      "failure_valid_count": 3389,
+      "failure_rejected_count": 211,
+      "failure_verification_pass_rate": 0.9413888888888889,
       "category_distribution": {
         "person": 47,
         "location": 41,
@@ -131,9 +131,9 @@
       "qa_acceptance_rate": 0.403,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 3464,
-      "failure_rejected_count": 136,
-      "failure_verification_pass_rate": 0.9622222222222222,
+      "failure_valid_count": 3406,
+      "failure_rejected_count": 194,
+      "failure_verification_pass_rate": 0.9461111111111111,
       "category_distribution": {
         "person": 42,
         "location": 40,
@@ -164,9 +164,9 @@
       "qa_acceptance_rate": 0.392,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 3447,
-      "failure_rejected_count": 153,
-      "failure_verification_pass_rate": 0.9575,
+      "failure_valid_count": 3388,
+      "failure_rejected_count": 212,
+      "failure_verification_pass_rate": 0.9411111111111111,
       "category_distribution": {
         "person": 48,
         "location": 41,
