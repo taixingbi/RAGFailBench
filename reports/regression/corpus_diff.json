@@ -1,0 +1,48 @@
+{
+  "snapshot_a": "pilot_stability_corpus",
+  "snapshot_b": "regress_corpus_b",
+  "diff": {
+    "pages_a": 768,
+    "pages_b": 764,
+    "pages_missing_in_b": 4,
+    "pages_new_revision": 580,
+    "pages_same_revision": 184,
+    "chunks_a": 12366,
+    "chunks_b": 13599,
+    "chunks_unchanged": 11296,
+    "chunks_removed_or_edited": 1070,
+    "chunks_added_or_edited": 2303
+  },
+  "staleness": {
+    "pilot_stability_s42": {
+      "n_seeds": 200,
+      "counts": {
+        "intact": 187,
+        "sentence_edited": 11,
+        "answer_gone": 2,
+        "page_missing": 0
+      },
+      "stale_rate": 0.065
+    },
+    "pilot_stability_s123": {
+      "n_seeds": 200,
+      "counts": {
+        "intact": 192,
+        "sentence_edited": 7,
+        "answer_gone": 1,
+        "page_missing": 0
+      },
+      "stale_rate": 0.04
+    },
+    "pilot_stability_s2026": {
+      "n_seeds": 200,
+      "counts": {
+        "intact": 190,
+        "sentence_edited": 10,
+        "answer_gone": 0,
+        "page_missing": 0
+      },
+      "stale_rate": 0.05
+    }
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "paired": true,
+  "tolerance": 0.05,
+  "n_boot": 2000,
+  "decision": "BLOCK",
+  "rows": [
+    {
+      "model": "gpt-oss",
+      "condition": "chunk_boundary",
+      "n": 505,
+      "baseline": 0.9069,
+      "candidate": 0.8475,
+      "diff": -0.0594,
+      "ci_low": -0.0851,
+      "ci_high": -0.0356,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "gpt-oss",
+      "condition": "clean",
+      "n": 200,
+      "baseline": 0.97,
+      "candidate": 0.97,
+      "diff": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "verdict": "pass"
+    },
+    {
+      "model": "gpt-oss",
+      "condition": "conflict",
+      "n": 600,
+      "baseline": 0.6633,
+      "candidate": 0.5833,
+      "diff": -0.08,
+      "ci_low": -0.1133,
+      "ci_high": -0.05,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "gpt-oss",
+      "condition": "context_noise",
+      "n": 600,
+      "baseline": 0.9667,
+      "candidate": 0.765,
+      "diff": -0.2017,
+      "ci_low": -0.235,
+      "ci_high": -0.1683,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "gpt-oss",
+      "condition": "evidence_position",
+      "n": 600,
+      "baseline": 0.9733,
+      "candidate": 0.32,
+      "diff": -0.6533,
+      "ci_low": -0.69,
+      "ci_high": -0.615,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "gpt-oss",
+      "condition": "hard_negative",
+      "n": 589,
+      "baseline": 0.9762,
+      "candidate": 0.983,
+      "diff": 0.0068,
+      "ci_low": -0.0068,
+      "ci_high": 0.0204,
+      "verdict": "pass"
+    },
+    {
+      "model": "gpt-oss",
+      "condition": "missing_evidence",
+      "n": 527,
+      "baseline": 0.9393,
+      "candidate": 0.9355,
+      "diff": -0.0038,
+      "ci_low": -0.0152,
+      "ci_high": 0.0076,
+      "verdict": "pass"
+    },
+    {
+      "model": "llama",
+      "condition": "chunk_boundary",
+      "n": 505,
+      "baseline": 0.9505,
+      "candidate": 0.8752,
+      "diff": -0.0752,
+      "ci_low": -0.099,
+      "ci_high": -0.0515,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "llama",
+      "condition": "clean",
+      "n": 200,
+      "baseline": 0.965,
+      "candidate": 0.965,
+      "diff": 0.0,
+      "ci_low": -0.02,
+      "ci_high": 0.02,
+      "verdict": "pass"
+    },
+    {
+      "model": "llama",
+      "condition": "conflict",
+      "n": 600,
+      "baseline": 0.7317,
+      "candidate": 0.6183,
+      "diff": -0.1133,
+      "ci_low": -0.1417,
+      "ci_high": -0.085,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "llama",
+      "condition": "context_noise",
+      "n": 600,
+      "baseline": 0.9633,
+      "candidate": 0.7733,
+      "diff": -0.19,
+      "ci_low": -0.225,
+      "ci_high": -0.1567,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "llama",
+      "condition": "evidence_position",
+      "n": 600,
+      "baseline": 0.9667,
+      "candidate": 0.3217,
+      "diff": -0.645,
+      "ci_low": -0.6817,
+      "ci_high": -0.6067,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "llama",
+      "condition": "hard_negative",
+      "n": 589,
+      "baseline": 0.9881,
+      "candidate": 0.9864,
+      "diff": -0.0017,
+      "ci_low": -0.0085,
+      "ci_high": 0.0034,
+      "verdict": "pass"
+    },
+    {
+      "model": "llama",
+      "condition": "missing_evidence",
+      "n": 527,
+      "baseline": 0.9677,
+      "candidate": 0.9696,
+      "diff": 0.0019,
+      "ci_low": 0.0,
+      "ci_high": 0.0057,
+      "verdict": "pass"
+    },
+    {
+      "model": "nova-pro",
+      "condition": "chunk_boundary",
+      "n": 505,
+      "baseline": 0.9446,
+      "candidate": 0.8733,
+      "diff": -0.0713,
+      "ci_low": -0.095,
+      "ci_high": -0.0495,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "nova-pro",
+      "condition": "clean",
+      "n": 200,
+      "baseline": 0.965,
+      "candidate": 0.96,
+      "diff": -0.005,
+      "ci_low": -0.025,
+      "ci_high": 0.01,
+      "verdict": "pass"
+    },
+    {
+      "model": "nova-pro",
+      "condition": "conflict",
+      "n": 600,
+      "baseline": 0.7283,
+      "candidate": 0.5867,
+      "diff": -0.1417,
+      "ci_low": -0.1733,
+      "ci_high": -0.1117,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "nova-pro",
+      "condition": "context_noise",
+      "n": 600,
+      "baseline": 0.965,
+      "candidate": 0.7617,
+      "diff": -0.2033,
+      "ci_low": -0.2383,
+      "ci_high": -0.1717,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "nova-pro",
+      "condition": "evidence_position",
+      "n": 600,
+      "baseline": 0.965,
+      "candidate": 0.3217,
+      "diff": -0.6433,
+      "ci_low": -0.6817,
+      "ci_high": -0.605,
+      "verdict": "FAIL"
+    },
+    {
+      "model": "nova-pro",
+      "condition": "hard_negative",
+      "n": 589,
+      "baseline": 0.9813,
+      "candidate": 0.9745,
+      "diff": -0.0068,
+      "ci_low": -0.017,
+      "ci_high": 0.0017,
+      "verdict": "pass"
+    },
+    {
+      "model": "nova-pro",
+      "condition": "missing_evidence",
+      "n": 527,
+      "baseline": 0.9317,
+      "candidate": 0.9298,
+      "diff": -0.0019,
+      "ci_low": -0.0057,
+      "ci_high": 0.0,
+      "verdict": "pass"
+    }
+  ],
+  "baseline_run": "regress_b_s42",
+  "candidate_run": "regress_b_s42_topk4"
+}

@@ -1,0 +1,21 @@
+{
+  "total_valid": 3421,
+  "total_rejected": 179,
+  "judge_used": true,
+  "judge_unaudited": 0,
+  "by_type": {
+    "missing_evidence": 527,
+    "context_noise": 600,
+    "chunk_boundary": 505,
+    "evidence_position": 600,
+    "conflict": 600,
+    "hard_negative": 589
+  },
+  "rejection_reasons": {
+    "gold_answer_present": 55,
+    "contexts_nonempty": 32,
+    "distractors_lack_gold_evidence": 7,
+    "evidence_split_across_chunks": 33,
+    "judge_answer_still_available": 52
+  }
+}
