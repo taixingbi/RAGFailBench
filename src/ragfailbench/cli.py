@@ -556,6 +556,8 @@ def inject_failures_cmd(
                 f"(judge_concurrency={client.concurrency_for('judge')}) …"
             )
             for ftype in list(by_type):
+                if all(c.answer_available for c in by_type[ftype]):
+                    continue  # the judge audits abstain-expected cases only
                 valid, judged_out = verify_failures(
                     by_type[ftype],
                     client,
@@ -581,6 +583,13 @@ def inject_failures_cmd(
         "total_valid": total,
         "total_rejected": len(rejected),
         "judge_used": use_judge,
+        "judge_unaudited": sum(
+            1
+            for cases in by_type.values()
+            for c in cases
+            if use_judge and not c.answer_available
+            and c.verification is not None and c.verification.judge_verified is None
+        ),
         "by_type": {ftype: len(cases) for ftype, cases in by_type.items()},
         "rejection_reasons": {},
     }
@@ -592,6 +601,11 @@ def inject_failures_cmd(
     write_json(dirs["reports"] / "failure_verification.json", report)
 
     console.print(f"[green]Wrote {total} failure cases → {failures_dir}[/green]")
+    if report["judge_unaudited"]:
+        console.print(
+            f"[red]{report['judge_unaudited']} abstain-expected cases kept without a "
+            "judge verdict (judge call failed)[/red]"
+        )
     if rejected:
         console.print(
             f"[yellow]Quarantined {len(rejected)} invalid injections → "
@@ -812,6 +826,152 @@ def export_review_cmd(
     console.print(f"[green]Wrote human-review pack → {out}[/green]")
     for name, path in paths.items():
         console.print(f"  {name}: {path}")
+
+
+@app.command("export-judge-review")
+def export_judge_review_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+    output_dir: Path = typer.Option(Path("reviews"), "--output-dir", "-o"),
+    per_cell: int = typer.Option(15, "--per-cell", help="Answers per (model, condition) cell"),
+    seed: int = typer.Option(None, "--seed", help="Sampling seed (default: project seed)"),
+) -> None:
+    """Export a blind sheet for validating the correctness judge against humans."""
+    from ragfailbench.reporting.judge_review import export_judge_review
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    results = read_jsonl_models(dirs["final"] / "evaluation_results.jsonl", EvaluationResult)
+    seeds = read_jsonl_models(dirs["final"] / "clean_seeds.jsonl", CleanSeed)
+    out = output_dir / cfg.project.run_id
+    paths = export_judge_review(
+        results=results,
+        seeds=seeds,
+        output_dir=out,
+        run_id=cfg.project.run_id,
+        per_cell=per_cell,
+        random_seed=cfg.project.random_seed if seed is None else seed,
+    )
+    for name, path in paths.items():
+        console.print(f"  {name}: {path}")
+
+
+@app.command("judge-agreement")
+def judge_agreement_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+    reviews_dir: Path = typer.Option(Path("reviews"), "--reviews-dir"),
+) -> None:
+    """Cohen's kappa between the filled judge-review sheet and the judge."""
+    from ragfailbench.reporting.judge_review import judge_agreement, judge_agreement_markdown
+    from ragfailbench.reporting.markdown_report import write_text
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    run_id = cfg.project.run_id
+    sheet = reviews_dir / run_id / f"{run_id}_judge_review.csv"
+    if not sheet.exists():
+        raise typer.BadParameter(f"Missing {sheet}; run export-judge-review first")
+    results = read_jsonl_models(dirs["final"] / "evaluation_results.jsonl", EvaluationResult)
+    report = judge_agreement(sheet, results)
+    write_json(dirs["reports"] / "judge_agreement.json", report)
+    write_text(dirs["reports"] / "judge_agreement.md", judge_agreement_markdown(report, run_id))
+    overall = report["judge_verdict"].get("all")
+    console.print(f"Labels {report['labels']}; judge verdict vs human: {overall}")
+
+
+@app.command("snapshot-refetch")
+def snapshot_refetch_cmd(
+    config: Path = typer.Option(..., "--config", "-c", help="Config of the new snapshot run"),
+    source_run: str = typer.Option(..., "--source-run", help="Run holding snapshot A"),
+) -> None:
+    """Re-fetch snapshot A's selected pages at their current revision (snapshot B).
+
+    Keeps A's page selection (no re-sampling or re-filtering) so the two
+    snapshots differ only in content; then run `chunk` on the new config.
+    """
+    from ragfailbench.experiments.regression import refetch_snapshot
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    src = Path(cfg.paths.data_dir) / "runs" / source_run / "2_interim" / "filtered_pages.jsonl"
+    pages_a = read_jsonl_models(src, WikipediaPage)
+    console.print(f"Re-fetching {len(pages_a)} pages of {source_run} …")
+    with MediaWikiSource(cfg) as source:
+        pages_b, missing = refetch_snapshot(
+            pages_a, source, max_concurrency=cfg.source.fetch_concurrency
+        )
+    write_jsonl(dirs["raw"] / "raw_pages.jsonl", pages_b)
+    write_jsonl(dirs["raw"] / "fetch_errors.jsonl", missing)
+    write_jsonl(dirs["interim"] / "filtered_pages.jsonl", pages_b)
+    rev_a = {p.page_id: p.revision_id for p in pages_a}
+    changed = sum(p.revision_id != rev_a[p.page_id] for p in pages_b)
+    console.print(
+        f"[green]{len(pages_b)} pages ({len(missing)} missing, {changed} with a new "
+        f"revision) → {dirs['interim']}; run `chunk -c {config}` next[/green]"
+    )
+
+
+@app.command("corpus-diff")
+def corpus_diff_cmd(
+    config: Path = typer.Option(..., "--config", "-c", help="Config of snapshot B"),
+    source_run: str = typer.Option(..., "--source-run", help="Run holding snapshot A"),
+    seeds_run: list[str] = typer.Option(
+        [], "--seeds-run", help="Benchmark runs on A whose seeds to check against B"
+    ),
+    output_dir: Path = typer.Option(Path("reports/regression"), "--output-dir", "-o"),
+) -> None:
+    """What changed from snapshot A to B, and how many of A's seeds went stale."""
+    from ragfailbench.experiments.regression import corpus_diff, seed_staleness
+
+    cfg = _load(config)
+    dirs = cfg.ensure_dirs()
+    runs = Path(cfg.paths.data_dir) / "runs"
+    pages_a = read_jsonl_models(runs / source_run / "2_interim" / "filtered_pages.jsonl", WikipediaPage)
+    chunks_a = read_jsonl_models(runs / source_run / "3_processed" / "chunks.jsonl", Chunk)
+    pages_b = read_jsonl_models(dirs["interim"] / "filtered_pages.jsonl", WikipediaPage)
+    chunks_b = _load_chunks(cfg, dirs)
+    report: dict = {"snapshot_a": source_run, "snapshot_b": cfg.project.run_id}
+    report["diff"] = corpus_diff(pages_a, pages_b, chunks_a, chunks_b)
+    report["staleness"] = {}
+    for run in seeds_run:
+        seeds = read_jsonl_models(runs / run / "6_final" / "clean_seeds.jsonl", CleanSeed)
+        stale = seed_staleness(seeds, chunks_b)
+        write_jsonl(output_dir / f"seed_staleness_{run}.jsonl", stale.pop("rows"))
+        report["staleness"][run] = stale
+        console.print(f"  {run}: {stale['counts']} (stale {stale['stale_rate']:.1%})")
+    write_json(output_dir / "corpus_diff.json", report)
+    console.print(f"[green]{report['diff']}[/green]")
+
+
+@app.command("regression-gate")
+def regression_gate_cmd(
+    baseline_run: str = typer.Option(..., "--baseline-run"),
+    candidate_run: str = typer.Option(..., "--candidate-run"),
+    paired: bool = typer.Option(
+        False, "--paired/--unpaired", help="Paired by item (same benchmark) or not"
+    ),
+    tolerance: float = typer.Option(0.05, "--tolerance", help="Allowed score drop"),
+    data_dir: Path = typer.Option(Path("data"), "--data-dir"),
+    output_dir: Path = typer.Option(Path("reports/regression"), "--output-dir", "-o"),
+    name: str = typer.Option(None, "--name", help="Report name (default: baseline__candidate)"),
+) -> None:
+    """Per model x condition regression verdict of a candidate run vs a baseline run."""
+    from ragfailbench.experiments.regression import gate_markdown, regression_gate
+    from ragfailbench.reporting.markdown_report import write_text
+
+    def _results(run: str) -> list[EvaluationResult]:
+        return read_jsonl_models(
+            data_dir / "runs" / run / "6_final" / "evaluation_results.jsonl", EvaluationResult
+        )
+
+    gate = regression_gate(
+        _results(baseline_run), _results(candidate_run), paired=paired, tolerance=tolerance
+    )
+    gate.update(baseline_run=baseline_run, candidate_run=candidate_run)
+    stem = name or f"{baseline_run}__{candidate_run}"
+    write_json(output_dir / f"gate_{stem}.json", gate)
+    write_text(output_dir / f"gate_{stem}.md", gate_markdown(gate, f"{baseline_run} → {candidate_run}"))
+    failed = [f"{r['model']}/{r['condition']}" for r in gate["rows"] if r["verdict"] == "FAIL"]
+    console.print(f"Decision: [bold]{gate['decision']}[/bold] {failed}")
 
 
 @app.command("seed-pipeline")

@@ -6,6 +6,7 @@ import re
 import string
 from collections import Counter
 from difflib import SequenceMatcher
+from functools import lru_cache
 
 _ARTICLES_RE = re.compile(r"\b(a|an|the)\b", re.IGNORECASE)
 _PUNCT_TABLE = str.maketrans("", "", string.punctuation)
@@ -57,3 +58,61 @@ def semantic_similarity(prediction: str, gold: str) -> float:
 def contains_answer(text: str, answer: str) -> bool:
     """True if the normalized answer appears as a normalized substring of text."""
     return normalize_answer(answer) in normalize_answer(text)
+
+
+_BRACKETED_RE = re.compile(r"\[[^\]]*\]|\([^)]*\)")
+_MONTHS = (
+    "january february march april may june july august september october november december"
+).split()
+_DAY_MONTH_YEAR_RE = re.compile(rf"\b(\d{{1,2}}) ({'|'.join(_MONTHS)}) (\d{{3,4}})\b")
+_MONTH_DAY_YEAR_RE = re.compile(rf"\b({'|'.join(_MONTHS)}) (\d{{1,2}}) (\d{{3,4}})\b")
+# Generic trailing type words a passage may omit ("Townsend Harris High School").
+_TYPE_SUFFIXES = (
+    "high school", "school", "university", "college", "company", "corporation",
+    "inc", "ltd", "river", "city",
+)
+_MIN_VARIANT_CHARS = 4
+_NON_WORD_RE = re.compile(r"[^\w\s]")
+
+
+@lru_cache(maxsize=4096)
+def answer_variants(answer: str) -> tuple[str, ...]:
+    """Normalized surface forms of an answer that a passage may use instead.
+
+    Adds: bracketed asides removed ("4 October [O.S. 21 September] 1916"),
+    the other day/month order for dates, the head before a comma
+    ("Paris, France"), and the name without a generic type suffix. Variants
+    shorter than four characters are dropped so a bare token never matches.
+    """
+    forms = [answer, _BRACKETED_RE.sub(" ", answer)]
+    if "," in answer:
+        forms.append(answer.split(",", 1)[0])
+    out: list[str] = []
+    for form in forms:
+        norm = normalize_answer(form)
+        out.append(norm)
+        out.append(_DAY_MONTH_YEAR_RE.sub(r"\2 \1 \3", norm))
+        out.append(_MONTH_DAY_YEAR_RE.sub(r"\2 \1 \3", norm))
+        for suffix in _TYPE_SUFFIXES:
+            if norm.endswith(" " + suffix):
+                out.append(norm[: -len(suffix)].strip())
+                break
+    seen: list[str] = []
+    for v in out:
+        if len(v) >= _MIN_VARIANT_CHARS and v not in seen:
+            seen.append(v)
+    return tuple(seen) or (normalize_answer(answer),)
+
+
+@lru_cache(maxsize=65536)
+def _padded_words(text: str) -> str:
+    # Non-ASCII punctuation (em dash, curly quotes) survives normalize_answer.
+    return f" {_WS_RE.sub(' ', _NON_WORD_RE.sub(' ', normalize_answer(text)))} "
+
+
+def contains_answer_variant(text: str, answer: str) -> bool:
+    """``contains_answer``, or any ``answer_variants`` form as whole words in text."""
+    if contains_answer(text, answer):
+        return True
+    padded = _padded_words(text)
+    return any(f" {v} " in padded for v in answer_variants(answer))

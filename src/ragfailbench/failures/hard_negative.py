@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from ragfailbench.evaluation.generation_metrics import contains_answer, normalize_answer
+from ragfailbench.evaluation.generation_metrics import contains_answer_variant, normalize_answer
 from ragfailbench.failures.base import FailureInjector
 from ragfailbench.schemas.chunk import Chunk
 from ragfailbench.schemas.failure import FailureCase, Severity
@@ -33,6 +33,14 @@ class HardNegativeInjector(FailureInjector):
     stage = "retrieval"
 
     def _rank_hard_negatives(self, seed: CleanSeed, gold: Chunk | None) -> list[Chunk]:
+        # Deterministic per seed; cached because every severity reuses it.
+        cache = self.__dict__.setdefault("_ranked", {})
+        key = (seed.sample_id, gold.chunk_id if gold else None)
+        if key not in cache:
+            cache[key] = self._rank_uncached(seed, gold)
+        return cache[key]
+
+    def _rank_uncached(self, seed: CleanSeed, gold: Chunk | None) -> list[Chunk]:
         gold_page = gold.page_id if gold else seed.source.page_id
         answer = seed.gold_answer
         query = f"{seed.question} {seed.supporting_sentence}"
@@ -46,7 +54,7 @@ class HardNegativeInjector(FailureInjector):
                 continue
             if not c.text.strip():
                 continue
-            if contains_answer(c.text, answer):
+            if contains_answer_variant(c.text, answer):
                 continue
             pool.append(c)
 

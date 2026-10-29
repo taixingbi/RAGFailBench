@@ -150,6 +150,9 @@ class EvaluationConfig(BaseModel):
     #   closed_book    — question without context (prior knowledge per seed)
     #   conflict_aware — conflict cases with a prompt that allows flagging conflicts
     probes: list[str] = Field(default_factory=list)
+    # Keep only the first k contexts of every item (None = all). Simulates a
+    # retrieval top-k misconfiguration for regression-gate experiments.
+    context_top_k: int | None = None
     abstain_markers: list[str] = Field(
         default_factory=lambda: [
             "i don't know",

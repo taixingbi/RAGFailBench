@@ -4,8 +4,8 @@ Every injected case gets a ``FailureVerification`` record:
 
 - structural checks (always): answer presence/absence, operator-specific
   invariants (gold position, context counts, split evidence, …)
-- optional LLM judge: does an independent model agree the question is / is not
-  answerable from the failed context?
+- optional LLM judge, for abstain-expected cases only: can the question still
+  be answered from the failed context (a paraphrased leak the rules miss)?
 
 Cases whose structural checks fail are dropped by the injector (and can be
 written to a quarantine file by the CLI).
@@ -15,7 +15,11 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from ragfailbench.evaluation.generation_metrics import contains_answer, normalize_answer
+from ragfailbench.evaluation.generation_metrics import (
+    contains_answer,
+    contains_answer_variant,
+    normalize_answer,
+)
 from ragfailbench.schemas.failure import FailureCase, FailureVerification
 
 # Weight of structural checks vs judge agreement in verification_score.
@@ -23,9 +27,13 @@ _STRUCTURAL_WEIGHT = 0.7
 _JUDGE_WEIGHT = 0.3
 
 
-def answer_still_in_contexts(contexts: list[str], gold_answer: str) -> bool:
-    """True if the gold answer appears anywhere in the joined failure contexts."""
+def answer_still_in_contexts(
+    contexts: list[str], gold_answer: str, *, variants: bool = False
+) -> bool:
+    """True if the gold answer (or, with ``variants``, any surface form) is in the contexts."""
     joined = "\n\n".join(c for c in contexts if c)
+    if variants:
+        return contains_answer_variant(joined, gold_answer)
     return contains_answer(joined, gold_answer)
 
 
@@ -166,7 +174,10 @@ def _operator_checks(case: FailureCase) -> dict[str, bool]:
 
 def structural_verify(case: FailureCase) -> FailureVerification:
     """Run all rule-based checks; no LLM involved."""
-    leaked = answer_still_in_contexts(case.contexts, case.gold_answer)
+    # Leak checks for abstain-expected cases also match surface variants.
+    leaked = answer_still_in_contexts(
+        case.contexts, case.gold_answer, variants=not case.answer_available
+    )
 
     checks: dict[str, bool] = {"contexts_nonempty": bool(case.contexts)}
     if case.answer_available:
@@ -223,8 +234,9 @@ def verify_case(case: FailureCase, client: Any | None = None) -> FailureCase:
     """Attach a verification record (structural + optional judge) to the case."""
     ver = structural_verify(case)
 
-    if client is not None and ver.injection_valid:
+    if client is not None and ver.injection_valid and not case.answer_available:
         judged_available, confidence = judge_answerability(case, client)
+        # A failed judge call leaves judge_verified None; the CLI counts these.
         if judged_available is not None:
             agrees = judged_available == case.answer_available
             ver.judge_verified = agrees

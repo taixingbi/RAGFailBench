@@ -96,7 +96,29 @@ def table_xiii(runs: list[dict]) -> list[list[str]]:
         for m in MODELS:
             abst = fmt(collect(runs, m, ("conditions", op, "abstention_rate")))
             hall = fmt(collect(runs, m, ("conditions", op, "hallucination_rate")))
-            row.append(f"{abst} / {hall}")
+            if op in ABSTAIN_OPERATORS:
+                known = fmt(collect(runs, m, ("conditions", op, "answered_correct_rate")))
+                row.append(f"{abst} / {known} / {hall}")
+            else:
+                row.append(f"{abst} / — / {hall}")
+        rows.append(row)
+    return rows
+
+
+def severity_table(runs: list[dict]) -> list[list[str]]:
+    """Paired drop (pp) by severity, mean ± std over seeds of the 3-model mean."""
+    rows = []
+    for op in OPERATORS:
+        row = [op]
+        for sev in ("low", "medium", "high"):
+            per_seed = [
+                100 * statistics.mean(
+                    run["by_severity"][f"{m}::{op}::{sev}"]["performance_drop"] for m in MODELS
+                )
+                for run in runs
+            ]
+            m, sd = mean_std(per_seed)
+            row.append(f"{m:.1f} ± {sd:.1f}")
         rows.append(row)
     return rows
 
@@ -125,7 +147,8 @@ def conflict_table(runs: list[dict]) -> list[list[str]]:
 
 HEADERS = {
     "xii": ["Condition"] + [f"{m} score (Δ pp)" for m in MODELS],
-    "xiii": ["Condition"] + [f"{m} abst. / halluc." for m in MODELS],
+    "xiii": ["Condition"] + [f"{m} abst. / ans.-correct / halluc." for m in MODELS],
+    "severity": ["Operator", "low", "medium", "high"],
     "conflict": [
         "Model", "Prompt", "Gold %", "Alternate %", "Both %", "Acknowledged %",
         "Handled %", "Judge-only %", "Handled, prior known %", "Handled, prior unknown %",
@@ -139,7 +162,18 @@ CAPTIONS = {
         "(prior knowledge, a probe outside FRS). Δ is the paired drop in percentage points against "
         "each item's own parent clean seed; FRS = 1 − mean paired drop."
     ),
-    "xiii": "Abstention / hallucination rate by condition, mean ± std over three seeded runs.",
+    "xiii": (
+        "Abstention / answered-correctly / hallucination rate by condition, mean ± std "
+        "over three seeded runs. For abstain-expected operators a non-abstention is "
+        "either correct (prior knowledge or a residual partial leak) or a hallucination "
+        "(wrong answer)."
+    ),
+    "severity": (
+        "Paired drop (pp) by severity: mean ± std over three seeded runs of the "
+        "three-model mean. For abstain-expected operators the drop is the rate of "
+        "failing to abstain; missing_evidence severity is closeness of the remaining "
+        "context to the removed evidence."
+    ),
     "conflict": (
         "Conflict outcomes, mean ± std (%) over three seeded runs. Handled = gold, both "
         "values, or an acknowledged conflict. Aware = prompt that permits flagging a "
@@ -225,7 +259,12 @@ def main() -> None:
     runs = load(args.seeds, args.reports)
     out = args.reports / "pilot_stability" / "paper"
     out.mkdir(parents=True, exist_ok=True)
-    tables = {"xii": table_xii(runs), "xiii": table_xiii(runs), "conflict": conflict_table(runs)}
+    tables = {
+        "xii": table_xii(runs),
+        "xiii": table_xiii(runs),
+        "severity": severity_table(runs),
+        "conflict": conflict_table(runs),
+    }
     (out / "tables.md").write_text("\n".join(to_md(k, r) for k, r in tables.items()), encoding="utf-8")
     (out / "tables.tex").write_text("\n".join(to_tex(k, r) for k, r in tables.items()), encoding="utf-8")
     figure(runs, out / "fig2_paired_drop")

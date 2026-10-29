@@ -162,3 +162,42 @@ def test_stale_human_review_is_not_counted(tmp_path: Path):
     )
     assert m.human_acceptance_rate is None
     assert "human clean-seed review CSV missing, empty or stale" in m.notes
+
+
+def test_seed_staleness_and_regression_gate():
+    from ragfailbench.experiments.regression import regression_gate, seed_status
+    from ragfailbench.schemas.chunk import Chunk
+    from ragfailbench.schemas.evaluation import EvaluationResult
+    from ragfailbench.schemas.qa import CleanSeed, SourceRef
+
+    def chunk(text):
+        return Chunk(
+            chunk_id="1_2_0_0", page_id=1, revision_id=2, page_title="T", section_path=[],
+            section_title="S", paragraph_index=0, chunk_index=0, token_count=5,
+            char_start=0, char_end=len(text), text=text,
+        )
+
+    seed = CleanSeed(
+        sample_id="s0", question="When?", gold_answer="1906",
+        supporting_sentence="It was founded in 1906.", answer_type="date", difficulty="easy",
+        source=SourceRef(page_id=1, revision_id=1, page_title="T", section_title="S", chunk_id="c"),
+    )
+    assert seed_status(seed, [chunk("Intro. It was founded in 1906.")]) == "intact"
+    assert seed_status(seed, [chunk("Founded 1906 by X.")]) == "sentence_edited"
+    assert seed_status(seed, [chunk("It was founded in 1907.")]) == "answer_gone"
+    assert seed_status(seed, None) == "page_missing"
+
+    def res(cond, sid, ok):
+        return EvaluationResult(
+            eval_id=sid, sample_id=sid, model_name="m", condition=cond,
+            prediction="x", gold_answer="x", exact_match=1.0 if ok else 0.0,
+        )
+
+    base = [res("evidence_position", f"e{i}", True) for i in range(40)]
+    base += [res("context_noise", f"n{i}", True) for i in range(40)]
+    cand = [res("evidence_position", f"e{i}", i < 20) for i in range(40)]
+    cand += [res("context_noise", f"n{i}", True) for i in range(40)]
+    gate = regression_gate(base, cand, paired=True, n_boot=200)
+    verdict = {r["condition"]: r["verdict"] for r in gate["rows"]}
+    assert verdict == {"evidence_position": "FAIL", "context_noise": "pass"}
+    assert gate["decision"] == "BLOCK"

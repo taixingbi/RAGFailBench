@@ -1,0 +1,144 @@
+project:
+  name: ragfailbench
+  random_seed: 42
+  run_id: regress_b_s42_topk4
+source:
+  provider: mediawiki_api
+  source_mode: live_mediawiki_api
+  language: en
+  api_base: https://en.wikipedia.org/w/api.php
+  retrieval_date: '2026-10-28'
+  requested_snapshot_date: null
+  user_agent: RAGFailBench/0.1 (research; https://github.com/taixingbi/RAGFailBench)
+  requests_per_second: 8.0
+  fetch_concurrency: 16
+  max_retries: 3
+  timeout_seconds: 30
+  candidates_per_category: 500
+  category_seeds:
+    person:
+    - Category:21st-century American scientists
+    - Category:American inventors
+    - Category:Nobel laureates in Physics
+    location:
+    - Category:Capital cities
+    - Category:Cities in Europe
+    - Category:National parks of the United States
+    science_technology:
+    - Category:Computer science
+    - Category:Software
+    - Category:Physics
+    historical_event:
+    - Category:20th-century conflicts
+    - Category:Treaties
+    - Category:Revolutions
+    organization_product:
+    - Category:Technology companies of the United States
+    - Category:Software companies
+    - Category:Open-source software
+categories:
+  person: 200
+  location: 200
+  science_technology: 200
+  historical_event: 200
+  organization_product: 200
+filtering:
+  min_page_chars: 2000
+  min_sections: 2
+  exclude_redirects: true
+  exclude_disambiguation: true
+  exclude_lists: true
+  exclude_timelines: true
+  min_prose_ratio: 0.55
+  max_paragraph_repeat_ratio: 0.35
+chunking:
+  chunk_size_tokens: 300
+  chunk_overlap_tokens: 0
+  encoding: cl100k_base
+  split_order:
+  - section
+  - paragraph
+  - sentence
+  - token
+qa_generation:
+  target_candidates: 1000
+  questions_per_chunk: 1
+  endpoint_type: openai_compatible
+  model: Qwen/Qwen2.5-7B-Instruct
+  temperature: 0.2
+  max_tokens: 512
+  min_chunk_tokens: 60
+  max_chunk_tokens: 320
+  max_candidate_chunks: 2000
+  difficulty_quotas:
+    easy: 0.4
+    medium: 0.4
+    hard: 0.2
+  enforce_target_difficulty: true
+validation:
+  target_clean_seeds: 200
+  min_quality_score: 0.85
+  require_answer_containment: true
+  require_evidence_containment: true
+  require_baseline_correct: true
+  use_answerability_judge: true
+  use_baseline_test: true
+  judge_min_confidence: 0.6
+  dedup_similarity_threshold: 0.85
+failure_generation:
+  types:
+  - missing_evidence
+  - context_noise
+  - chunk_boundary
+  - evidence_position
+  - conflict
+  - hard_negative
+  severity_levels:
+  - low
+  - medium
+  - high
+  noise_ratios:
+    low: 0.25
+    medium: 0.5
+    high: 0.75
+  context_chunk_budget: 8
+  random_seed: 42
+evaluation:
+  context_top_k: 4
+  models:
+  - nova-pro
+  - llama
+  - gpt-oss
+  temperature: 0.0
+  # gpt-oss spends ~250 tokens on hidden reasoning; 256 truncated it to empty output
+  max_tokens: 1024
+  use_llm_judge: true
+  judge_model: deepseek
+  # Same Nova Pro v1 model via the US cross-region profile: 50 vs 25 Bedrock req/min
+  model_routes:
+    nova-pro: us.amazon.nova-pro-v1:0
+  # Diagnostics excluded from FRS (see models.md / failure_metrics.PROBE_CONDITIONS)
+  probes: []  # probes are outside the gate
+  base_url_env: EVAL_BASE_URL
+  api_key_env: EVAL_API_KEY
+  model_env: EVAL_MODEL
+  default_model: nova-pro
+llm:
+  base_url_env: CHAT_BASE_URL
+  api_key_env: CHAT_API_KEY
+  model_env: CHAT_MODEL
+  default_model: qwen3-32b
+  timeout_seconds: 120
+  max_tokens: 512
+  max_concurrency: 8
+  generation_concurrency: 8
+  judge_concurrency: 8
+  # Lambda account limit is 10 concurrent executions; split across the 3 models
+  evaluation_concurrency: 9
+  max_retries: 5
+  retry_backoff_seconds: 2.0
+  retry_jitter: true
+  log_raw_responses: true
+paths:
+  data_dir: data
+  reports_dir: reports

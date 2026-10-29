@@ -6,7 +6,10 @@ Scoring follows each item's ``expected_behavior``:
   with the item's own parent clean seed (not the clean-set mean), so condition
   drops are not confounded by which seeds a condition could be built from.
 * ``abstain`` items (e.g. missing evidence, hard negatives) are scored on
-  correct abstention; their drop is the rate of failing to abstain.
+  correct abstention; their drop is the rate of failing to abstain. A
+  non-abstention is split into ``answered_correct_rate`` (the model still gave
+  the gold answer: prior knowledge or a residual leak) and
+  ``hallucination_rate`` (a wrong answer).
 
 Rows whose answer or judge call failed (``metadata.error``) are excluded and
 counted per model as ``n_errors``.
@@ -63,6 +66,13 @@ def item_correct(r: EvaluationResult) -> bool:
     return answer_correct(r) if resolved is None else resolved
 
 
+def is_hallucination(r: EvaluationResult) -> bool | None:
+    """Abstain-expected: answered wrong. Answer-expected: the stored flag."""
+    if expects_abstain(r):
+        return (not r.abstained) and not answer_correct(r)
+    return r.hallucinated
+
+
 def call_error(r: EvaluationResult) -> str | None:
     """Answer/judge call that failed after retries; such rows carry no verdict."""
     return (r.metadata or {}).get("error")
@@ -98,9 +108,13 @@ def _group_stats(
         "behavior_accuracy": _safe_mean(behavior),
         "abstention_rate": _safe_mean([1.0 if r.abstained else 0.0 for r in items]),
         "hallucination_rate": _safe_mean(
-            [1.0 if r.hallucinated else 0.0 for r in items if r.hallucinated is not None]
+            [1.0 if is_hallucination(r) else 0.0 for r in items if is_hallucination(r) is not None]
         ),
     }
+    if unanswerable:
+        stats["answered_correct_rate"] = _safe_mean(
+            [1.0 if (not r.abstained and answer_correct(r)) else 0.0 for r in unanswerable]
+        )
     outcomes = [(r.metadata or {}).get("conflict_outcome") for r in items]
     if any(outcomes):
         scored = [o for o in outcomes if o]
@@ -121,12 +135,28 @@ def _group_stats(
 def _prior_split(
     items: list[EvaluationResult], known_by_seed: dict[str, bool]
 ) -> dict[str, Any]:
-    """Answer accuracy split by whether the model answered the seed closed-book."""
+    """Split by whether the model answered the seed closed-book.
+
+    Answer-expected items: answer accuracy. Abstain-expected items: the rate
+    of answering correctly anyway, which separates prior knowledge from leaks.
+    """
     split: dict[bool, list[float]] = {True: [], False: []}
+    answered: dict[bool, list[float]] = {True: [], False: []}
     for r in items:
         known = known_by_seed.get(parent_seed_id(r))
-        if known is not None and not expects_abstain(r):
+        if known is None:
+            continue
+        if expects_abstain(r):
+            answered[known].append(1.0 if (not r.abstained and answer_correct(r)) else 0.0)
+        else:
             split[known].append(1.0 if item_correct(r) else 0.0)
+    if answered[True] or answered[False]:
+        return {
+            "answered_correct_prior_known": _opt_mean(answered[True]),
+            "answered_correct_prior_unknown": _opt_mean(answered[False]),
+            "n_prior_known": len(answered[True]),
+            "n_prior_unknown": len(answered[False]),
+        }
     return {
         "answer_accuracy_prior_known": _opt_mean(split[True]),
         "answer_accuracy_prior_unknown": _opt_mean(split[False]),
@@ -223,7 +253,7 @@ def compute_failure_metrics(results: list[EvaluationResult]) -> dict[str, Any]:
                 model_report["probes"][cond] = stats
                 continue
             stats = _group_stats(items, clean_map)
-            if known_by_seed and cond == "conflict":
+            if known_by_seed and (cond == "conflict" or any(expects_abstain(r) for r in items)):
                 stats.update(_prior_split(items, known_by_seed))
             stats["unpaired_drop"] = round(clean_acc - stats["accuracy"], 4)
             drops.append(stats["performance_drop"])

@@ -409,3 +409,49 @@ def test_llm_alternate_takes_priority_and_rules_reject_bad_ones():
         assert case.parameters["alternate_source"] == "llm"
         assert case.parameters["alternate_answer"] == "Red Hat"
         assert "Red Hat" in case.parameters["conflict_passage"]
+
+
+def test_answer_variants_catch_reformatted_answers():
+    from ragfailbench.evaluation.generation_metrics import contains_answer_variant
+
+    gold = "4 October [O.S. 21 September] 1916"
+    assert contains_answer_variant("born in Moscow on 4 October 1916— the son", gold)
+    assert contains_answer_variant("born October 4, 1916", gold)
+    assert contains_answer_variant("he attended Townsend Harris, then", "Townsend Harris High School")
+    assert contains_answer_variant("moved to Paris in 1920", "Paris, France")
+    # The exact answer still matches as a substring (never weaker than
+    # contains_answer); added variants match whole words only.
+    assert contains_answer_variant("the Berliner Zeitung", "Berlin")
+    assert not contains_answer_variant("Townsend Harrison wrote", "Townsend Harris High School")
+
+
+def test_missing_evidence_severity_tracks_closeness_to_evidence():
+    """high keeps the rest of the gold chunk; low keeps only off-page distractors."""
+    cfg = AppConfig()
+    by_sev = {c.severity: c for c in inject_failures([_seed()], _chunks(), cfg)["missing_evidence"]}
+    assert by_sev["high"].parameters["removed"] == "supporting_sentence"
+    assert by_sev["medium"].parameters["removed"] == "gold_chunk"
+    if "low" in by_sev:
+        assert by_sev["low"].parameters["removed"] == "all_related_evidence"
+
+
+def test_verification_judge_audits_abstain_cases_only():
+    from ragfailbench.failures.verify import verify_case
+
+    class _Judge:
+        calls = 0
+
+        def complete_json(self, *args, **kwargs):
+            _Judge.calls += 1
+            return {"answer_available": True, "confidence": 0.9}
+
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks(), cfg)
+    answerable = by_type["context_noise"][0]
+    assert verify_case(answerable, _Judge()).verification.judge_verified is None
+    assert _Judge.calls == 0
+    absent = by_type["missing_evidence"][0]
+    ver = verify_case(absent, _Judge()).verification
+    assert _Judge.calls == 1
+    assert ver.injection_valid is False
+    assert "judge_answer_still_available" in ver.failed_checks

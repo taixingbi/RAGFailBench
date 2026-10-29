@@ -255,3 +255,67 @@ def test_conflict_scored_by_outcome_not_judge():
     assert conflict["answer_accuracy"] == 0.6
     assert conflict["answer_accuracy_judge"] == 0.2
     assert conflict["performance_drop"] == 0.4
+
+
+def test_abstain_non_answers_split_into_correct_and_hallucinated():
+    def _abs(sample_id, abstained, correct):
+        r = _res("missing_evidence", correct, sample_id=sample_id)
+        r.abstained = abstained
+        r.metadata.update(expected_behavior="abstain", answer_available=False)
+        return r
+
+    results = [
+        _res("clean", True, sample_id="s0"),
+        _res("closed_book", True, sample_id="s0__closed_book"),
+        _res("closed_book", False, sample_id="s1__closed_book"),
+        _abs("s0__missing_evidence__low", False, True),  # answered from prior knowledge
+        _abs("s1__missing_evidence__low", False, False),  # hallucinated
+        _abs("s1__missing_evidence__high", True, False),
+    ]
+    me = compute_failure_metrics(results)["by_model"]["m1"]["conditions"]["missing_evidence"]
+    assert me["correct_abstention_rate"] == round(1 / 3, 4)
+    assert me["answered_correct_rate"] == round(1 / 3, 4)
+    assert me["hallucination_rate"] == round(1 / 3, 4)
+    assert me["answered_correct_prior_known"] == 1.0
+    assert me["answered_correct_prior_unknown"] == 0.0
+
+
+def test_judge_review_roundtrip_kappa(tmp_path):
+    import csv
+
+    from ragfailbench.reporting.judge_review import (
+        cohen_kappa,
+        export_judge_review,
+        judge_agreement,
+    )
+    from ragfailbench.schemas.qa import CleanSeed, SourceRef
+
+    seed = CleanSeed(
+        sample_id="s0", question="Who?", gold_answer="Ada", supporting_sentence="Ada did.",
+        answer_type="person", difficulty="easy",
+        source=SourceRef(page_id=1, revision_id=1, page_title="T", section_title="S", chunk_id="c"),
+    )
+    results = []
+    for i, (judge, cond) in enumerate([(True, "clean"), (False, "clean"), (True, "conflict"), (False, "conflict")]):
+        r = _res(cond, judge, sample_id="s0" if cond == "clean" else f"s0__conflict__{i}")
+        r.eval_id = f"e{i}"
+        r.llm_judge_correct = judge
+        r.exact_match, r.token_f1 = 0.0, 0.0
+        results.append(r)
+    paths = export_judge_review(
+        results=results, seeds=[seed], output_dir=tmp_path, run_id="r", per_cell=5
+    )
+    rows = list(csv.DictReader(paths["judge_review"].open()))
+    assert len(rows) == 4 and "llm_judge_correct" not in rows[0]  # blind
+    assert all(r["question"] == "Who?" for r in rows)
+    human = {"e0": "yes", "e1": "no", "e2": "no", "e3": "both"}
+    with paths["judge_review"].open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        for r in rows:
+            w.writerow({**r, "human_correct": human[r["eval_id"]]})
+    rep = judge_agreement(paths["judge_review"], results)
+    assert rep["labels"] == {"yes": 1, "no": 2, "both": 1}
+    overall = rep["judge_verdict"]["all"]
+    assert overall["n"] == 3 and overall["system_says_correct_human_no"] == 1
+    assert cohen_kappa([True, False], [True, False]) == 1.0

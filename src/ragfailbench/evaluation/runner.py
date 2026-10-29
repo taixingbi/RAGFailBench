@@ -148,10 +148,15 @@ def _answer(
     return text
 
 
-def _clean_context(seed: CleanSeed) -> str:
+def _top_k(contexts: list[str], cfg: AppConfig) -> list[str]:
+    k = cfg.evaluation.context_top_k
+    return contexts if k is None else contexts[:k]
+
+
+def _clean_context(seed: CleanSeed, cfg: AppConfig) -> str:
     """Use gold-chunk-scale clean_contexts; fall back to supporting sentence."""
     if seed.clean_contexts:
-        return "\n\n".join(c for c in seed.clean_contexts if c and c.strip())
+        return "\n\n".join(c for c in _top_k(seed.clean_contexts, cfg) if c and c.strip())
     return seed.supporting_sentence
 
 
@@ -210,11 +215,11 @@ def _evaluate_one(
 
     correct = bool(em >= 1.0 or f1 >= 0.6 or judge_ok)
 
-    # Hallucination: produced a (non-abstain) answer when none was available,
-    # or gave a wrong answer that does not contain the gold answer.
+    # Hallucination: a wrong (non-abstain) answer. When no answer was available,
+    # a correct one comes from prior knowledge and is counted separately.
     hallucinated: bool | None
     if not answer_available:
-        hallucinated = not abstained
+        hallucinated = (not abstained) and (not correct)
     else:
         hallucinated = (not correct) and (not abstained) and (not contains_answer(prediction, gold))
 
@@ -278,7 +283,7 @@ def evaluate_model(
                 "model": model,
                 "condition": "clean",
                 "severity": None,
-                "context": _clean_context(seed),
+                "context": _clean_context(seed, cfg),
                 "question": seed.question,
                 "gold": seed.gold_answer,
                 "answer_available": True,
@@ -296,7 +301,7 @@ def evaluate_model(
                 "model": model,
                 "condition": fc.failure_type,
                 "severity": fc.severity,
-                "context": "\n\n".join(fc.contexts),
+                "context": "\n\n".join(_top_k(fc.contexts, cfg)),
                 "question": fc.question,
                 "gold": fc.gold_answer,
                 "answer_available": fc.answer_available,
@@ -338,7 +343,7 @@ def evaluate_model(
                     "model": model,
                     "condition": "conflict_aware",
                     "severity": fc.severity,
-                    "context": "\n\n".join(fc.contexts),
+                    "context": "\n\n".join(_top_k(fc.contexts, cfg)),
                     "question": fc.question,
                     "gold": fc.gold_answer,
                     "answer_available": fc.answer_available,
