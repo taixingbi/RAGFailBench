@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import random
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 
 from ragfailbench.schemas.chunk import Chunk
 from ragfailbench.schemas.failure import (
@@ -29,6 +30,7 @@ class ChunkIndex:
         for page_chunks in self.by_page.values():
             page_chunks.sort(key=lambda c: (c.paragraph_index, c.chunk_index))
         self.all: list[Chunk] = list(chunks)
+        self._easy_pools: dict[str, list[Chunk]] = {}
 
     def gold_chunk(self, seed: CleanSeed) -> Chunk | None:
         return self.by_id.get(seed.source.chunk_id)
@@ -70,6 +72,38 @@ class ChunkIndex:
             pool = [c for c in self.all if c.page_id != gold_page]
         rng.shuffle(pool)
         return pool[:n]
+
+    def off_topic_fillers(
+        self,
+        page_id: int,
+        category_group: str | None,
+        rng: random.Random,
+        *,
+        n: int,
+        exclude: set[str],
+        reject: Callable[[str], bool],
+        max_tries: int = 200,
+    ) -> list[str]:
+        """``n`` off-topic chunk texts (other category, other page), the same kind
+        of filler the clean context uses. Samples lazily so ``reject`` (e.g. an
+        answer-variant check) only runs on drawn candidates."""
+        key = category_group or ""
+        pool = self._easy_pools.get(key)
+        if pool is None:
+            pool = [c for c in self.all if c.category_group != category_group and c.text.strip()]
+            self._easy_pools[key] = pool or [c for c in self.all if c.text.strip()]
+            pool = self._easy_pools[key]
+        out: list[str] = []
+        seen = set(exclude)
+        for _ in range(max_tries):
+            if len(out) >= n:
+                break
+            c = rng.choice(pool)
+            if c.page_id == page_id or c.text in seen or reject(c.text):
+                continue
+            seen.add(c.text)
+            out.append(c.text)
+        return out
 
 
 class FailureInjector(ABC):

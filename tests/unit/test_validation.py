@@ -81,3 +81,28 @@ def test_dedup_exact_and_near():
     kept, dropped = deduplicate_candidates([a, b])
     assert len(kept) == 1
     assert "c2" in dropped
+
+
+def test_referent_rules():
+    from ragfailbench.validation.rule_validator import check_referents
+
+    assert check_referents("When did he die?") == ["unresolved_referent"]
+    assert check_referents("What is its capital?") == ["unresolved_referent"]
+    assert check_referents("In what year was the company founded?") == ["unresolved_referent"]
+    assert check_referents("Where did Berry study for his doctoral studies?") == []
+    assert check_referents("How far from its base did the SEPECAT Jaguar crash?") == []
+    assert check_referents("Which ruler is mentioned in the passage?") == ["refers_to_passage"]
+
+
+def test_time_sensitive_rule():
+    from ragfailbench.validation.rule_validator import check_time_sensitive
+
+    assert check_time_sensitive("Who is the current CEO of Apple?") == ["time_sensitive_phrasing"]
+    assert check_time_sensitive("What is the population of Biała as of December 2021?") == []
+    assert check_time_sensitive("When was Apple founded?") == []
+
+
+def test_rules_reject_unresolved_question():
+    cfg = ValidationConfig()
+    cand = _cand("c1", "When was he born?", "1948", "Phillips was born in 1948.")
+    assert "unresolved_referent" in check_rules(cand, _chunk("Phillips was born in 1948."), cfg)

@@ -455,3 +455,49 @@ def test_verification_judge_audits_abstain_cases_only():
     assert _Judge.calls == 1
     assert ver.injection_valid is False
     assert "judge_answer_still_available" in ver.failed_checks
+
+
+def _off_topic_chunks(n: int) -> list[Chunk]:
+    return [
+        Chunk(
+            chunk_id=f"9{i}_1_0_0",
+            page_id=900 + i,
+            revision_id=1,
+            page_title=f"Filler {i}",
+            section_path=["Lead"],
+            section_title="Lead",
+            paragraph_index=0,
+            chunk_index=0,
+            token_count=20,
+            char_start=0,
+            char_end=60,
+            text=f"Filler passage number {i} about river ecology and sediment transport."
+            + (" Google bought it." if i == 0 else ""),
+            category_group="geography",
+        )
+        for i in range(n)
+    ]
+
+
+def test_every_case_padded_to_context_budget_without_answer():
+    from ragfailbench.evaluation.generation_metrics import contains_answer_variant
+
+    cfg = AppConfig()
+    by_type = inject_failures([_seed()], _chunks() + _off_topic_chunks(20), cfg)
+    budget = cfg.failure_generation.context_chunk_budget
+    for name, cases in by_type.items():
+        if name == "_rejected":
+            continue
+        for case in cases:
+            assert len(case.contexts) == budget, (name, case.severity)
+            assert case.parameters["num_contexts"] == budget
+            pad = case.parameters.get("num_padding", 0)
+            for filler in case.contexts[len(case.contexts) - pad :]:
+                assert not contains_answer_variant(filler, case.gold_answer)
+
+
+def test_padding_can_be_disabled():
+    cfg = AppConfig()
+    cfg.failure_generation.pad_to_budget = False
+    by_type = inject_failures([_seed()], _chunks() + _off_topic_chunks(20), cfg)
+    assert any(len(c.contexts) < 8 for c in by_type["missing_evidence"])

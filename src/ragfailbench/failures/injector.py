@@ -5,6 +5,7 @@ from __future__ import annotations
 import random
 
 from ragfailbench.config import AppConfig
+from ragfailbench.evaluation.generation_metrics import contains_answer_variant
 from ragfailbench.failures.base import ChunkIndex, FailureInjector
 from ragfailbench.failures.chunk_boundary import ChunkBoundaryInjector
 from ragfailbench.failures.conflict import AnswerPool, ConflictInjector, build_answer_pool
@@ -44,6 +45,38 @@ def build_injectors(
     return {name: injectors[name] for name in fcfg.types if name in injectors}
 
 
+def pad_to_budget(case: FailureCase, index: ChunkIndex, budget: int) -> FailureCase:
+    """Append off-topic fillers until the case has ``budget`` contexts.
+
+    Every condition then shows the reader the same number of passages as its
+    clean parent (gold + neighbors + off-topic fillers), so a drop is not a
+    context-length effect. Fillers go after the operator's own contexts, so
+    recorded positions stay valid, and never contain a surface form of the
+    answer. The filler draw is seeded by ``failure_id``, independent of the
+    operators' random stream.
+    """
+    missing = budget - len(case.contexts)
+    if missing <= 0:
+        return case
+    fillers = index.off_topic_fillers(
+        case.source.page_id,
+        case.category_group,
+        random.Random(case.failure_id),
+        n=missing,
+        exclude=set(case.contexts),
+        reject=lambda text: contains_answer_variant(text, case.gold_answer),
+    )
+    params = {**case.parameters, "num_contexts": len(case.contexts) + len(fillers),
+              "num_operator_contexts": len(case.contexts), "num_padding": len(fillers)}
+    return case.model_copy(
+        update={
+            "contexts": [*case.contexts, *fillers],
+            "parameters": params,
+            "metadata": {**case.metadata, **params},
+        }
+    )
+
+
 def inject_failures(
     seeds: list[CleanSeed],
     chunks: list[Chunk],
@@ -67,12 +100,16 @@ def inject_failures(
         index, cfg, rng, answer_pool=build_answer_pool(seeds), llm_alternates=llm_alternates
     )
     require_valid = cfg.failure_generation.require_answer_absence
+    pad = cfg.failure_generation.pad_to_budget
+    budget = cfg.failure_generation.context_chunk_budget
 
     by_type: dict[str, list[FailureCase]] = {name: [] for name in injectors}
     rejected: list[FailureCase] = []
     for seed in seeds:
         for name, injector in injectors.items():
             for case in injector.inject_all(seed):
+                if pad:
+                    case = pad_to_budget(case, index, budget)
                 case = verify_case(case)
                 assert case.verification is not None
                 if require_valid and not case.verification.injection_valid:

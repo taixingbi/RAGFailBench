@@ -91,6 +91,9 @@ class ValidationConfig(BaseModel):
     dedup_similarity_threshold: float = 0.85
     max_question_tokens: int = 60
     min_question_chars: int = 12
+    # Self-containment rules (added after the human audit's fix categories).
+    check_referents: bool = True
+    check_time_sensitive: bool = True
     judge_temperature: float = 0.0
     baseline_temperature: float = 0.0
 
@@ -113,6 +116,9 @@ class FailureGenerationConfig(BaseModel):
         default_factory=lambda: {"low": 0.25, "medium": 0.50, "high": 0.75}
     )
     context_chunk_budget: int = 8
+    # Fill every case up to the budget with off-topic chunks (as the clean context
+    # does), so conditions differ in content, not in context length.
+    pad_to_budget: bool = True
     random_seed: int | None = None
     # Drop cases whose structural verification fails (answer leakage, broken
     # operator invariants). Rejected cases are quarantined, not silently lost.

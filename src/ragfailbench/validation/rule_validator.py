@@ -2,11 +2,77 @@
 
 from __future__ import annotations
 
+import re
+
 from ragfailbench.config import ValidationConfig
 from ragfailbench.evaluation.generation_metrics import contains_answer, normalize_answer
 from ragfailbench.schemas.chunk import Chunk
 from ragfailbench.schemas.qa import CandidateQA
 from ragfailbench.utils import count_tokens
+
+
+_PRONOUN_RE = re.compile(r"\b(he|she|him|they|them|it)\b", re.IGNORECASE)
+# Possessives may point forward ("How far from its base did the Jaguar crash?").
+_POSSESSIVE_RE = re.compile(r"\b(his|her|hers|their|theirs|its)\b", re.IGNORECASE)
+# A definite/demonstrative generic noun ("the company", "this album") is only
+# resolvable if the question names an entity somewhere.
+_DEICTIC_RE = re.compile(
+    r"\b(the|this|that|these|those)\s+(person|man|woman|scientist|physicist|author|"
+    r"writer|artist|singer|player|company|firm|band|group|album|film|movie|book|novel|"
+    r"song|city|town|country|state|team|club|game|show|series|organization|"
+    r"institution|university|school|building|event|war|character|work|device|product)\b",
+    re.IGNORECASE,
+)
+_PASSAGE_RE = re.compile(
+    r"\b(the|this|that)\s+(passage|text|article|document|excerpt|paragraph)\b"
+    r"|\bmentioned\b",
+    re.IGNORECASE,
+)
+_TIME_RE = re.compile(
+    r"\b(currently|current|now|today|nowadays|presently|latest|most recent|recently|"
+    r"as of(?!\s+(\w+\s+)?\d)|to date|so far|this year|last year|next year|at present)\b",
+    re.IGNORECASE,
+)
+_TOKEN_RE = re.compile(r"[\w'’.-]+")
+
+
+def _named_entity_spans(question: str) -> list[int]:
+    """Start offsets of tokens that look like a name: a capitalized word that is
+    not the question's first word (and not "I"), or a token with a digit."""
+    starts = []
+    for i, m in enumerate(_TOKEN_RE.finditer(question)):
+        tok = m.group(0)
+        if any(ch.isdigit() for ch in tok):
+            starts.append(m.start())
+        elif i > 0 and tok[:1].isupper() and tok != "I":
+            starts.append(m.start())
+    return starts
+
+
+def check_referents(question: str) -> list[str]:
+    """Flag a question that cannot be understood without its source page.
+
+    unresolved_referent: a pronoun with no name before it ("When did he die?"),
+    a possessive in a question that names nothing ("What is its capital?"), or a
+    generic "the company"-style phrase in a question that names nothing.
+    refers_to_passage: the question points at "the passage" / "mentioned".
+    """
+    reasons: list[str] = []
+    entities = _named_entity_spans(question)
+    pron = _PRONOUN_RE.search(question)
+    if pron and not any(s < pron.start() for s in entities):
+        reasons.append("unresolved_referent")
+    elif not entities and (_POSSESSIVE_RE.search(question) or _DEICTIC_RE.search(question)):
+        reasons.append("unresolved_referent")
+    if _PASSAGE_RE.search(question):
+        reasons.append("refers_to_passage")
+    return reasons
+
+
+def check_time_sensitive(question: str) -> list[str]:
+    """Relative-time phrasing ("current", "latest", an undated "as of") makes
+    the gold answer depend on when the benchmark is used."""
+    return ["time_sensitive_phrasing"] if _TIME_RE.search(question) else []
 
 
 def check_rules(
@@ -30,6 +96,11 @@ def check_rules(
         reasons.append("question_too_short")
     if count_tokens(q) > cfg.max_question_tokens:
         reasons.append("question_too_long")
+
+    if q and cfg.check_referents:
+        reasons.extend(check_referents(q))
+    if q and cfg.check_time_sensitive:
+        reasons.extend(check_time_sensitive(q))
 
     # Answer must not leak into the question
     if gold and contains_answer(q, gold):

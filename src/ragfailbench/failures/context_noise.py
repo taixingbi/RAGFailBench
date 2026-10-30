@@ -1,4 +1,7 @@
-"""Context Noise failure: gold chunk buried among distractors."""
+"""Context Noise failure: gold chunk among topically close distractors.
+
+Severity is the share of same-category distractors in a fixed-size context.
+"""
 
 from __future__ import annotations
 
@@ -21,17 +24,25 @@ class ContextNoiseInjector(FailureInjector):
 
         ratio = self.noise_ratios.get(severity, 0.5)
         budget = self.context_budget
-        # Number of distractors so that gold is ~(1-ratio) of the context.
+        # The context always holds ``budget`` passages, like the clean one; the
+        # noise ratio is the share of same-category (topically close)
+        # distractors among them, the rest are off-topic fillers.
         n_distractors = max(1, round(budget * ratio))
         n_distractors = min(n_distractors, budget - 1)
 
-        # Harder severities use harder (same-category) distractors.
-        hard = severity in {"medium", "high"}
         distractors = self.index.distractors(
-            seed, gold, self.rng, hard=hard, n=n_distractors
+            seed, gold, self.rng, hard=True, n=n_distractors
+        )
+        fillers = self.index.off_topic_fillers(
+            gold.page_id,
+            seed.category_group,
+            self.rng,
+            n=budget - 1 - len(distractors),
+            exclude={gold.text, *(d.text for d in distractors)},
+            reject=lambda text: False,
         )
 
-        contexts = [d.text for d in distractors] + [gold.text]
+        contexts = [d.text for d in distractors] + fillers + [gold.text]
         self.rng.shuffle(contexts)
         gold_position = contexts.index(gold.text)
 
@@ -45,7 +56,7 @@ class ContextNoiseInjector(FailureInjector):
             parameters={
                 "noise_ratio": ratio,
                 "num_distractors": len(distractors),
-                "distractor_hardness": "hard" if hard else "easy",
+                "num_fillers": len(fillers),
                 "gold_position": gold_position,
                 "num_contexts": len(contexts),
             },
