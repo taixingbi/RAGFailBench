@@ -2,101 +2,106 @@
 
 ## Clean Seeds
 
-- **Q:** When was Bohr born?
-  - **A:** 19 June 1922 (date, easy)
-  - **Evidence:** Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund).
-  - **Source:** Aage Bohr / Early life and education
-
-- **Q:** What was Constant's role at the National Institute of General Medical Sciences in 2017?
-  - **A:** chief of the Office of Scientific Review (other, easy)
-  - **Evidence:** In 2017, Constant joined the National Institute of General Medical Sciences (NIGMS) as chief of the Office of Scientific Review (OSR).
-  - **Source:** Stephanie Constant / Career
+- **Q:** In what year was Einstein granted American citizenship?
+  - **A:** 1940 (date, easy)
+  - **Evidence:** Horrified by the Nazi persecution of his fellow Jews, he decided to remain in the US, and was granted American citizenship in 1940.
+  - **Source:** Albert Einstein / Lead
 
 - **Q:** When was Philipp Eduard Anton von Lenard born?
   - **A:** 7 June 1862 (date, easy)
   - **Evidence:** Philipp Eduard Anton von Lenard (German: [ˈfɪlɪp ˈleːnaʁt] ; 7 June 1862 – 20 May 1947) was a Hungarian–German experimental physicist who received the Nobel Prize in Physics in 1905 for his work on cathode rays.
   - **Source:** Philipp Lenard / Lead
 
+- **Q:** When was Bohr born?
+  - **A:** 19 June 1922 (date, easy)
+  - **Evidence:** Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund).
+  - **Source:** Aage Bohr / Early life and education
+
 ## missing_evidence
 
-- **[low]** When was Bohr born?
+- **[low]** In what year was Einstein granted American citizenship?
   - expected: abstain (answer_available=False)
-  - contexts (3): The Gillette paternal ancestors were French Huguenots who sought refuge in Engla | In a letter to Gillette, Arthur Conan Doyle stated: "I consider the production a | Arnold Beckman lived in Altadena, California and had a strong interest in solvin
+  - contexts (8): In 1907, Collins political affiliation was reported to be Republican, and he als | 73Li + p → 242He + 17.2 MeV
+This feat was popularly known as "splitting the atom | Valerie Barr is an American computer scientist, and is the Margaret Hamilton Dis
 
-- **[medium]** When was Bohr born?
+- **[medium]** In what year was Einstein granted American citizenship?
   - expected: abstain (answer_available=False)
-  - contexts (1): In 1940, shortly after the German occupation of Denmark in April, he entered the
+  - contexts (8): Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical ph | In 1917, Einstein wrote a paper which introduced the concepts of spontaneous emi | The idea of there being two opposed justifications for truth has shown up throug
 
-- **[high]** When was Bohr born?
+- **[high]** In what year was Einstein granted American citizenship?
   - expected: abstain (answer_available=False)
-  - contexts (1): His oldest brother, Christian, died in a boating accident in 1934, and his young
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical ph | KAL 007 had four redundant hydraulic systems of which systems one, two, and thre
 
 ## context_noise
 
-- **[low]** When was Bohr born?
+- **[low]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (3): A capital district, capital region, or capital territory is normally a specially | The definition of an ESW is broad enough that, on occasion, research distinguish | Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi
+  - contexts (8): "Embrace, extend, and extinguish" (EEE), also known as "embrace, extend, and ext | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | The City Council promotes Belmopan as "The Garden City." A Crime prevention Init
 
-- **[medium]** When was Bohr born?
+- **[medium]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (5): Einstein developed an appreciation for music at an early age. In his late journa | Bill Booth appears as a part of a waiver and introduction-to-skydiving video sho | Bell was the voice director for Kidd Video, Peter Pan and the Pirates, as well a
+  - contexts (8): Gillette was born in Nook Farm, Hartford, Connecticut, a literary and intellectu | The National Park Service maintains a number of hiker/biker campsites, about eve | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow
 
-- **[high]** When was Bohr born?
+- **[high]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (7): Information Storage, retrieval, and Handling Apparatus United States Patent no.  | Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | These charts are not static records of the past: they deal with the present and 
+  - contexts (8): The basic picture painted of the pre–Industrial Revolution is that the Industria | Sir William Henry Bragg (2 July 1862 – 12 March 1942) was a British X-ray crysta | Golf training device
+Electronuclear Reactor
+Optical range finder with variable a
 
 ## chunk_boundary
 
-- **[low]** When was Bohr born?
+- **[low]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (2): Bohr was born in Copenhagen on 19 June 1922, the fourth of six | sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund). His 
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | to remain in the US, and was granted American citizenship in 1940. On the eve of | In 2025, Microsoft was one of the donors who funded the demolition of the East W
 
-- **[medium]** When was Bohr born?
+- **[medium]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (3): Bohr was born in Copenhagen on 19 June 1922, the fourth of six | In 1925, he was appointed Director of the Physics Institute at the University of | sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund). His 
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | Moses Sperry Beach (October 5, 1822 – July 25, 1892) was an American newspaper o | to remain in the US, and was granted American citizenship in 1940. On the eve of
 
-- **[high]** When was Bohr born?
+- **[high]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (5): Bohr was born in Copenhagen on 19 June 1922, the fourth of six | He describes seeing women at the bar as "bitches" in his thoughts, and tells a s | sons of the physicist Niels Bohr
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | 2001 E.L.R. Stockstad Award
+2023 Elected Fellow of the American Association for  | to remain in the US, and
 
 ## evidence_position
 
-- **[low]** When was Bohr born?
+- **[low]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (8): Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | HubSpot, Inc. is a US-based developer and marketer of software products for mark | The most popular theory surrounding the downing of BOAC Flight 777 is that Germa
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In physics, a front is an interface between two different possible states (eithe | During the 1990s, Apple also branched out beyond computers, developing several c
 
-- **[medium]** When was Bohr born?
+- **[medium]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (8): EP 1 774 755B Method and Apparatus for Enabling Discovery and Use of a Service b | The Shasta–Trinity National Forest is a federally designated forest in northern  | Johann Peter Hebel (1760–1826), short story writer, dialectal poet and Lutheran 
+  - contexts (8): The original Brussels Pharmacopoeia Agreement, originally agreed on in Brussels  | Criticisms are well established regarding the implementation of the postcolonial | Riverbank Acoustical Laboratories (RAL), (often referred to as Riverbank or Rive
 
-- **[high]** When was Bohr born?
+- **[high]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (8): There are several shopping malls that represent international brands of clothing | The City of Adelaide, was a 10 sail composite (timber planking on a wrought-iron | The government and MILF had been negotiating for the inclusion of the province i
+  - contexts (8): The mountain supports a wide variety of animal life, including several species p | Banff National Park is the most visited Alberta tourist destination and one of t | The celebration of World Book Day at the Círculo de Bellas Artes
+June Book Fair 
 
 ## conflict
 
-- **[low]** When was Bohr born?
+- **[low]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (2): Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | Bohr was born in Copenhagen on 19 June 1919, the fourth of six sons of the physi
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | "A crucial step was the adoption of a punched card system derived from the Jacqu
 
-- **[medium]** When was Bohr born?
+- **[medium]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (4): Bohr was born in Copenhagen on 19 June 1919, the fourth of six sons of the physi | Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physi | From 1907 through 1913, Mulholland directed the building of the aqueduct. The 23
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | Washington, D.C., was a planned city, and many of the city's street grids were d
 
-- **[high]** When was Bohr born?
+- **[high]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (8): Bohr was born in Copenhagen on 19 June 1919, the fourth of six sons of the physi | The fourth series of the Danish TV series Borgen (2022) plays partially in the c | The architecture of Kuala Lumpur is a mixture of old colonial influences, Asian 
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In September 2021, the Climate Action Tracker estimated that, with current polic | After the series of bombings that hit Italy in the 1970s, a terrorist act was th
 
 ## hard_negative
 
-- **[low]** When was Bohr born?
+- **[low]** In what year was Einstein granted American citizenship?
   - expected: abstain (answer_available=False)
-  - contexts (2): In 1910, Bohr met Margrethe Nørlund, the sister of mathematician Niels Erik Nørl | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu
+  - contexts (8): Lenard is remembered today as a strong German nationalist who despised "English  | Planck was therefore unsuccessful, since this reply "took from him every basis f | This is a list of urban areas in the European Union with over 500,000 inhabitant
 
-- **[medium]** When was Bohr born?
+- **[medium]** In what year was Einstein granted American citizenship?
   - expected: abstain (answer_available=False)
-  - contexts (4): In 1910, Bohr met Margrethe Nørlund, the sister of mathematician Niels Erik Nørl | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu | Heisenberg first came to Copenhagen in 1924, then returned to Göttingen in June 
+  - contexts (8): Lenard is remembered today as a strong German nationalist who despised "English  | Planck was therefore unsuccessful, since this reply "took from him every basis f | He had the prospect of a position at the University of Edinburgh, but visa delay
 
-- **[high]** When was Bohr born?
+- **[high]** In what year was Einstein granted American citizenship?
   - expected: abstain (answer_available=False)
-  - contexts (8): In 1910, Bohr met Margrethe Nørlund, the sister of mathematician Niels Erik Nørl | From 1924 to 1927, Heisenberg was a Privatdozent at Göttingen, meaning he was qu | Heisenberg first came to Copenhagen in 1924, then returned to Göttingen in June 
+  - contexts (8): Lenard is remembered today as a strong German nationalist who despised "English  | Planck was therefore unsuccessful, since this reply "took from him every basis f | He had the prospect of a position at the University of Edinburgh, but visa delay

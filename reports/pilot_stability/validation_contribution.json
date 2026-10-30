@@ -10,55 +10,55 @@
     "std": 0.0
   },
   "n_accepted": {
-    "mean": 394.0,
-    "std": 8.18535277187245
+    "mean": 364.0,
+    "std": 11.269427669584644
   },
   "acceptance_rate": {
-    "mean": 0.394,
-    "std": 0.008185352771872456
+    "mean": 0.364,
+    "std": 0.011269427669584655
   },
   "n_llm_assessed": {
-    "mean": 484.3333333333333,
-    "std": 10.066445913694333
+    "mean": 451.6666666666667,
+    "std": 13.428824718989125
   },
   "components": {
     "rule_checks": {
       "rejected_candidates": {
-        "mean": 579.6666666666666,
-        "std": 6.3508529610858835
+        "mean": 609.3333333333334,
+        "std": 8.082903768654761
       },
       "unique_rejections": {
-        "mean": 59.0,
-        "std": 6.0
+        "mean": 56.0,
+        "std": 7.0
       },
       "typical_reason": "title leakage / containment / uniqueness"
     },
     "llm_judge": {
       "rejected_candidates": {
-        "mean": 14.0,
-        "std": 0.0
+        "mean": 15.666666666666666,
+        "std": 2.8867513459481287
       },
       "unique_rejections": {
-        "mean": 1.6666666666666667,
-        "std": 1.1547005383792515
+        "mean": 1.0,
+        "std": 0.0
       },
       "typical_reason": "unsupported / unclear / unanswerable"
     },
     "baseline_test": {
       "rejected_candidates": {
-        "mean": 19.666666666666668,
-        "std": 2.8867513459481287
+        "mean": 19.333333333333332,
+        "std": 2.309401076758503
       },
       "unique_rejections": {
-        "mean": 2.0,
-        "std": 2.6457513110645907
+        "mean": 1.3333333333333333,
+        "std": 1.5275252316519468
       },
       "typical_reason": "gold-chunk baseline incorrect"
     },
     "quality_threshold": {
       "rejected_candidates": {
-        "mean": 540.6666666666666,
-        "std": 7.094598884597588
+        "mean": 575.3333333333334,
+        "std": 14.189197769195175
       },
       "unique_rejections": {
         "mean": 0.0,
@@ -68,12 +68,12 @@
     },
     "deduplication": {
       "rejected_candidates": {
-        "mean": 2.6666666666666665,
-        "std": 1.5275252316519468
+        "mean": 2.3333333333333335,
+        "std": 1.1547005383792515
       },
       "unique_rejections": {
-        "mean": 2.6666666666666665,
-        "std": 1.5275252316519468
+        "mean": 2.3333333333333335,
+        "std": 1.1547005383792515
       },
       "typical_reason": "near-duplicate question or fact"
     }
@@ -82,14 +82,14 @@
   "per_run": [
     {
       "n_candidates": 1000,
-      "n_accepted": 387,
-      "n_rejected": 613,
-      "n_llm_assessed": 475,
-      "acceptance_rate": 0.387,
+      "n_accepted": 351,
+      "n_rejected": 649,
+      "n_llm_assessed": 442,
+      "acceptance_rate": 0.351,
       "components": {
         "rule_checks": {
-          "rejected_candidates": 587,
-          "unique_rejections": 59,
+          "rejected_candidates": 618,
+          "unique_rejections": 56,
           "typical_reason": "title leakage / containment / uniqueness",
           "top_reasons": [
             {
@@ -105,45 +105,45 @@
               "count": 60
             },
             {
-              "reason": "answer_in_question",
-              "count": 14
+              "reason": "refers_to_passage",
+              "count": 21
             },
             {
-              "reason": "supporting_sentence_not_in_chunk",
-              "count": 11
+              "reason": "time_sensitive_phrasing",
+              "count": 18
             }
           ]
         },
         "llm_judge": {
-          "rejected_candidates": 14,
-          "unique_rejections": 3,
+          "rejected_candidates": 19,
+          "unique_rejections": 1,
           "typical_reason": "unsupported / unclear / unanswerable",
           "top_reasons": [
             {
               "reason": "judge_rejected",
-              "count": 14
+              "count": 19
             }
           ]
         },
         "baseline_test": {
-          "rejected_candidates": 18,
+          "rejected_candidates": 22,
           "unique_rejections": 1,
           "typical_reason": "gold-chunk baseline incorrect",
           "top_reasons": [
             {
               "reason": "baseline_incorrect",
-              "count": 18
+              "count": 22
             }
           ]
         },
         "quality_threshold": {
-          "rejected_candidates": 547,
+          "rejected_candidates": 588,
           "unique_rejections": 0,
           "typical_reason": "combined score below min_quality_score",
           "top_reasons": [
             {
               "reason": "below_quality_threshold",
-              "count": 547
+              "count": 588
             }
           ]
         },
@@ -160,13 +160,16 @@
         }
       },
       "reason_counts": {
-        "below_quality_threshold": 547,
+        "below_quality_threshold": 588,
         "title_leak_in_question": 470,
         "possible_multiple_answers": 118,
         "answer_not_in_supporting_sentence": 60,
-        "baseline_incorrect": 18,
+        "baseline_incorrect": 22,
+        "refers_to_passage": 21,
+        "judge_rejected": 19,
+        "time_sensitive_phrasing": 18,
         "answer_in_question": 14,
-        "judge_rejected": 14,
+        "unresolved_referent": 14,
         "supporting_sentence_not_in_chunk": 11,
         "duplicate_question": 3
       },
@@ -176,14 +179,14 @@
     },
     {
       "n_candidates": 1000,
-      "n_accepted": 403,
-      "n_rejected": 597,
-      "n_llm_assessed": 483,
-      "acceptance_rate": 0.403,
+      "n_accepted": 371,
+      "n_rejected": 629,
+      "n_llm_assessed": 446,
+      "acceptance_rate": 0.371,
       "components": {
         "rule_checks": {
-          "rejected_candidates": 576,
-          "unique_rejections": 53,
+          "rejected_candidates": 608,
+          "unique_rejections": 49,
           "typical_reason": "title leakage / containment / uniqueness",
           "top_reasons": [
             {
@@ -199,12 +202,12 @@
               "count": 56
             },
             {
-              "reason": "answer_in_question",
-              "count": 17
+              "reason": "refers_to_passage",
+              "count": 30
             },
             {
-              "reason": "supporting_sentence_not_in_chunk",
-              "count": 8
+              "reason": "unresolved_referent",
+              "count": 21
             }
           ]
         },
@@ -231,13 +234,13 @@
           ]
         },
         "quality_threshold": {
-          "rejected_candidates": 542,
+          "rejected_candidates": 578,
           "unique_rejections": 0,
           "typical_reason": "combined score below min_quality_score",
           "top_reasons": [
             {
               "reason": "below_quality_threshold",
-              "count": 542
+              "count": 578
             }
           ]
         },
@@ -254,12 +257,15 @@
         }
       },
       "reason_counts": {
-        "below_quality_threshold": 542,
+        "below_quality_threshold": 578,
         "title_leak_in_question": 464,
         "possible_multiple_answers": 118,
         "answer_not_in_supporting_sentence": 56,
+        "refers_to_passage": 30,
+        "unresolved_referent": 21,
         "baseline_incorrect": 18,
         "answer_in_question": 17,
+        "time_sensitive_phrasing": 15,
         "judge_rejected": 14,
         "supporting_sentence_not_in_chunk": 8,
         "duplicate_question": 1
@@ -270,14 +276,14 @@
     },
     {
       "n_candidates": 1000,
-      "n_accepted": 392,
-      "n_rejected": 608,
-      "n_llm_assessed": 495,
-      "acceptance_rate": 0.392,
+      "n_accepted": 370,
+      "n_rejected": 630,
+      "n_llm_assessed": 467,
+      "acceptance_rate": 0.37,
       "components": {
         "rule_checks": {
-          "rejected_candidates": 576,
-          "unique_rejections": 65,
+          "rejected_candidates": 602,
+          "unique_rejections": 63,
           "typical_reason": "title leakage / containment / uniqueness",
           "top_reasons": [
             {
@@ -297,8 +303,8 @@
               "count": 21
             },
             {
-              "reason": "supporting_sentence_not_in_chunk",
-              "count": 7
+              "reason": "time_sensitive_phrasing",
+              "count": 20
             }
           ]
         },
@@ -314,49 +320,52 @@
           ]
         },
         "baseline_test": {
-          "rejected_candidates": 23,
-          "unique_rejections": 5,
+          "rejected_candidates": 18,
+          "unique_rejections": 3,
           "typical_reason": "gold-chunk baseline incorrect",
           "top_reasons": [
             {
               "reason": "baseline_incorrect",
-              "count": 23
+              "count": 18
             }
           ]
         },
         "quality_threshold": {
-          "rejected_candidates": 533,
+          "rejected_candidates": 560,
           "unique_rejections": 0,
           "typical_reason": "combined score below min_quality_score",
           "top_reasons": [
             {
               "reason": "below_quality_threshold",
-              "count": 533
+              "count": 560
             }
           ]
         },
         "deduplication": {
-          "rejected_candidates": 4,
-          "unique_rejections": 4,
+          "rejected_candidates": 3,
+          "unique_rejections": 3,
           "typical_reason": "near-duplicate question or fact",
           "top_reasons": [
             {
               "reason": "duplicate_question",
-              "count": 4
+              "count": 3
             }
           ]
         }
       },
       "reason_counts": {
-        "below_quality_threshold": 533,
+        "below_quality_threshold": 560,
         "title_leak_in_question": 458,
         "possible_multiple_answers": 130,
         "answer_not_in_supporting_sentence": 56,
-        "baseline_incorrect": 23,
         "answer_in_question": 21,
+        "time_sensitive_phrasing": 20,
+        "baseline_incorrect": 18,
+        "unresolved_referent": 16,
+        "refers_to_passage": 14,
         "judge_rejected": 14,
         "supporting_sentence_not_in_chunk": 7,
-        "duplicate_question": 4
+        "duplicate_question": 3
       },
       "pipeline_note": "Candidates first pass deterministic rule checks. Rule-passing candidates are then independently assessed by an LLM answerability judge and a baseline-answer test. Signals are combined into a quality score, followed by deduplication among accepted items.",
       "run_id": "pilot_stability_s2026",

@@ -18,10 +18,10 @@
       "display": "100.0% ± 0.0%"
     },
     "qa_acceptance_rate": {
-      "mean": 0.394,
-      "std": 0.008185352771872456,
+      "mean": 0.364,
+      "std": 0.011269427669584655,
       "n": 3,
-      "display": "39.4% ± 0.8%"
+      "display": "36.4% ± 1.1%"
     },
     "clean_seed_yield": {
       "mean": 0.2,
@@ -30,10 +30,10 @@
       "display": "20.0% ± 0.0%"
     },
     "failure_verification_pass_rate": {
-      "mean": 0.9428703703703704,
-      "std": 0.002809998315832124,
+      "mean": 0.9547222222222222,
+      "std": 0.0010015420209622064,
       "n": 3,
-      "display": "94.3% ± 0.3%"
+      "display": "95.5% ± 0.1%"
     },
     "human_acceptance_rate": {
       "mean": null,
@@ -62,10 +62,10 @@
       "display": "0.0 ± 0.0"
     },
     "accepted_qa_count": {
-      "mean": 394.0,
-      "std": 8.18535277187245,
+      "mean": 364.0,
+      "std": 11.269427669584644,
       "n": 3,
-      "display": "394.0 ± 8.2"
+      "display": "364.0 ± 11.3"
     },
     "clean_seed_count": {
       "mean": 200.0,
@@ -74,16 +74,16 @@
       "display": "200.0 ± 0.0"
     },
     "failure_valid_count": {
-      "mean": 3394.3333333333335,
-      "std": 10.115993936995679,
+      "mean": 3437.0,
+      "std": 3.605551275463989,
       "n": 3,
-      "display": "3394.3 ± 10.1"
+      "display": "3437.0 ± 3.6"
     },
     "failure_rejected_count": {
-      "mean": 205.66666666666666,
-      "std": 10.115993936995679,
+      "mean": 163.0,
+      "std": 3.605551275463989,
       "n": 3,
-      "display": "205.7 ± 10.1"
+      "display": "163.0 ± 3.6"
     }
   },
   "per_run": [
@@ -93,24 +93,24 @@
       "candidate_qa_count": 1000,
       "generation_error_count": 0,
       "schema_success_rate": 1.0,
-      "accepted_qa_count": 387,
-      "rejected_qa_count": 613,
-      "qa_acceptance_rate": 0.387,
+      "accepted_qa_count": 351,
+      "rejected_qa_count": 649,
+      "qa_acceptance_rate": 0.351,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 3389,
-      "failure_rejected_count": 211,
-      "failure_verification_pass_rate": 0.9413888888888889,
+      "failure_valid_count": 3436,
+      "failure_rejected_count": 164,
+      "failure_verification_pass_rate": 0.9544444444444444,
       "category_distribution": {
-        "person": 47,
-        "location": 41,
+        "person": 52,
+        "location": 42,
         "science_technology": 40,
         "historical_event": 41,
-        "organization_product": 31
+        "organization_product": 25
       },
       "difficulty_distribution": {
-        "easy": 82,
-        "medium": 80,
+        "easy": 80,
+        "medium": 82,
         "hard": 38
       },
       "human_acceptance_rate": null,
@@ -126,25 +126,25 @@
       "candidate_qa_count": 1000,
       "generation_error_count": 0,
       "schema_success_rate": 1.0,
-      "accepted_qa_count": 403,
-      "rejected_qa_count": 597,
-      "qa_acceptance_rate": 0.403,
+      "accepted_qa_count": 371,
+      "rejected_qa_count": 629,
+      "qa_acceptance_rate": 0.371,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 3406,
-      "failure_rejected_count": 194,
-      "failure_verification_pass_rate": 0.9461111111111111,
+      "failure_valid_count": 3434,
+      "failure_rejected_count": 166,
+      "failure_verification_pass_rate": 0.9538888888888889,
       "category_distribution": {
-        "person": 42,
-        "location": 40,
+        "person": 47,
+        "location": 41,
         "science_technology": 40,
-        "historical_event": 40,
-        "organization_product": 38
+        "historical_event": 41,
+        "organization_product": 31
       },
       "difficulty_distribution": {
-        "easy": 78,
-        "medium": 83,
-        "hard": 39
+        "easy": 80,
+        "medium": 82,
+        "hard": 38
       },
       "human_acceptance_rate": null,
       "human_failure_validity_rate": null,
@@ -159,25 +159,25 @@
       "candidate_qa_count": 1000,
       "generation_error_count": 0,
       "schema_success_rate": 1.0,
-      "accepted_qa_count": 392,
-      "rejected_qa_count": 608,
-      "qa_acceptance_rate": 0.392,
+      "accepted_qa_count": 370,
+      "rejected_qa_count": 630,
+      "qa_acceptance_rate": 0.37,
       "clean_seed_count": 200,
       "clean_seed_yield": 0.2,
-      "failure_valid_count": 3388,
-      "failure_rejected_count": 212,
-      "failure_verification_pass_rate": 0.9411111111111111,
+      "failure_valid_count": 3441,
+      "failure_rejected_count": 159,
+      "failure_verification_pass_rate": 0.9558333333333333,
       "category_distribution": {
-        "person": 48,
+        "person": 52,
         "location": 41,
         "science_technology": 40,
         "historical_event": 41,
-        "organization_product": 30
+        "organization_product": 26
       },
       "difficulty_distribution": {
-        "easy": 82,
-        "medium": 79,
-        "hard": 39
+        "easy": 83,
+        "medium": 81,
+        "hard": 36
       },
       "human_acceptance_rate": null,
       "human_failure_validity_rate": null,
@@ -189,42 +189,42 @@
   ],
   "category_distribution_by_run": {
     "pilot_stability_s42": {
+      "person": 52,
+      "location": 42,
+      "science_technology": 40,
+      "historical_event": 41,
+      "organization_product": 25
+    },
+    "pilot_stability_s123": {
       "person": 47,
       "location": 41,
       "science_technology": 40,
       "historical_event": 41,
       "organization_product": 31
     },
-    "pilot_stability_s123": {
-      "person": 42,
-      "location": 40,
-      "science_technology": 40,
-      "historical_event": 40,
-      "organization_product": 38
-    },
     "pilot_stability_s2026": {
-      "person": 48,
+      "person": 52,
       "location": 41,
       "science_technology": 40,
       "historical_event": 41,
-      "organization_product": 30
+      "organization_product": 26
     }
   },
   "difficulty_distribution_by_run": {
     "pilot_stability_s42": {
-      "easy": 82,
-      "medium": 80,
+      "easy": 80,
+      "medium": 82,
       "hard": 38
     },
     "pilot_stability_s123": {
-      "easy": 78,
-      "medium": 83,
-      "hard": 39
+      "easy": 80,
+      "medium": 82,
+      "hard": 38
     },
     "pilot_stability_s2026": {
-      "easy": 82,
-      "medium": 79,
-      "hard": 39
+      "easy": 83,
+      "medium": 81,
+      "hard": 36
     }
   }
 }

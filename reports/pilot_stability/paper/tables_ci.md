@@ -1,0 +1,19 @@
+**Paired drop (pp) and FRS with 95% CIs, pooled over three seeded runs; cluster bootstrap over 600 parent clean seeds, 2000 resamples.**
+
+| Condition | nova-pro | llama | gpt-oss |
+|---|---|---|---|
+| missing_evidence | 6.3 [5.1, 7.7] | 5.2 [4.1, 6.5] | 6.6 [5.3, 8.0] |
+| hard_negative | 4.2 [2.9, 5.6] | 4.5 [3.1, 5.9] | 4.5 [3.2, 5.9] |
+| conflict | 23.4 [20.6, 25.9] | 23.3 [20.7, 25.8] | 32.1 [29.4, 34.7] |
+| context_noise | 0.3 [-0.8, 1.4] | 0.0 [-0.7, 0.7] | 0.4 [-0.3, 1.2] |
+| chunk_boundary | 1.5 [0.3, 2.8] | 0.9 [-0.3, 2.1] | 4.4 [2.9, 5.9] |
+| evidence_position | 0.5 [-0.5, 1.6] | -0.2 [-1.1, 0.6] | 0.1 [-0.8, 0.9] |
+| FRS | 0.940 [0.932, 0.948] | 0.944 [0.937, 0.951] | 0.920 [0.912, 0.928] |
+
+**FRS difference between models with paired 95% CIs (same resampled seeds), pooled over three seeded runs; cluster bootstrap over 600 parent clean seeds, 2000 resamples.**
+
+| Models | ΔFRS [95% CI] | CI excludes 0 |
+|---|---|---|
+| nova-pro − llama | -0.004 [-0.014, +0.006] | no |
+| nova-pro − gpt-oss | +0.020 [+0.009, +0.030] | yes |
+| llama − gpt-oss | +0.024 [+0.015, +0.033] | yes |

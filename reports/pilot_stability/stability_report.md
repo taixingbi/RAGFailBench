@@ -10,10 +10,10 @@ Run IDs: `['pilot_stability_s42', 'pilot_stability_s123', 'pilot_stability_s2026
 |--------|-------|-----|
 | Candidate QA count | 1000.0 ± 0.0 | Generation stability |
 | JSON/schema success rate | 100.0% ± 0.0% | LLM output reliability |
-| QA acceptance rate | 39.4% ± 0.8% | Validation stability |
+| QA acceptance rate | 36.4% ± 1.1% | Validation stability |
 | Clean-seed yield | 20.0% ± 0.0% | Dataset construction stability |
 | Clean-seed count | 200.0 ± 0.0 | Absolute yield |
-| Failure verification pass rate | 94.3% ± 0.3% | Injection reliability |
+| Failure verification pass rate | 95.5% ± 0.1% | Injection reliability |
 | Human acceptance rate (HAR) | n/a | Actual quality stability |
 | Human failure validity | n/a | Injection quality |
 
@@ -21,13 +21,21 @@ Run IDs: `['pilot_stability_s42', 'pilot_stability_s123', 'pilot_stability_s2026
 
 | run_id | seed | candidates | schema% | accept% | seeds | yield% | fail_pass% | HAR |
 |--------|------|------------|---------|---------|-------|--------|------------|-----|
-| pilot_stability_s42 | 42 | 1000 | 100.0% | 38.7% | 200 | 20.0% | 94.1% | n/a |
-| pilot_stability_s123 | 123 | 1000 | 100.0% | 40.3% | 200 | 20.0% | 94.6% | n/a |
-| pilot_stability_s2026 | 2026 | 1000 | 100.0% | 39.2% | 200 | 20.0% | 94.1% | n/a |
+| pilot_stability_s42 | 42 | 1000 | 100.0% | 35.1% | 200 | 20.0% | 95.4% | n/a |
+| pilot_stability_s123 | 123 | 1000 | 100.0% | 37.1% | 200 | 20.0% | 95.4% | n/a |
+| pilot_stability_s2026 | 2026 | 1000 | 100.0% | 37.0% | 200 | 20.0% | 95.6% | n/a |
 
 ## Category / difficulty distributions
 
 ### pilot_stability_s42 — category
+
+- `historical_event`: 41
+- `location`: 42
+- `organization_product`: 25
+- `person`: 52
+- `science_technology`: 40
+
+### pilot_stability_s123 — category
 
 - `historical_event`: 41
 - `location`: 41
@@ -35,39 +43,31 @@ Run IDs: `['pilot_stability_s42', 'pilot_stability_s123', 'pilot_stability_s2026
 - `person`: 47
 - `science_technology`: 40
 
-### pilot_stability_s123 — category
-
-- `historical_event`: 40
-- `location`: 40
-- `organization_product`: 38
-- `person`: 42
-- `science_technology`: 40
-
 ### pilot_stability_s2026 — category
 
 - `historical_event`: 41
 - `location`: 41
-- `organization_product`: 30
-- `person`: 48
+- `organization_product`: 26
+- `person`: 52
 - `science_technology`: 40
 
 ### pilot_stability_s42 — difficulty
 
-- `easy`: 82
+- `easy`: 80
 - `hard`: 38
-- `medium`: 80
+- `medium`: 82
 
 ### pilot_stability_s123 — difficulty
 
-- `easy`: 78
-- `hard`: 39
-- `medium`: 83
+- `easy`: 80
+- `hard`: 38
+- `medium`: 82
 
 ### pilot_stability_s2026 — difficulty
 
-- `easy`: 82
-- `hard`: 39
-- `medium`: 79
+- `easy`: 83
+- `hard`: 36
+- `medium`: 81
 
 ## Design notes
 

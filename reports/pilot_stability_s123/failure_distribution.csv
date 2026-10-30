@@ -1,7 +1,7 @@
 failure_type,severity,count
-chunk_boundary,high,146
-chunk_boundary,low,185
-chunk_boundary,medium,163
+chunk_boundary,high,150
+chunk_boundary,low,184
+chunk_boundary,medium,165
 conflict,high,200
 conflict,low,200
 conflict,medium,200
@@ -11,9 +11,9 @@ context_noise,medium,200
 evidence_position,high,200
 evidence_position,low,200
 evidence_position,medium,200
-hard_negative,high,190
-hard_negative,low,193
+hard_negative,high,191
+hard_negative,low,191
 hard_negative,medium,191
-missing_evidence,high,178
-missing_evidence,low,198
-missing_evidence,medium,162
+missing_evidence,high,175
+missing_evidence,low,200
+missing_evidence,medium,187

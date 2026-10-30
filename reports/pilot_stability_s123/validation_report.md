@@ -5,20 +5,23 @@
 | Stage | Count |
 |-------|-------|
 | Candidate QA | 1000 |
-| Accepted (post-dedup) | 403 |
-| Rejected | 597 |
+| Accepted (post-dedup) | 371 |
+| Rejected | 629 |
 | Clean Seeds selected | 200 |
 
 ### Rejection reasons
 
 | Key | Count |
 |-----|-------|
-| below_quality_threshold | 542 |
+| below_quality_threshold | 578 |
 | title_leak_in_question | 464 |
 | possible_multiple_answers | 118 |
 | answer_not_in_supporting_sentence | 56 |
+| refers_to_passage | 30 |
+| unresolved_referent | 21 |
 | baseline_incorrect | 18 |
 | answer_in_question | 17 |
+| time_sensitive_phrasing | 15 |
 | judge_rejected | 14 |
 | supporting_sentence_not_in_chunk | 8 |
 | duplicate_question | 1 |
@@ -27,27 +30,27 @@
 
 | Key | Count |
 |-----|-------|
-| person | 42 |
-| historical_event | 40 |
-| location | 40 |
+| person | 47 |
+| historical_event | 41 |
+| location | 41 |
 | science_technology | 40 |
-| organization_product | 38 |
+| organization_product | 31 |
 
 ### Clean seeds by difficulty
 
 | Key | Count |
 |-----|-------|
-| medium | 83 |
-| easy | 78 |
-| hard | 39 |
+| medium | 82 |
+| easy | 80 |
+| hard | 38 |
 
 ### Clean seeds by answer type
 
 | Key | Count |
 |-----|-------|
-| other | 62 |
-| date | 45 |
-| location | 41 |
-| organization | 19 |
+| other | 69 |
+| date | 43 |
+| location | 43 |
 | numeric | 17 |
-| person | 16 |
+| organization | 15 |
+| person | 13 |

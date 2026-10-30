@@ -2,103 +2,105 @@
 
 ## Clean Seeds
 
-- **Q:** When was Victor Franz Hess born?
-  - **A:** 24 June 1883 (date, easy)
-  - **Evidence:** Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 1964) was an Austrian–American experimental physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson for his discovery of cosmic rays.
-  - **Source:** Victor Hess / Lead
+- **Q:** Where was Lake born?
+  - **A:** Pleasantville, New Jersey (location, easy)
+  - **Evidence:** Born in Pleasantville, New Jersey on September 4, 1866.
+  - **Source:** Simon Lake / Biography
 
-- **Q:** When was Werner Karl Heisenberg born?
-  - **A:** 5 December 1901 (date, easy)
-  - **Evidence:** Werner Karl Heisenberg (; German: [ˈvɛʁnɐ ˈhaɪzn̩bɛʁk] ; 5 December 1901 – 1 February 1976) was a German theoretical physicist, one of the main pioneers of the theory of quantum mechanics and a principal scientist in the German nuclear program during World War II.
-  - **Source:** Werner Heisenberg / Lead
+- **Q:** What was the name of the person who married Elders after her marriage to a federal employee ended?
+  - **A:** Oliver Elders (person, easy)
+  - **Evidence:** She later married Oliver Elders, a basketball coach.
+  - **Source:** Joycelyn Elders / Early life, education, family, and military service
 
-- **Q:** When was Andrew Gould Bostom born?
-  - **A:** 1955 or 1956 (date, easy)
-  - **Evidence:** Andrew Gould Bostom (born 1955 or 1956) is an American author, physician and critic of Islam, who is a former associate professor of medicine and researcher at Brown University Medical School.
-  - **Source:** Andrew G. Bostom / Lead
+- **Q:** In what year was Einstein granted American citizenship?
+  - **A:** 1940 (date, easy)
+  - **Evidence:** Horrified by the Nazi persecution of his fellow Jews, he decided to remain in the US, and was granted American citizenship in 1940.
+  - **Source:** Albert Einstein / Lead
 
 ## missing_evidence
 
-- **[low]** When was Victor Franz Hess born?
+- **[low]** Where was Lake born?
   - expected: abstain (answer_available=False)
-  - contexts (3): Elders drew fire, as well as censure from the Clinton administration, when she s | By the end of the 1940s, nearly 300 Germans were working at the institute, and t | Amanda Bosh is an American planetary scientist and observational astronomer best
+  - contexts (8): In January 1994 in the context of abortion, Elders said, "We really need to get  | By the end of the 1940s, nearly 300 Germans were working at the institute, and t | Amanda Bosh is an American planetary scientist and observational astronomer best
 
-- **[low]** When was Werner Karl Heisenberg born?
+- **[medium]** Where was Lake born?
   - expected: abstain (answer_available=False)
-  - contexts (3): In 1932, he showed that the threshold of the applied magnetic field which destro | Aspect is a graduate of the École Normale Supérieure de Cachan (ENS Cachan, toda | In 2007, his residence was a hexagonal, shed style mansion he dubbed Westwind, l
+  - contexts (8): Simon Lake (September 4, 1866 – June 23, 1945) was a Quaker American mechanical  | Lake, lacking Holland's financial backing, was unable to continue building subma | The idea of there being two opposed justifications for truth has shown up throug
 
-- **[medium]** When was Werner Karl Heisenberg born?
+- **[high]** Where was Lake born?
   - expected: abstain (answer_available=False)
-  - contexts (1): Following World War II, Heisenberg was appointed Director of the Kaiser Wilhelm 
+  - contexts (8): He studied at the Clinton Liberal Institute in Fort Plain, New York. Lake joined | Simon Lake (September 4, 1866 – June 23, 1945) was a Quaker American mechanical  | KAL 007 had four redundant hydraulic systems of which systems one, two, and thre
 
 ## context_noise
 
-- **[low]** When was Victor Franz Hess born?
+- **[low]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (3): The situation had not stabilized by 17 June, and the Finns were being pushed bac | 1st place: Mitsuku – 24 points
-2nd place: Uberbot – 6 points
-3rd place: Anna – 5 | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19
+  - contexts (8): Havířov is twinned with: | Joint German–Soviet parades were held in Lviv and Brest-Litovsk, and the countri | Schrödinger had a deep interest in philosophy, and was influenced by the works o
 
-- **[medium]** When was Victor Franz Hess born?
+- **[medium]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (5): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | In 1952, he suggested that the different terms of a superposition evolving under | Later in his career, Leyner developed a strong interest in farming and ranching.
+  - contexts (8): CloudBees is an enterprise software delivery company. Sacha Labourey and Francoi | {\displaystyle \lambda =h/p} | Gelfand also competed in various other endurance races:
+1993 IMSA Firestone Fire
 
-- **[high]** When was Victor Franz Hess born?
+- **[high]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (7): Following his retirement from full-time academic duties, he was named Distinguis | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | {\displaystyle R_{Z}={2\pi ^{2}m_{e}Z^{2}e^{4} \over h^{3}}}
+  - contexts (8): In 2024, Czarnik was elected to the National Academy of Inventors. He has also e | Plaza de la Cultura Juan Pablo Duarte - which houses several national museums an | He further criticized the Committee on Naming and Recognition (CNR) report for "
 
 ## chunk_boundary
 
-- **[low]** When was Victor Franz Hess born?
+- **[low]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (2): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson fo
+  - contexts (8): Born in Pleasantville, New | Jersey on September 4, 1866. He studied at the Clinton Liberal Institute in Fort | In 2025, Microsoft was one of the donors who funded the demolition of the East W
 
-- **[medium]** When was Victor Franz Hess born?
+- **[low]** What was the name of the person who married Elders after her marriage to a federal employee ended?
   - expected: answer (answer_available=True)
-  - contexts (3): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | By building such a network, they became the first researchers to introduce mm-wa | physicist who shared the 1936 Nobel Prize in Physics with Carl David Anderson fo
+  - contexts (8): Elders was born Minnie Lee Jones in Schaal, Arkansas to a poor sharecropping fam | Elders, a basketball coach. After working as a nurse's aide in a Veterans Admini | Desk.com was a SaaS help desk and customer support product acquired by Salesforc
 
-- **[high]** When was Victor Franz Hess born?
+- **[low]** In what year was Einstein granted American citizenship?
   - expected: answer (answer_available=True)
-  - contexts (5): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | In 1905, a gold medal competition was sponsored by the Royal Danish Academy of S | physicist who shared the 1936 Nobel Prize in Physics
+  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | to remain in the US, and was granted American citizenship in 1940. On the eve of | In 2018, the Washington, D.C. area was the 18th-busiest airport system in the wo
 
 ## evidence_position
 
-- **[low]** When was Victor Franz Hess born?
+- **[low]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (8): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | In 2022, CloudBees announced the acquisition of ReleaseIQ, a SaaS-based offering | Its flight profile involved taking off from NAS Atsugi then flying northwest ove
+  - contexts (8): Born in Pleasantville, New Jersey on September 4, 1866. He studied at the Clinto | The city is also served by passenger and cargo seaports in the Neva Bay of the G | "The Arabs, especially the educated among us, look with the deepest sympathy on 
 
-- **[medium]** When was Victor Franz Hess born?
+- **[medium]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (8): The industrial and residential settlement south-west of Chorzów constructed sinc | This discovery was particularly important because it empirically proved that 'ai | The surrounding waters are filled with a diversity of marine life, including sea
+  - contexts (8): Following an economic transformation in the 1990s, Gliwice shifted from steelwor | The primary purpose of GitHub is to facilitate the version control and issue tra | algorithm fly-algorithm is
+ input: number of flies (N), 
+ input projection data 
 
-- **[high]** When was Victor Franz Hess born?
+- **[high]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (8): In early September however, Germany arranged its own occupation of Romania, targ | Characterizations (observations, definitions, and measurements of the subject of | Hal Leonard LLC (formerly Hal Leonard Corporation) is an American music publishi
+  - contexts (8): People use private transport like Taxis, Careem, Bykea, Indrive and Yango for lo | On web pages, Unicode directional formatting characters can be replaced by HTML5 | CECO Environmental describes its product portfolio as technologies used to reduc
 
 ## conflict
 
-- **[low]** When was Victor Franz Hess born?
+- **[low]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (2): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1880 – 17 December 19
+  - contexts (8): Born in Pleasantville, New Jersey on September 4, 1866. He studied at the Clinto | Born in Trenton, New Jersey on September 4, 1866. He studied at the Clinton Libe | "A crucial step was the adoption of a punched card system derived from the Jacqu
 
-- **[medium]** When was Victor Franz Hess born?
+- **[medium]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (4): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1880 – 17 December 19 | Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1883 – 17 December 19 | The legal procedure lasted more than two years and was significant enough to be 
+  - contexts (8): Born in Trenton, New Jersey on September 4, 1866. He studied at the Clinton Libe | Born in Pleasantville, New Jersey on September 4, 1866. He studied at the Clinto | Nicholas Magni (1355–1435), theologian
+Christoff Rudolff (1499–1545), author of 
 
-- **[high]** When was Victor Franz Hess born?
+- **[high]** Where was Lake born?
   - expected: answer (answer_available=True)
-  - contexts (8): Victor Franz Hess (German: [ˈvɪktɔʁ ˈfʁants ˈhɛs]; 24 June 1880 – 17 December 19 | The Cold War developed between the Soviet bloc and the United States, Canada, an | The Bolesławiec pottery that is most recognizable today is the white or cream co
+  - contexts (8): Born in Trenton, New Jersey on September 4, 1866. He studied at the Clinton Libe | In the late 1840s, Argentina attempted to regulate traffic on the Paraná and Uru | On 29 December 1808, at Liverpool harbour, Jørgensen accompanied and financed by
 
 ## hard_negative
 
-- **[low]** When was Victor Franz Hess born?
+- **[low]** Where was Lake born?
   - expected: abstain (answer_available=False)
-  - contexts (2): Carl David Anderson (September 3, 1905 – January 11, 1991) was an American exper | In 1936, Anderson and his first graduate student, Seth Neddermeyer, discovered t
+  - contexts (8): Hutchins was born in Harvard, Massachusetts, to Gordon and Holly Hutchins on Aug | Lowe made the flight successfully on June 28, 1860, from Philadelphia to New Jer | This is a list of urban areas in the European Union with over 500,000 inhabitant
 
-- **[medium]** When was Victor Franz Hess born?
+- **[medium]** Where was Lake born?
   - expected: abstain (answer_available=False)
-  - contexts (4): Carl David Anderson (September 3, 1905 – January 11, 1991) was an American exper | In 1936, Anderson and his first graduate student, Seth Neddermeyer, discovered t | Under the supervision of Robert Millikan, Anderson began investigations into cos
+  - contexts (8): Hutchins was born in Harvard, Massachusetts, to Gordon and Holly Hutchins on Aug | Lowe made the flight successfully on June 28, 1860, from Philadelphia to New Jer | Einstein became an American citizen in 1940. Not long after settling into his ca
 
-- **[high]** When was Victor Franz Hess born?
+- **[high]** Where was Lake born?
   - expected: abstain (answer_available=False)
-  - contexts (8): Carl David Anderson (September 3, 1905 – January 11, 1991) was an American exper | In 1936, Anderson and his first graduate student, Seth Neddermeyer, discovered t | Under the supervision of Robert Millikan, Anderson began investigations into cos
+  - contexts (8): Hutchins was born in Harvard, Massachusetts, to Gordon and Holly Hutchins on Aug | Lowe made the flight successfully on June 28, 1860, from Philadelphia to New Jer | Einstein became an American citizen in 1940. Not long after settling into his ca

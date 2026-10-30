@@ -1,21 +1,20 @@
 {
-  "total_valid": 3389,
-  "total_rejected": 211,
+  "total_valid": 3436,
+  "total_rejected": 164,
   "judge_used": true,
   "judge_unaudited": 0,
   "by_type": {
-    "missing_evidence": 524,
+    "missing_evidence": 561,
     "context_noise": 600,
-    "chunk_boundary": 494,
+    "chunk_boundary": 499,
     "evidence_position": 600,
     "conflict": 600,
-    "hard_negative": 571
+    "hard_negative": 576
   },
   "rejection_reasons": {
-    "gold_answer_present": 56,
-    "contexts_nonempty": 39,
-    "distractors_lack_gold_evidence": 2,
-    "evidence_split_across_chunks": 48,
-    "judge_answer_still_available": 66
+    "gold_answer_present": 52,
+    "distractors_lack_gold_evidence": 4,
+    "evidence_split_across_chunks": 45,
+    "judge_answer_still_available": 63
   }
 }
