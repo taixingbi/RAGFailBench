@@ -219,8 +219,8 @@ for the paired drops, FRS and FRS differences)**: see `tables_ci.md` / `tables_c
 > injection with judge audit 5.1) and 3,736 logged generator / judge calls (1.8M tokens; injection-judge calls are not logged),
 > excluding the 3-model evaluation (23,188 calls including judge calls, 13.6M tokens,
 > 2.8 h at the gateway's concurrency limit of 10). The funnel reproduces: 1,000
-> candidates, 390 accepted, 200 seeds, 3,421 verified failure cases (179 quarantined,
-> 0 unaudited). Only 23 of B's 200 questions coincide with A's, so A and B are two
+> candidates, 369 accepted, 200 seeds, 3,429 verified failure cases (171 quarantined,
+> 0 unaudited). Only 29 of B's 200 questions coincide with A's, so A and B are two
 > independent draws of the benchmark.
 >
 > **Gate.** For each model × condition the gate compares a candidate run with a
@@ -230,15 +230,23 @@ for the paired drops, FRS and FRS differences)**: see `tables_ci.md` / `tables_c
 > was regenerated. We run two comparisons (Table XVIII):
 >
 > 1. *Knowledge update, same RAG system* (A → B, unpaired). Every one of the 21 cells
->    passes (largest drop 2.8 points; FRS 0.924/0.939/0.919 on A vs 0.943/0.952/0.925 on
->    B). Decision: SHIP. The corpus update does not by itself degrade the system.
+>    passes (largest drop 2.9 points; FRS 0.934/0.943/0.923 on A vs 0.945/0.953/0.921 on
+>    B for nova-pro/llama/gpt-oss). Decision: SHIP. The corpus update does not by itself
+>    degrade the system.
 > 2. *Degraded retrieval configuration* (B, top-k 8 → 4, paired). The reader receives
->    only the first four passages. Clean accuracy is unchanged for every model (Δ ≤ 0.5
->    points), because the gold passage is ranked first, so a clean-only regression test
->    would ship this change. The failure operators block it: evidence_position drops
->    64–65 points, context_noise 19–20, conflict 8–14 and chunk_boundary 6–7.5 (all CIs
->    below zero). FRS falls from 0.94–0.95 to 0.76–0.78. The abstain-expected operators
->    are unaffected, as expected, since truncation cannot add evidence. Decision: BLOCK.
+>    only the first four of the eight passages. Clean accuracy is unchanged for every
+>    model (|Δ| ≤ 1 point), because the gold passage is ranked first, so a clean-only
+>    regression test would ship this change. The failure operators block it in 12 of 21
+>    cells: evidence_position drops 64–65 points, context_noise 46–47, conflict 7.5–15.5
+>    and chunk_boundary 7–9 (all CIs below zero). context_noise places the gold passage
+>    uniformly over the eight slots and evidence_position at slot 1, 5 or 8 (by
+>    severity), so a top-4 cut removes it in about half and two thirds of cases; the
+>    scores (≈0.50 and ≈0.32) match exactly the evidence the configuration discards.
+>    The pre-padding run showed a smaller context_noise drop (19–20 points) only
+>    because its contexts were shorter and the gold passage more often sat in the
+>    first four. FRS falls from
+>    0.92–0.95 to 0.71–0.73. The abstain-expected operators are unaffected, as expected,
+>    since truncation cannot add evidence. Decision: BLOCK.
 >
 > The second comparison is the case the benchmark is designed for. A configuration
 > error that is invisible on clean questions is caught, and the operators that fail
