@@ -75,6 +75,23 @@ def check_time_sensitive(question: str) -> list[str]:
     return ["time_sensitive_phrasing"] if _TIME_RE.search(question) else []
 
 
+_FUNCTION_WORDS = frozenset(
+    "who whom whose what which when where why how is are was were be been does do did "
+    "has have had the a an of in on at to for by as known called name named mean means "
+    "s about tell me".split()
+)
+
+
+def title_only_question(question: str, page_title: str) -> bool:
+    """True when the question contains the page title and no content word besides it."""
+    title = normalize_answer(page_title.strip())
+    q = normalize_answer(question)
+    if not title or title not in q:
+        return False
+    rest = q.replace(title, " ").split()
+    return not [w for w in rest if w not in _FUNCTION_WORDS]
+
+
 def check_rules(
     candidate: CandidateQA,
     chunk: Chunk | None,
@@ -117,9 +134,10 @@ def check_rules(
             norm_chunk = normalize_answer(chunk.text)
             if norm_support and norm_support not in norm_chunk:
                 reasons.append("supporting_sentence_not_in_chunk")
-        # Title leakage: question should not just restate the page title
-        title = chunk.page_title.strip()
-        if title and normalize_answer(title) and normalize_answer(title) in normalize_answer(q):
+        # Title leakage: the question is little more than the page title
+        # ("Who is Albert Einstein?"). Naming the subject is otherwise required
+        # for a self-contained question, so the title alone is not a leak.
+        if title_only_question(q, chunk.page_title):
             reasons.append("title_leak_in_question")
 
     return reasons

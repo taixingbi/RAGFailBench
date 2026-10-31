@@ -23,7 +23,7 @@ _DIFFICULTY_SPECS = {
         "- The question should require combining cues from TWO nearby sentences "
         "or applying a light comparison / ordering / attribution.\n"
         "- Avoid trivial one-word lookup questions when richer facts exist.\n"
-        "- Keep the question self-contained (no pronouns that need the title)."
+        "- Keep the question self-contained: name its subject, no pronouns."
     ),
     "hard": (
         "Difficulty target: HARD\n"
@@ -46,9 +46,11 @@ Hard requirements (all difficulties):
 - The "supporting_sentence" MUST be copied verbatim (character-for-character) \
 from the passage and must contain the answer.
 - The question MUST NOT contain the answer.
-- The question MUST NOT rely on the article title or phrases like \
-"according to the passage/text/article".
-- Avoid vague pronouns; make the question self-contained.
+- The question MUST be understandable without the passage: name its subject \
+explicitly (e.g. "When did Albert Einstein die?", not "When did he die?"). The \
+passage comes from the article named below, so its subject is usually that \
+article's topic.
+- Do NOT use phrases like "according to the passage/text/article".
 - Do NOT invent facts that are not in the passage.
 - Set "difficulty" exactly to "{target_difficulty}".
 
@@ -62,6 +64,8 @@ Return STRICT JSON with exactly these keys:
   "reasoning_type": "single_fact|multi_sentence|multi_constraint",
   "is_time_sensitive": true|false
 }}
+
+Article: {page_title}
 
 Passage:
 \"\"\"
@@ -208,10 +212,12 @@ def build_qa_generation_prompt(
     chunk_text: str,
     *,
     target_difficulty: str = "easy",
+    page_title: str = "",
 ) -> str:
     diff = target_difficulty if target_difficulty in _DIFFICULTY_SPECS else "easy"
     return QA_GENERATION_TEMPLATE.format(
         chunk_text=chunk_text,
+        page_title=page_title or "(unknown)",
         target_difficulty=diff,
         difficulty_spec=_DIFFICULTY_SPECS[diff],
     )

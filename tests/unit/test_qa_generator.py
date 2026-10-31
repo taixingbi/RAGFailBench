@@ -146,3 +146,11 @@ def test_is_good_qa_chunk_bounds():
     cfg = AppConfig()
     small = _chunk("1", 1, "x" * 200, tokens=10)
     assert not is_good_qa_chunk(small, cfg)
+
+
+def test_build_qa_prompt_names_article():
+    from ragfailbench.generation.prompts import build_qa_generation_prompt
+
+    text = build_qa_generation_prompt("He was born in Ulm.", page_title="Albert Einstein")
+    assert "Article: Albert Einstein" in text
+    assert "name its subject" in text

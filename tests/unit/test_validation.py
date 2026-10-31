@@ -106,3 +106,12 @@ def test_rules_reject_unresolved_question():
     cfg = ValidationConfig()
     cand = _cand("c1", "When was he born?", "1948", "Phillips was born in 1948.")
     assert "unresolved_referent" in check_rules(cand, _chunk("Phillips was born in 1948."), cfg)
+
+
+def test_title_leak_only_for_title_only_questions():
+    chunk = _chunk("Kubernetes was originally designed by Google.")
+    support = "Kubernetes was originally designed by Google."
+    named = _cand("c1", "Which company originally designed Kubernetes?", "Google", support)
+    assert "title_leak_in_question" not in check_rules(named, chunk, ValidationConfig())
+    bare = _cand("c2", "What is Kubernetes?", "Google", support)
+    assert "title_leak_in_question" in check_rules(bare, chunk, ValidationConfig())

@@ -30,7 +30,7 @@ _DATE_HINT_RE = re.compile(
 
 VALID_ANSWER_TYPES = {"person", "organization", "location", "date", "numeric", "other"}
 VALID_DIFFICULTY = {"easy", "medium", "hard"}
-PROMPT_VERSION = "qa_v2_difficulty"
+PROMPT_VERSION = "qa_v3_named_subject"
 
 
 def stable_candidate_id(chunk_id: str, question: str) -> str:
@@ -182,7 +182,7 @@ def generate_for_chunk(
 ) -> tuple[dict[str, Any] | None, str | None]:
     """Return (parsed_qa_fields, error). Exactly one is non-None."""
     prompt = build_qa_generation_prompt(
-        chunk.text, target_difficulty=target_difficulty
+        chunk.text, target_difficulty=target_difficulty, page_title=chunk.page_title
     )
     try:
         data = client.complete_json(
