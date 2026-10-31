@@ -1,20 +1,27 @@
-"""95% bootstrap CIs for the paired drops, FRS and model-vs-model FRS gaps.
+"""Statistics for the paper: bootstrap CIs, McNemar tests, metric breakdown.
 
-Pools the seeded runs' evaluation_results.jsonl and resamples parent clean
-seeds (clusters: every failure variant of one seed moves together, since they
-share a question and evidence). Per-item drops follow failure_metrics: an
-answer-expected item's drop is its parent's clean correctness minus its own,
-an abstain-expected item's drop is failing to abstain. All models are resampled
-on the same clusters, so the FRS gaps are paired.
+Pools the seeded runs' evaluation_results.jsonl and writes, under
+reports/pilot_stability/paper/ (tables_ci.md / tables_ci.tex):
 
-Writes reports/pilot_stability/paper/tables_ci.md / tables_ci.tex.
+  1. 95% CIs for the paired drops, FRS and model-vs-model FRS gaps. The
+     bootstrap resamples parent clean seeds (clusters: every failure variant
+     of one seed moves together, since they share a question and evidence).
+     Per-item drops follow failure_metrics: an answer-expected item's drop is
+     its parent's clean correctness minus its own, an abstain-expected item's
+     drop is failing to abstain. All models are resampled on the same
+     clusters, so the FRS gaps are paired.
+  2. Exact McNemar tests between models on the same items, per condition,
+     with Holm correction over all tests.
+  3. Which correctness signal the reported score rests on: exact match,
+     token-F1 >= 0.6 and judge verdict, each alone, against their union.
 
-Usage: python scripts/bootstrap_ci.py [--seeds 42 123 2026] [--n-boot 2000]
+Usage: python scripts/paper_stats.py [--seeds 42 123 2026] [--n-boot 2000]
 """
 
 from __future__ import annotations
 
 import argparse
+import math
 from collections import defaultdict
 from itertools import combinations
 from pathlib import Path
@@ -105,12 +112,112 @@ def bootstrap(clusters: dict[tuple, list[tuple[str, float]]], n_boot: int, seed:
     return out
 
 
+def item_scores(results: list[EvaluationResult], run: str) -> dict[str, dict[tuple, dict]]:
+    """condition -> (run, sample_id) -> {model: expected-behavior score 0/1}."""
+    out: dict[str, dict[tuple, dict]] = defaultdict(lambda: defaultdict(dict))
+    for r in results:
+        if call_error(r) or r.condition in PROBE_CONDITIONS:
+            continue
+        ok = r.abstained if expects_abstain(r) else item_correct(r)
+        out[r.condition][(run, r.sample_id)][r.model_name] = 1 if ok else 0
+    return out
+
+
+def mcnemar_exact(b: int, c: int) -> float:
+    """Two-sided exact McNemar p-value from the discordant counts."""
+    n = b + c
+    if n == 0:
+        return 1.0
+    tail = sum(math.comb(n, i) for i in range(min(b, c) + 1)) / 2**n
+    return min(1.0, 2 * tail)
+
+
+def mcnemar_table(scores: dict[str, dict[tuple, dict]]) -> list[dict]:
+    rows = []
+    for cond in ("clean", *OPERATORS):
+        for a, b in combinations(MODELS, 2):
+            pairs = [v for v in scores[cond].values() if a in v and b in v]
+            only_a = sum(1 for v in pairs if v[a] > v[b])
+            only_b = sum(1 for v in pairs if v[b] > v[a])
+            rows.append(
+                {
+                    "cond": cond,
+                    "pair": f"{a} vs {b}",
+                    "n": len(pairs),
+                    "diff": (sum(v[a] for v in pairs) - sum(v[b] for v in pairs)) / len(pairs),
+                    "only_a": only_a,
+                    "only_b": only_b,
+                    "p": mcnemar_exact(only_a, only_b),
+                }
+            )
+    # Holm step-down over every test in the table.
+    order = sorted(range(len(rows)), key=lambda i: rows[i]["p"])
+    running = 0.0
+    for rank, i in enumerate(order):
+        running = max(running, min(1.0, (len(rows) - rank) * rows[i]["p"]))
+        rows[i]["p_holm"] = running
+    return rows
+
+
+def signal_breakdown(results: list[EvaluationResult]) -> dict[tuple[str, str], dict[str, list]]:
+    """(model, condition) -> per-item [EM, F1>=0.6, judge, union] for answer-expected items."""
+    out: dict[tuple[str, str], dict[str, list]] = defaultdict(lambda: defaultdict(list))
+    for r in results:
+        if call_error(r) or expects_abstain(r) or r.condition in PROBE_CONDITIONS:
+            continue
+        cell = out[(r.model_name, r.condition)]
+        cell["em"].append(r.exact_match >= 1.0)
+        cell["f1"].append(r.token_f1 >= 0.6)
+        cell["judge"].append(bool(r.llm_judge_correct))
+        cell["union"].append(answer_correct(r))
+    return out
+
+
 def pp(point: float, lo: float, hi: float) -> str:
     return f"{100 * point:.1f} [{100 * lo:.1f}, {100 * hi:.1f}]"
 
 
 def frs_fmt(point: float, lo: float, hi: float) -> str:
     return f"{point:.3f} [{lo:.3f}, {hi:.3f}]"
+
+
+def test_tables(
+    tests: list[dict], signals: dict[tuple[str, str], dict[str, list]]
+) -> list[tuple[str, list[str], list[list[str]]]]:
+    test_rows = [
+        [
+            t["cond"],
+            t["pair"],
+            str(t["n"]),
+            f"{100 * t['diff']:+.1f}",
+            f"{t['only_a']} / {t['only_b']}",
+            f"{t['p']:.2g}",
+            f"{t['p_holm']:.2g}",
+        ]
+        for t in tests
+    ]
+    frac = lambda xs: f"{sum(xs) / len(xs):.3f}"  # noqa: E731
+    signal_rows = [
+        [cond, m] + [frac(signals[(m, cond)][k]) for k in ("em", "f1", "judge", "union")]
+        for cond in ("clean", "conflict", "context_noise", "chunk_boundary", "evidence_position")
+        for m in MODELS
+    ]
+    return [
+        (
+            "Exact McNemar tests between models on the same items (expected-behavior score; "
+            "pooled over three seeded runs). Discordant = items only the first / only the "
+            f"second model gets right; p (Holm) corrects over all {len(tests)} tests.",
+            ["Condition", "Models", "n", "Δ pp", "Discordant", "p", "p (Holm)"],
+            test_rows,
+        ),
+        (
+            "Share of answer-expected items each correctness signal accepts, pooled over three "
+            "seeded runs. The reported answer accuracy is the union (exact match, token-F1 ≥ "
+            "0.6, or judge). Conflict here is answer correctness before outcome scoring.",
+            ["Condition", "Model", "Exact match", "Token-F1 ≥ 0.6", "Judge", "Union (reported)"],
+            signal_rows,
+        ),
+    ]
 
 
 def tables(ci: dict) -> list[tuple[str, list[str], list[list[str]]]]:
@@ -173,14 +280,22 @@ def main() -> None:
     args = parser.parse_args()
 
     clusters: dict[tuple, list[tuple[str, float]]] = {}
+    scores: dict[str, dict[tuple, dict]] = defaultdict(dict)
+    signals: dict[tuple[str, str], dict[str, list]] = defaultdict(lambda: defaultdict(list))
     for s in args.seeds:
         run = f"pilot_stability_s{s}"
         path = args.data / run / "6_final" / "evaluation_results.jsonl"
-        clusters.update(item_drops(read_jsonl_models(path, EvaluationResult), run))
+        results = read_jsonl_models(path, EvaluationResult)
+        clusters.update(item_drops(results, run))
+        for cond, items in item_scores(results, run).items():
+            scores[cond].update(items)
+        for key, cell in signal_breakdown(results).items():
+            for k, v in cell.items():
+                signals[key][k].extend(v)
     ci = bootstrap(clusters, args.n_boot, args.rng_seed)
     out = args.reports / "pilot_stability" / "paper"
     out.mkdir(parents=True, exist_ok=True)
-    parts = tables(ci)
+    parts = tables(ci) + test_tables(mcnemar_table(scores), signals)
     (out / "tables_ci.md").write_text("\n".join(to_md(*t) for t in parts), encoding="utf-8")
     (out / "tables_ci.tex").write_text("\n".join(to_tex(*t) for t in parts), encoding="utf-8")
     print(f"Wrote {out}/tables_ci.md, tables_ci.tex")
