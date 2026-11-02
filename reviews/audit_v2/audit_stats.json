@@ -1,0 +1,322 @@
+{
+  "audit": "reviews/audit_v2",
+  "annotator1": {
+    "clean_rows": 50,
+    "clean_labeled_valid": 50,
+    "clean_rows_breaking_guide": [],
+    "decisions": {
+      "keep": 42,
+      "fix": 7,
+      "reject": 1
+    },
+    "har": {
+      "k": 42,
+      "n": 50,
+      "rate": 0.84,
+      "ci95": [
+        0.7148551903823401,
+        0.9166267863791231
+      ]
+    },
+    "fix_reject_notes": {
+      "C002": [
+        "fix",
+        "Sentence lists four research areas, so 'primary focus' has no single answer. Ask for one area or accept the full list."
+      ],
+      "C010": [
+        "fix",
+        "Refers to 'this Mother's Day', which needs the episode title. Name the episode in the question."
+      ],
+      "C022": [
+        "fix",
+        "Present tense ('is based') will go stale. Add an 'as of' date to the question."
+      ],
+      "C027": [
+        "fix",
+        "Present-tense HQ and CEO facts can change. Add an 'as of' date to the question."
+      ],
+      "C039": [
+        "fix",
+        "Question is ungrammatical ('continue into'). Rewrite as 'Into which period did the Counter-Enlightenment continue?'"
+      ],
+      "C040": [
+        "reject",
+        "Question restates its own answer ('also called ...'), so it tests nothing."
+      ],
+      "C044": [
+        "fix",
+        "Passage does not say Congress set the area aside; the 'Congressional action' premise is unsupported. Reword to 'What was set aside in 1943?'"
+      ],
+      "C047": [
+        "fix",
+        "Question adds 'drying up of Owens Lake by 1926', which the sentence does not state. Drop that clause."
+      ]
+    },
+    "failure_rows": 54,
+    "failure_labeled_valid": 54,
+    "failure_rows_breaking_guide": [],
+    "injection_valid": {
+      "k": 52,
+      "n": 54,
+      "rate": 0.9629629629629629,
+      "ci95": [
+        0.8746459065659669,
+        0.9897838464145869
+      ]
+    },
+    "label_correct": {
+      "k": 54,
+      "n": 54,
+      "rate": 1.0,
+      "ci95": [
+        0.9335841332189981,
+        1.0
+      ]
+    },
+    "injection_valid_by_operator": {
+      "chunk_boundary": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "conflict": {
+        "k": 7,
+        "n": 9,
+        "rate": 0.7777777777777778,
+        "ci95": [
+          0.4525833436728054,
+          0.9367762376877727
+        ]
+      },
+      "context_noise": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "evidence_position": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "hard_negative": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "missing_evidence": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      }
+    },
+    "issue_codes": {
+      "other": 9,
+      "ok": 41,
+      "empty_or_broken_context": 3,
+      "position_not_matched_budget": 1
+    }
+  },
+  "annotator2": {
+    "clean_rows": 50,
+    "clean_labeled_valid": 50,
+    "clean_rows_breaking_guide": [],
+    "decisions": {
+      "keep": 43,
+      "fix": 6,
+      "reject": 1
+    },
+    "har": {
+      "k": 43,
+      "n": 50,
+      "rate": 0.86,
+      "ci95": [
+        0.738135428014719,
+        0.9304925473797714
+      ]
+    },
+    "fix_reject_notes": {
+      "C002": [
+        "fix",
+        "Sentence lists four research areas; 'primary focus' has no single answer. Ask for one area or accept the list."
+      ],
+      "C010": [
+        "fix",
+        "'this Mother's Day' only makes sense with the episode title. Name the episode."
+      ],
+      "C022": [
+        "fix",
+        "Present tense; HQ can change. Add an 'as of' date."
+      ],
+      "C027": [
+        "fix",
+        "Present tense; HQ can change. Add an 'as of' date."
+      ],
+      "C039": [
+        "fix",
+        "Ungrammatical ('continue into'). Reword to ask which period it continued into."
+      ],
+      "C040": [
+        "reject",
+        "Only asks the page's alternate name (trivial); sentence also gives 'Manipuri script movement', so two answers."
+      ],
+      "C044": [
+        "fix",
+        "'Congressional action' premise is not in the sentence. Ask what was set aside in 1943."
+      ]
+    },
+    "failure_rows": 54,
+    "failure_labeled_valid": 54,
+    "failure_rows_breaking_guide": [],
+    "injection_valid": {
+      "k": 53,
+      "n": 54,
+      "rate": 0.9814814814814815,
+      "ci95": [
+        0.902283346415128,
+        0.996723596684648
+      ]
+    },
+    "label_correct": {
+      "k": 54,
+      "n": 54,
+      "rate": 1.0,
+      "ci95": [
+        0.9335841332189981,
+        1.0
+      ]
+    },
+    "injection_valid_by_operator": {
+      "chunk_boundary": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "conflict": {
+        "k": 8,
+        "n": 9,
+        "rate": 0.8888888888888888,
+        "ci95": [
+          0.5649937852319399,
+          0.9801096286728695
+        ]
+      },
+      "context_noise": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "evidence_position": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "hard_negative": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      },
+      "missing_evidence": {
+        "k": 9,
+        "n": 9,
+        "rate": 1.0,
+        "ci95": [
+          0.7008472464490407,
+          1.0
+        ]
+      }
+    },
+    "issue_codes": {
+      "ok": 53,
+      "other": 1
+    }
+  },
+  "agreement": {
+    "clean": {
+      "n_both": 50,
+      "decision": {
+        "n": 50,
+        "percent_agreement": 0.98,
+        "cohen_kappa": 0.923195084485407
+      },
+      "question_clear": {
+        "n": 50,
+        "percent_agreement": 0.98,
+        "cohen_kappa": 0.8466257668711654
+      },
+      "answer_in_evidence": {
+        "n": 50,
+        "percent_agreement": 1.0,
+        "cohen_kappa": null
+      },
+      "answer_unique": {
+        "n": 50,
+        "percent_agreement": 0.98,
+        "cohen_kappa": 0.6575342465753422
+      },
+      "time_sensitive_ok": {
+        "n": 50,
+        "percent_agreement": 1.0,
+        "cohen_kappa": 1.0
+      },
+      "needs_title": {
+        "n": 50,
+        "percent_agreement": 1.0,
+        "cohen_kappa": 1.0
+      }
+    },
+    "failure": {
+      "n_both": 54,
+      "human_injection_valid": {
+        "n": 54,
+        "percent_agreement": 0.9814814814814815,
+        "cohen_kappa": 0.6582278481012661
+      },
+      "human_label_correct": {
+        "n": 54,
+        "percent_agreement": 1.0,
+        "cohen_kappa": null
+      },
+      "severity_ok": {
+        "n": 54,
+        "percent_agreement": 0.7407407407407407,
+        "cohen_kappa": 0.13501144164759707
+      }
+    }
+  }
+}

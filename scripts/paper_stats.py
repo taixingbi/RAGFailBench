@@ -255,7 +255,10 @@ def to_md(caption: str, header: list[str], rows: list[list[str]]) -> str:
 
 
 def to_tex(caption: str, header: list[str], rows: list[list[str]]) -> str:
-    esc = lambda s: s.replace("_", r"\_").replace("−", "--")  # noqa: E731
+    esc = lambda s: (  # noqa: E731
+        s.replace("_", r"\_").replace("%", r"\%").replace("−", "--")
+        .replace("Δ", r"$\Delta$").replace("≥", r"$\geq$")
+    )
     lines = [
         r"\begin{table}[t]",
         r"\centering\small",

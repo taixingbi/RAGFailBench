@@ -191,7 +191,7 @@ def to_md(key: str, rows: list[list[str]]) -> str:
 
 
 def tex_escape(text: str) -> str:
-    return text.replace("_", r"\_").replace("%", r"\%").replace("±", r"$\pm$").replace("Δ", r"$\Delta$").replace("−", "$-$")
+    return text.replace("_", r"\_").replace("%", r"\%").replace("±", r"$\pm$").replace("Δ", r"$\Delta$").replace("−", "$-$").replace("—", "---").replace("≥", r"$\geq$")
 
 
 def to_tex(key: str, rows: list[list[str]]) -> str:

@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering\small
-\caption{Paired drop (pp) and FRS with 95% CIs, pooled over three seeded runs; cluster bootstrap over 561 parent clean seeds, 2000 resamples.}
+\caption{Paired drop (pp) and FRS with 95\% CIs, pooled over three seeded runs; cluster bootstrap over 561 parent clean seeds, 2000 resamples.}
 \begin{tabular}{lccc}
 \toprule
 Condition & nova-pro & llama & gpt-oss \\
@@ -18,10 +18,10 @@ FRS & 0.932 [0.925, 0.940] & 0.939 [0.933, 0.945] & 0.924 [0.917, 0.931] \\
 
 \begin{table}[t]
 \centering\small
-\caption{FRS difference between models with paired 95% CIs (same resampled seeds), pooled over three seeded runs; cluster bootstrap over 561 parent clean seeds, 2000 resamples.}
+\caption{FRS difference between models with paired 95\% CIs (same resampled seeds), pooled over three seeded runs; cluster bootstrap over 561 parent clean seeds, 2000 resamples.}
 \begin{tabular}{lcc}
 \toprule
-Models & ΔFRS [95% CI] & CI excludes 0 \\
+Models & $\Delta$FRS [95\% CI] & CI excludes 0 \\
 \midrule
 nova-pro -- llama & -0.006 [-0.015, +0.002] & no \\
 nova-pro -- gpt-oss & +0.008 [-0.000, +0.016] & no \\
@@ -35,7 +35,7 @@ llama -- gpt-oss & +0.015 [+0.006, +0.022] & yes \\
 \caption{Exact McNemar tests between models on the same items (expected-behavior score; pooled over three seeded runs). Discordant = items only the first / only the second model gets right; p (Holm) corrects over all 21 tests.}
 \begin{tabular}{lcccccc}
 \toprule
-Condition & Models & n & Δ pp & Discordant & p & p (Holm) \\
+Condition & Models & n & $\Delta$ pp & Discordant & p & p (Holm) \\
 \midrule
 clean & nova-pro vs llama & 561 & -0.4 & 4 / 6 & 0.75 & 1 \\
 clean & nova-pro vs gpt-oss & 561 & +0.0 & 5 / 5 & 1 & 1 \\
@@ -64,10 +64,10 @@ evidence\_position & llama vs gpt-oss & 1683 & +0.6 & 18 / 8 & 0.076 & 1 \\
 
 \begin{table}[t]
 \centering\small
-\caption{Share of answer-expected items each correctness signal accepts, pooled over three seeded runs. The reported answer accuracy is the union (exact match, token-F1 ≥ 0.6, or judge). Conflict here is answer correctness before outcome scoring.}
+\caption{Share of answer-expected items each correctness signal accepts, pooled over three seeded runs. The reported answer accuracy is the union (exact match, token-F1 $\geq$ 0.6, or judge). Conflict here is answer correctness before outcome scoring.}
 \begin{tabular}{lccccc}
 \toprule
-Condition & Model & Exact match & Token-F1 ≥ 0.6 & Judge & Union (reported) \\
+Condition & Model & Exact match & Token-F1 $\geq$ 0.6 & Judge & Union (reported) \\
 \midrule
 clean & nova-pro & 0.731 & 0.879 & 0.971 & 0.982 \\
 clean & llama & 0.745 & 0.884 & 0.975 & 0.986 \\

@@ -1,0 +1,34 @@
+% All revision tables and Fig. 2 in one document. Build:
+%   tectonic reports/pilot_stability/paper/revision_tables.tex
+\documentclass[10pt]{article}
+\usepackage[a4paper,landscape,margin=1.6cm]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{newunicodechar}
+\newunicodechar{−}{$-$}
+\newunicodechar{×}{$\times$}
+\newunicodechar{–}{--}
+\newunicodechar{≥}{$\geq$}
+\setlength{\parindent}{0pt}
+\title{RAGFailBench revision: tables and figure}
+\date{}
+\begin{document}
+\maketitle
+\section*{Model evaluation (Tables XII, XIII, XV, XVI)}
+\input{tables.tex}
+\clearpage
+\section*{Confidence intervals, McNemar tests, correctness signals (Tables XVII, XIX)}
+\input{tables_ci.tex}
+\clearpage
+\section*{Human audit (Tables V, VI, VIII, IX, XI human rows)}
+\input{tables_audit.tex}
+\clearpage
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.75\linewidth]{fig2_paired_drop.pdf}
+\caption{Paired performance drop by failure operator (Fig. 2).}
+\end{figure}
+\end{document}

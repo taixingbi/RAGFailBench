@@ -44,10 +44,15 @@ passages, separated by `---`. Check the claim against the passages.
 
 | Operator | low | medium | high | Typical failures to look for |
 |---|---|---|---|---|
-| missing_evidence | only passages from other pages | neighbouring passages of the same page | the gold passage with the answer sentence deleted | answer still stated or inferable elsewhere → `answer_leaked` |
+| missing_evidence | only passages from other pages | 0–2 neighbouring passages of the same page (none in about 11% of cases) | the gold passage with the answer sentence deleted | answer still stated or inferable elsewhere → `answer_leaked` |
 | hard_negative | 2 topical passages | 4 topical passages | 8 topical passages | a passage states the answer → `answer_leaked` |
-| conflict | gold first, conflicting copy last | conflicting copy just before gold | conflicting copy first and repeated, gold last | the two copies do not actually disagree, or the alternate is also correct |
-| context_noise | 25% distractors | 50% distractors | 75% distractors | gold passage missing; a distractor supports the answer |
+| conflict | gold in slot 1, conflicting copy in slot 2 | conflicting copy in slot 1, gold in slot 2 | conflicting copy in slots 1 and 7, gold in slot 8 | the two copies do not actually disagree, or the alternate is also correct |
+| context_noise | gold + 7 others, of which 2 topically similar | 4 of 7 topically similar | 6 of 7 topically similar | gold passage missing; a distractor supports the answer |
+
+Every case has 8 passages; slots the operator does not use hold off-topic padding.
+(Corrected 2026-11-02 after annotator 1: the earlier text gave context_noise as
+"25/50/75% distractors" and conflict-low as "conflicting copy last", which did not
+match the cases.)
 | chunk_boundary | sentence split into 2 adjacent pieces | 2 pieces with a distractor between | 3 pieces with distractors between | pieces cannot be recombined; split inside a word → `midword_split` |
 | evidence_position | gold passage first | gold passage in the middle | gold passage last | gold passage missing or not where the severity says |
 
