@@ -38,11 +38,12 @@ RAGFailBench instead regenerates a failure-aware benchmark whenever the corpus c
 builds provenance-preserving question-answering (QA) seeds from a document corpus, validates
 them with rule checks, an LLM judge and a baseline-model test, audits a sample by hand, and
 injects six parameterized failure operators under a fixed eight-passage context budget. Each
-failure case is compared with its own parent clean seed, so a drop is attributable to one
-operator. On a 768-page Wikipedia pilot (12,366 chunks), three seeded runs give a stable
+answer-expected failure case is compared with its own parent clean seed, so a drop is
+attributable to one operator. On a 768-page Wikipedia pilot (12,366 chunks), three seeded runs give a stable
 construction funnel (QA acceptance 74.8\%\,$\pm$\,1.0\%; failure verification 94.9\%\,$\pm$\,0.3\%).
-A blind human audit accepts 84.0\% of sampled seeds (95\% CI 71.5--91.7\%) and judges 96.3\% of
-sampled failure cases valid. Evaluating three Bedrock-hosted models shows that conflicting
+In a human audit of a 50-seed sample with automatic verdicts hidden, the primary annotator
+accepts 84.0\% of seeds (95\% CI 71.5--91.7\%) and judges 96.3\% of 54 sampled failure cases
+valid. Evaluating three Bedrock-hosted models shows that conflicting
 evidence is the dominant failure for all of them (26.6--30.4-point paired drop), that they
 abstain correctly on 92--98\% of evidence-absent cases, and that context noise and evidence
 position cause no measurable drop with eight passages. On two Wikipedia snapshots three months
@@ -76,8 +77,8 @@ week's document changes, did robustness regress, and against which failure mode?
 RAGFailBench addresses this with (i) automatic construction of validated,
 provenance-preserving QA seeds from a corpus snapshot and (ii) six typed, parameterized failure
 operators that turn each seed into labeled failure cases. Models are evaluated on clean and
-failure conditions under the same context budget, and each failure case is compared with its
-own parent seed.
+failure conditions under the same context budget, and each answer-expected failure case is
+compared with its own parent seed.
 
 \subsection{Contributions}
 \textbf{C1, automated construction.} A configuration-driven pipeline that ingests a corpus,
@@ -232,7 +233,7 @@ rows); every drop is paired by parent, so removing a parent keeps comparisons ma
 \label{sec:audit}
 Automatic validation is not sufficient on its own (Section~\ref{sec:humanresults}), so the
 workflow includes a human stage. It is \emph{sampled quality assurance}: after each
-regeneration, a blind stratified sample of seeds and failure cases is exported, labeled by
+regeneration, a stratified sample of seeds and failure cases is exported with all automatic verdicts hidden, labeled by
 annotators against a written guide (keep / fix / reject with a reason for every fix or reject;
 per-operator validity and severity), and summarized as a human acceptance rate (HAR) and failure
 validity with confidence intervals. The audit measures the quality of a regenerated benchmark
@@ -315,16 +316,30 @@ model, and a failed or unparseable judge call is excluded and counted, never sco
 84--88\% and exact match 69--75\%; the union adds about one point over the judge. Abstain-expected
 items (\op{missing_evidence}, \op{hard_negative}) are scored on correct abstention.
 
-\textbf{Conflict scoring.} A conflict answer is classified as gold, alternate, both (names both
-values), abstain or other; it is \emph{handled} if it gives gold, names both, or explicitly says
-the sources conflict, and fails only if it commits to the alternate or gives an unacknowledged
-non-answer. We score by outcome because a single-answer judge marks many two-value answers
-wrong; the judge-only score is reported alongside.
+\textbf{Conflict scoring.} Each conflict answer gets one outcome. \emph{Abstain} if the model
+abstains; otherwise the gold and alternate values are matched in the normalized answer (the
+alternate is masked first, so a gold ``15'' does not match inside ``150''), and the answer is
+\emph{both} if it contains both values, \emph{gold} if it is correct by the scoring rule above
+or contains the gold value, \emph{alternate} if it contains only the alternate, and
+\emph{other} otherwise. An answer \emph{acknowledges} the conflict if it is \emph{both} or uses
+a contradiction cue (``conflict'', ``contradict'', ``inconsistent'', ``discrepancy'',
+``differ''). The reported score is the \emph{handled} rate: gold, both, or an abstain/other
+answer that acknowledges the conflict. This rule is deliberately lenient: it credits surfacing
+the contradiction, the behavior a RAG system with a stale document should show, and it avoids
+penalizing two-value answers that a single-answer judge marks wrong. Because the rule changes
+the numbers, we also report two stricter rules, \emph{gold only} and \emph{answer correctness}
+without outcome credit (Table~\ref{tab:sensitivity}).
 
-\textbf{Paired drops and FRS.} Every failure case is compared with its own parent clean seed, so
-a drop is not confounded by which seeds an operator could be built from. The Failure Robustness
-Score is $\mathrm{FRS} = 1 - \overline{\Delta}$, the mean paired drop over the six operators. We
-report mean\,$\pm$\,std over the three runs and 95\% cluster-bootstrap CIs pooled over runs
+\textbf{Paired drops and FRS.} For an answer-expected item, the drop is its parent clean
+seed's correctness minus its own (each 0 or 1), so a drop is not confounded by which seeds an
+operator could be built from. For an abstain-expected item, whose parent expects an answer, the
+drop is simply 1 if the model fails to abstain and 0 otherwise. An operator's drop is the mean
+over its cases (all three severities), and the Failure Robustness Score is
+$\mathrm{FRS} = 1 - \frac{1}{6}\sum_{o} \overline{\Delta}_o$, an unweighted mean over the six
+operators. FRS is a summary of one benchmark configuration (operator set, severity mix, context
+budget, conflict rule) and is meaningful for comparing runs under the same configuration, as the
+regression gate does; it is not an absolute measure of a model's robustness, and model rankings
+on it should be read together with the per-operator drops. We report mean\,$\pm$\,std over the three runs and 95\% cluster-bootstrap CIs pooled over runs
 (2,000 resamples of the 561 parent seeds; models share resamples, so model differences are
 paired \cite{efron1993bootstrap}), and exact McNemar tests on identical items, Holm-corrected
 over 21 tests \cite{mcnemar1947,holm1979}.
@@ -351,7 +366,7 @@ is 79/80/30, 77/77/30 and 78/78/32 (easy/medium/hard).
 
 \begin{table}[t]
 \centering
-\caption{Construction funnel, mean $\pm$ std over three runs; human rows are a blind audit sample with 95\% Wilson CIs. ``Configured'' rows are inputs.}
+\caption{Construction funnel, mean $\pm$ std over three runs; human rows are an audit sample (primary annotator) with 95\% Wilson CIs. ``Configured'' rows are inputs.}
 \label{tab:pipeline}
 \footnotesize
 \begin{tabular}{@{}lr@{}}
@@ -372,9 +387,9 @@ Human failure validity, $n{=}54$ & 96.3\% [87.5, 99.0] \\
 
 \subsection{Human audit}
 \label{sec:humanresults}
-A blind sample of 50 seeds (proportional to run\,$\times$\,difficulty, balanced over
+A sample of 50 seeds (proportional to run\,$\times$\,difficulty, balanced over
 categories) and 54 failure cases (three per operator\,$\times$\,severity, one per run) was
-labeled with automatic verdicts hidden (Table~\ref{tab:audit}). The primary annotator keeps
+labeled with all automatic verdicts hidden (Table~\ref{tab:audit}). The primary annotator keeps
 42 of 50 seeds (HAR 84.0\%), against 66.0\% in our earlier pilot. Of the eight not kept, two are
 present-tense facts that can go stale (``Where is Intuit Inc.\ headquartered?''), which the
 time rule misses because it matches words, not tense; four are unclear (an unstated context, two
@@ -384,35 +399,38 @@ occur. Failure cases are valid in 52 of 54; the two exceptions are \op{conflict}
 alternate is compatible with gold (``convection'' as a heat-transfer mechanism). The
 answer-availability label is correct in all 54.
 
-A second annotator labeled the same rows (HAR 86.0\%, validity 98.1\%). They agree on 49 of 50
-decisions (Cohen's $\kappa$ = 0.92 \cite{cohen1960}) and 53 of 54 validity labels
-($\kappa$ = 0.66). The second annotator had seen the first annotator's labels in an earlier
-pass, so we read these as an upper bound. Agreement on whether a case matches its severity is
-low (74\%, $\kappa$ = 0.14), mostly over how many \op{context_noise} distractors count as
-topically similar; we therefore treat severity as a configured property.
+A second annotator then labeled the same rows (HAR 86.0\%, validity 98.1\%). This second pass
+is \emph{not independent}: the second annotator had seen the first annotator's labels and notes
+in an earlier attempt. We therefore report its agreement with the first (49 of 50 decisions,
+Cohen's $\kappa$ = 0.92 \cite{cohen1960}; 53 of 54 validity labels, $\kappa$ = 0.66) only as a
+consistency check, not as an estimate of inter-annotator reliability, and all audit figures in
+this paper use the primary annotator. Even this non-independent pass agrees only weakly on
+whether a case matches its severity (74\%, $\kappa$ = 0.14), mostly over how many
+\op{context_noise} distractors count as topically similar; we therefore treat severity as a
+configured property, not a human-validated one.
 
 \begin{table}[t]
 \centering
-\caption{Human audit, two annotators (A1 primary). 95\% Wilson CIs.}
+\caption{Human audit with 95\% Wilson CIs. A1 is the primary annotator. A2 had seen A1's labels, so the last two rows are a consistency check, not inter-annotator reliability.}
 \label{tab:audit}
 \footnotesize
-\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}lll@{}}
 \toprule
  & A1 & A2 \\
 \midrule
 HAR (50 seeds) & 84.0\% [71.5, 91.7] & 86.0\% [73.8, 93.0] \\
-Injection valid (54 cases) & 96.3\% [87.5, 99.0] & 98.1\% [90.2, 99.7] \\
-\quad of which \op{conflict} & 7/9 & 8/9 \\
-\quad other five operators & 45/45 & 45/45 \\
-Label correct (54 cases) & 100\% [93.4, 100] & 100\% [93.4, 100] \\
+Valid injection (54) & 96.3\% [87.5, 99.0] & 98.1\% [90.2, 99.7] \\
+\quad \op{conflict} & 7/9 & 8/9 \\
+\quad other operators & 45/45 & 45/45 \\
+Label correct (54) & 100\% [93.4, 100] & 100\% [93.4, 100] \\
 \midrule
-Agreement: decision / validity & \multicolumn{2}{l}{98.0\%, $\kappa$ 0.92 / 98.1\%, $\kappa$ 0.66} \\
+A1--A2, decision & \multicolumn{2}{l}{98.0\% agreement, $\kappa$ = 0.92} \\
+A1--A2, validity & \multicolumn{2}{l}{98.1\% agreement, $\kappa$ = 0.66} \\
 \bottomrule
-\end{tabular}}
+\end{tabular}
 \end{table}
 
-\textbf{Judge validation.} On a blind sheet of 270 model answers (15 per model\,$\times$\,condition),
+\textbf{Judge validation.} On a sheet of 270 model answers with the judge's verdicts hidden (15 per model\,$\times$\,condition),
 the 255 whose seeds survive the multi-part filter agree with a human label in 91.0\% of cases
 ($\kappa$ = 0.72); the judge accepts 17 answers the human rejects and rejects 6 the human
 accepts.
@@ -420,9 +438,29 @@ accepts.
 \subsection{Model $\times$ operator performance}
 Clean accuracy is 0.98--0.99 for all models (Table~\ref{tab:main}); no pair differs on clean,
 \op{missing_evidence}, \op{hard_negative}, \op{context_noise} or \op{evidence_position}
-(McNemar, $p_\text{Holm}$\,=\,1 for each pair except one at 0.85). FRS is 0.932, 0.939 and 0.924; only
-llama $-$ gpt-oss has a CI excluding zero ($+$0.015 [0.006, 0.022]; nova-pro $-$ gpt-oss
-$+$0.008 [$-$0.000, 0.016]; nova-pro $-$ llama $-$0.006 [$-$0.015, 0.002]).
+(McNemar, $p_\text{Holm}$\,=\,1 for each pair except one at 0.85). FRS is 0.932, 0.939 and 0.924;
+under the reported conflict rule only llama $-$ gpt-oss has a CI excluding zero ($+$0.015 [0.006,
+0.022]). The FRS ranking of the models is \emph{not} robust: it reverses under the stricter
+conflict rules (Table~\ref{tab:sensitivity}), because llama often names both values. We
+therefore do not rank the models by FRS. Two results hold under every rule: \op{conflict} is
+the largest drop for every model, and gpt-oss alone loses several points on
+\op{chunk_boundary}.
+
+\begin{table}[t]
+\centering
+\caption{Conflict paired drop (points) / FRS under three conflict scoring rules, pooled over three runs. The FRS ranking changes with the rule.}
+\label{tab:sensitivity}
+\footnotesize
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Conflict rule & nova-pro & llama & gpt-oss \\
+\midrule
+Handled (reported) & 28.5 / .932 & 26.6 / .939 & 30.4 / .924 \\
+Answer correctness & 29.1 / .932 & 36.5 / .923 & 34.0 / .918 \\
+Gold only & 38.9 / .915 & 61.7 / .880 & 47.8 / .895 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[t]
 \centering
@@ -488,19 +526,21 @@ handled 11--23 points more often than seeds it cannot.
 \caption{Conflict outcomes (\%), default prompt unless noted, mean over three runs. Handled = gold, both, or acknowledged.}
 \label{tab:conflict}
 \footnotesize
-\setlength{\tabcolsep}{2.4pt}
-\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}lccc@{}}
 \toprule
  & nova-pro & llama & gpt-oss \\
 \midrule
-Gold / alternate / both & 59.3 / 25.8 / 10.4 & 36.8 / 18.2 / 34.9 & 50.4 / 25.2 / 17.5 \\
+Gold & 59.3 & 36.8 & 50.4 \\
+Alternate & 25.8 & 18.2 & 25.2 \\
+Both values & 10.4 & 34.9 & 17.5 \\
 Acknowledged & 10.6 & 35.1 & 17.6 \\
 Handled (judge-only) & 69.7 (69.2) & 72.0 (62.1) & 67.9 (64.2) \\
-Handled, prior known / unknown & 86.5 / 63.2 & 78.0 / 66.6 & 78.2 / 58.1 \\
-Aware prompt: ack.\ / handled & 58.5 / 88.6 & 83.9 / 95.5 & 84.9 / 95.6 \\
+Handled, prior known & 86.5 & 78.0 & 78.2 \\
+Handled, prior unknown & 63.2 & 66.6 & 58.1 \\
+Aware prompt: acknowledged & 58.5 & 83.9 & 84.9 \\
+Aware prompt: handled & 88.6 & 95.5 & 95.6 \\
 \bottomrule
-\end{tabular}}
+\end{tabular}
 \end{table}
 
 \subsection{Regression loop on two snapshots}
@@ -569,7 +609,9 @@ The reader receives fixed contexts; no retriever or reranker is evaluated. The c
 English, single-hop Wikipedia; the source adapter is designed for other stores (e.g.\ wikis or
 document repositories), but no enterprise connector is evaluated, and scaling claims rest on one
 768-page corpus and the throughput measured in Section~\ref{sec:regression}. The human audit
-covers 50 seeds and 54 failure cases, and the second annotator was not blind to the first.
+covers 50 seeds and 54 failure cases from one primary annotator; the second pass was not
+independent, so inter-annotator reliability remains unmeasured. The conflict score and FRS
+depend on the scoring rule (Table~\ref{tab:sensitivity}).
 Severity levels are configured, not human-validated; 11\% of medium \op{missing_evidence} cases
 keep no same-page passage. Context noise and evidence position may stress weaker models or
 longer contexts; we did not test them. The multi-part rule was applied to finished runs rather
@@ -581,8 +623,9 @@ difficulty tiers.
 RAGFailBench regenerates a failure-aware RAG benchmark whenever the corpus changes: validated,
 provenance-preserving seeds, a sampled human audit, six typed operators under a fixed context
 budget, and a per-operator regression gate. On a Wikipedia pilot it yields a stable funnel
-(74.8\% acceptance), an audited seed quality of 84\%, and a clear finding that conflicting
-evidence is the dominant failure for three current models. On two real snapshots it ships a
+(74.8\% acceptance), a human acceptance rate of 84\% on a 50-seed sample, and a finding that
+holds under every scoring rule we tried: conflicting evidence is the largest failure for all
+three models. On two real snapshots it ships a
 corpus update and blocks a retrieval-depth change that clean accuracy cannot see. Code,
 configurations, all runs and the audit sheets are at
 \url{https://github.com/taixingbi/RAGFailBench}.

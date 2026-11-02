@@ -138,10 +138,11 @@ candidates no rule catches". VI.A cites "9.7 ± 1.5" and "2.7 ± 1.5"; change th
 > named-subject changes. Of the failure cases, 52 of 54 are judged valid injections
 > (96.3%, CI 87.5–99.0%), and the answer-availability label is correct on all 54
 > (100%, CI 93.4–100%). A second annotator labeled the same rows (HAR 86.0%, validity
-> 98.1%); the two agree on 49 of 50 keep/fix/reject decisions (Cohen's κ = 0.92) and
-> on 53 of 54 validity judgments (κ = 0.66). The second annotator had seen the first
-> annotator's labels in an earlier pass, so these agreement figures may be overstated
-> and should be read as an upper bound.
+> 98.1%). This second pass is not independent: the second annotator had seen the first
+> annotator's labels and notes in an earlier attempt. Its agreement with the first (49 of
+> 50 decisions, κ = 0.92; 53 of 54 validity labels, κ = 0.66) is reported only as a
+> consistency check, not as inter-annotator reliability; all audit figures use the
+> primary annotator.
 >
 > **E. What the audit still catches (replaces Table IX).** Of the eight seeds the
 > primary annotator did not keep, two are present-tense facts that can go stale ("Where
@@ -443,7 +444,9 @@ token-F1 ≥ 0.6 84–88% and exact match 69–75%; the reported score is their 
 - **Statistics:** Exact McNemar tests on identical items (Table XIX, Holm-corrected).
   Seeded-run tables report mean ± std over three runs, and Table XVII adds 95%
   cluster-bootstrap CIs (resampling parent seeds) for every paired drop, FRS and the
-  pairwise FRS differences. The three models' FRS lie within 0.015 of each other;
+  pairwise FRS differences. The three models' FRS lie within 0.015 of each other,
+  and the FRS ranking reverses under stricter conflict scoring rules (last table of
+  `tables_ci.md`), so the paper does not rank models by FRS; under the reported rule
   only llama vs gpt-oss has a CI excluding zero, and gpt-oss's one significant
   per-operator deficit is chunk_boundary (p_Holm ≤ 4e-7). We have withdrawn the
   earlier claim that gpt-oss is uniquely weak on conflict: with the rev3 questions,
@@ -478,10 +481,9 @@ token-F1 ≥ 0.6 84–88% and exact match 69–75%; the reported score is their 
   On a blind audit of 50 released seeds, HAR is 84.0% [71.5%, 91.7%] and failure-case
   validity 96.3% [87.5%, 99.0%] (Section V.D).
 - **Single annotator:** A second annotator labeled the same 50 seeds and 54 failure
-  cases: 98% agreement on keep/fix/reject (κ = 0.92) and on injection validity
-  (κ = 0.66). The second annotator had seen the first annotator's labels in an earlier
-  pass, so we report these as an upper bound; a fully blind second annotation remains
-  future work.
+  cases, but had seen the first annotator's labels in an earlier attempt, so the pass is
+  not independent. We report its agreement (κ = 0.92 on decisions) only as a consistency
+  check and state that inter-annotator reliability remains unmeasured.
 - **Weak operators:** context_noise and evidence_position cause no drop on a correctly
   configured reader with eight passages, but they are the operators that block a
   top-k 8 → 4 regression that clean accuracy misses (Section V.H, 46–66-point drops).

@@ -14,6 +14,8 @@ reports/pilot_stability/paper/ (tables_ci.md / tables_ci.tex):
      with Holm correction over all tests.
   3. Which correctness signal the reported score rests on: exact match,
      token-F1 >= 0.6 and judge verdict, each alone, against their union.
+  4. FRS sensitivity to the conflict scoring rule (handled / gold only /
+     answer correctness), since the model ranking depends on it.
 
 Usage: python scripts/paper_stats.py [--seeds 42 123 2026] [--n-boot 2000]
 """
@@ -50,7 +52,18 @@ OPERATORS = (
 )
 
 
-def item_drops(results: list[EvaluationResult], run: str) -> dict[tuple, list[tuple[str, float]]]:
+# Alternative conflict scores for the sensitivity table; None keeps the reported
+# outcome rule (gold, both, or an acknowledged conflict counts as handled).
+CONFLICT_RULES = {
+    "Handled (reported)": None,
+    "Gold only": lambda r: (r.metadata or {}).get("conflict_outcome") == "gold",
+    "Answer correctness": answer_correct,
+}
+
+
+def item_drops(
+    results: list[EvaluationResult], run: str, conflict_rule=None
+) -> dict[tuple, list[tuple[str, float]]]:
     """(run, parent seed) -> [(model::condition, drop)], unmatched answer items skipped."""
     results = [r for r in results if not call_error(r)]
     clean = {
@@ -69,7 +82,12 @@ def item_drops(results: list[EvaluationResult], run: str) -> dict[tuple, list[tu
             base = clean.get((r.model_name, pid))
             if base is None:
                 continue
-            drop = base - (1.0 if item_correct(r) else 0.0)
+            ok = (
+                conflict_rule(r)
+                if conflict_rule is not None and r.condition == "conflict"
+                else item_correct(r)
+            )
+            drop = base - (1.0 if ok else 0.0)
         out[(run, pid)].append((f"{r.model_name}::{r.condition}", drop))
     return out
 
@@ -247,6 +265,23 @@ def tables(ci: dict) -> list[tuple[str, list[str], list[list[str]]]]:
     ]
 
 
+def sensitivity_table(by_rule: dict[str, dict]) -> tuple[str, list[str], list[list[str]]]:
+    rows = []
+    for name, ci in by_rule.items():
+        conflict = [f"{100 * ci['drop'][f'{m}::conflict'][0]:.1f}" for m in MODELS]
+        frs = [f"{ci['frs'][m][0]:.3f}" for m in MODELS]
+        rank = " > ".join(sorted(MODELS, key=lambda m: -ci["frs"][m][0]))
+        rows.append([name, *[f"{c} / {f}" for c, f in zip(conflict, frs)], rank])
+    return (
+        "Conflict paired drop (pp) / FRS under three conflict scoring rules, pooled over three "
+        "seeded runs. Handled = gold, both values, or an acknowledged conflict; gold only = "
+        "commits to the gold value; answer correctness = exact match, token-F1 ≥ 0.6 or judge, "
+        "with no credit for naming both. The model ranking on FRS depends on the rule.",
+        ["Conflict rule", *MODELS, "FRS ranking"],
+        rows,
+    )
+
+
 def to_md(caption: str, header: list[str], rows: list[list[str]]) -> str:
     lines = [f"**{caption}**", "", "| " + " | ".join(header) + " |"]
     lines.append("|" + "---|" * len(header))
@@ -283,6 +318,7 @@ def main() -> None:
     args = parser.parse_args()
 
     clusters: dict[tuple, list[tuple[str, float]]] = {}
+    by_rule_clusters: dict[str, dict] = {name: {} for name in CONFLICT_RULES}
     scores: dict[str, dict[tuple, dict]] = defaultdict(dict)
     signals: dict[tuple[str, str], dict[str, list]] = defaultdict(lambda: defaultdict(list))
     for s in args.seeds:
@@ -290,6 +326,8 @@ def main() -> None:
         path = args.data / run / "6_final" / "evaluation_results.jsonl"
         results = read_jsonl_models(path, EvaluationResult)
         clusters.update(item_drops(results, run))
+        for name, rule in CONFLICT_RULES.items():
+            by_rule_clusters[name].update(item_drops(results, run, rule))
         for cond, items in item_scores(results, run).items():
             scores[cond].update(items)
         for key, cell in signal_breakdown(results).items():
@@ -298,7 +336,8 @@ def main() -> None:
     ci = bootstrap(clusters, args.n_boot, args.rng_seed)
     out = args.reports / "pilot_stability" / "paper"
     out.mkdir(parents=True, exist_ok=True)
-    parts = tables(ci) + test_tables(mcnemar_table(scores), signals)
+    by_rule = {n: bootstrap(c, args.n_boot, args.rng_seed) for n, c in by_rule_clusters.items()}
+    parts = tables(ci) + test_tables(mcnemar_table(scores), signals) + [sensitivity_table(by_rule)]
     (out / "tables_ci.md").write_text("\n".join(to_md(*t) for t in parts), encoding="utf-8")
     (out / "tables_ci.tex").write_text("\n".join(to_tex(*t) for t in parts), encoding="utf-8")
     print(f"Wrote {out}/tables_ci.md, tables_ci.tex")

@@ -37,7 +37,7 @@
 |   chunk_boundary | 9/9 | 9/9 |
 |   evidence_position | 9/9 | 9/9 |
 
-**Inter-annotator agreement on the same audit rows. The second annotator had seen the first annotator's labels in an earlier pass, so agreement may be overstated. Kappa is undefined when both annotators used a single identical label.**
+**Annotator 1 vs annotator 2 on the same audit rows. Annotator 2 had seen annotator 1's labels in an earlier pass, so this is a consistency check, not inter-annotator reliability. Kappa is undefined when both used a single identical label.**
 
 | Field | n | Agreement | Cohen's kappa |
 |---|---|---|---|

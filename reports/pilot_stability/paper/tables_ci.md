@@ -63,3 +63,11 @@
 | evidence_position | nova-pro | 0.736 | 0.877 | 0.973 | 0.983 |
 | evidence_position | llama | 0.747 | 0.891 | 0.977 | 0.987 |
 | evidence_position | gpt-oss | 0.693 | 0.853 | 0.973 | 0.981 |
+
+**Conflict paired drop (pp) / FRS under three conflict scoring rules, pooled over three seeded runs. Handled = gold, both values, or an acknowledged conflict; gold only = commits to the gold value; answer correctness = exact match, token-F1 ≥ 0.6 or judge, with no credit for naming both. The model ranking on FRS depends on the rule.**
+
+| Conflict rule | nova-pro | llama | gpt-oss | FRS ranking |
+|---|---|---|---|---|
+| Handled (reported) | 28.5 / 0.932 | 26.6 / 0.939 | 30.4 / 0.924 | llama > nova-pro > gpt-oss |
+| Gold only | 38.9 / 0.915 | 61.7 / 0.880 | 47.8 / 0.895 | nova-pro > gpt-oss > llama |
+| Answer correctness | 29.1 / 0.932 | 36.5 / 0.923 | 34.0 / 0.918 | nova-pro > llama > gpt-oss |
