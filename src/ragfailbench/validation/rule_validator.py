@@ -33,6 +33,10 @@ _TIME_RE = re.compile(
     r"as of(?!\s+(\w+\s+)?\d)|to date|so far|this year|last year|next year|at present)\b",
     re.IGNORECASE,
 )
+_WH = r"(?:what|where|when|who|whom|whose|which|why|how)"
+# A second question joined to the first ("…, and where did he work?") or
+# stacked wh-words ("When and where…"): one gold answer cannot cover both.
+_MULTI_PART_RE = re.compile(rf"\band\s+{_WH}\b|^\s*{_WH}\s+or\s+{_WH}\b", re.IGNORECASE)
 _TOKEN_RE = re.compile(r"[\w'’.-]+")
 
 
@@ -73,6 +77,12 @@ def check_time_sensitive(question: str) -> list[str]:
     """Relative-time phrasing ("current", "latest", an undated "as of") makes
     the gold answer depend on when the benchmark is used."""
     return ["time_sensitive_phrasing"] if _TIME_RE.search(question) else []
+
+
+def check_multi_part(question: str) -> list[str]:
+    """A question that asks two things ("When and where…", "…, and what…") has
+    no single gold answer."""
+    return ["multi_part_question"] if _MULTI_PART_RE.search(question) else []
 
 
 _FUNCTION_WORDS = frozenset(
@@ -118,6 +128,8 @@ def check_rules(
         reasons.extend(check_referents(q))
     if q and cfg.check_time_sensitive:
         reasons.extend(check_time_sensitive(q))
+    if q and cfg.check_multi_part:
+        reasons.extend(check_multi_part(q))
 
     # Answer must not leak into the question
     if gold and contains_answer(q, gold):

@@ -102,6 +102,22 @@ def test_time_sensitive_rule():
     assert check_time_sensitive("When was Apple founded?") == []
 
 
+def test_multi_part_rule():
+    from ragfailbench.validation.rule_validator import check_multi_part
+
+    assert check_multi_part("When and where did Ray Dolby found Dolby Laboratories?") == [
+        "multi_part_question"
+    ]
+    assert check_multi_part(
+        "What year did Arthur Ashkin invent optical tweezers, and where did he reside?"
+    ) == ["multi_part_question"]
+    assert check_multi_part("Where and when did John Ball receive his B.Sc.?") == [
+        "multi_part_question"
+    ]
+    assert check_multi_part("Which band did John Lennon and Paul McCartney form?") == []
+    assert check_multi_part("What separates Bloomington and Normal?") == []
+
+
 def test_rules_reject_unresolved_question():
     cfg = ValidationConfig()
     cand = _cand("c1", "When was he born?", "1948", "Phillips was born in 1948.")

@@ -94,6 +94,7 @@ class ValidationConfig(BaseModel):
     # Self-containment rules (added after the human audit's fix categories).
     check_referents: bool = True
     check_time_sensitive: bool = True
+    check_multi_part: bool = True
     judge_temperature: float = 0.0
     baseline_temperature: float = 0.0
 
