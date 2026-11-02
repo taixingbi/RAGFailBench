@@ -47,8 +47,8 @@ valid. Evaluating three Bedrock-hosted models shows that conflicting
 evidence is the dominant failure for all of them (26.6--30.4-point paired drop), that they
 abstain correctly on 92--98\% of evidence-absent cases, and that context noise and evidence
 position cause no measurable drop with eight passages. On two Wikipedia snapshots three months
-apart, the regression gate passes the corpus update and blocks a retrieval-depth change
-(top-$k$ 8$\to$4) that leaves clean accuracy unchanged. Code, configurations and all run
+apart, the regression gate passes the corpus update and blocks a simulated retrieval-depth
+change (each case's eight passages truncated to four) that leaves clean accuracy unchanged. Code, configurations and all run
 artifacts are released.
 \end{abstract}
 
@@ -91,7 +91,8 @@ independent LLM audit of every abstain-expected case.
 
 \textbf{C3, regression workflow, tested.} The benchmark is regenerated from a new corpus
 snapshot and compared with a gate that reports a per-operator decision with bootstrap CIs. We
-run it on two Wikipedia snapshots and on a deliberately degraded retrieval configuration.
+run it on two Wikipedia snapshots and on a simulated retrieval-depth change (context truncated
+from eight passages to four); no retriever is run.
 
 We ask \textbf{RQ1}: how much does each operator cost, measured against matched parents?
 \textbf{RQ2}: do models differ in sensitivity to specific operators? \textbf{RQ3}: does a
@@ -213,8 +214,7 @@ sentence, which occurs in the chunk), \emph{refers-to-passage} (``the passage'',
 ``mentioned''), \emph{time-sensitive phrasing} (``current'', ``latest'', an undated ``as of''),
 \emph{answer in question}, \emph{unresolved referent} (a pronoun with no name before it, or a
 possessive or ``the company''-style phrase in a question that names nothing),
-\emph{title-only} (a question that only asks what the page title is), \emph{multi-part}
-(``when and where'', ``\dots, and what'') and length limits. Rule-passing candidates are then
+\emph{title-only} (a question that only asks what the page title is), and length limits. Rule-passing candidates are then
 assessed in parallel by an LLM answerability judge (answerable, supported, unique, clear, with a
 confidence) and a baseline test in which a reference model answers from the gold chunk alone.
 Accepted candidates are deduplicated (exact or character-5-gram Jaccard $\ge$\,0.85) and a
@@ -225,9 +225,16 @@ The quality score $q = 0.3\,[\text{rules}] + 0.1\,[\text{unique}] + 0.3\,c\,(a{+
 judge's verdicts and $c$ its confidence). A threshold sweep shows that $q$ never makes a
 decision on its own: every candidate passing the hard gates scores $\ge$\,0.985, and a rule
 failure caps $q$ at 0.70, so any threshold from 0 to 0.95 accepts the same candidates. We report
-$q$ as a ranking score, not a filter. The multi-part rule was added after the runs and applied to
-the selected seeds, removing 11, 16 and 12 of 200 (with all their failure cases and evaluation
-rows); every drop is paired by parent, so removing a parent keeps comparisons matched.
+$q$ as a ranking score, not a filter.
+
+\textbf{Post-hoc multi-part filter.} Inspecting the finished runs showed compound questions whose
+gold answer covers only one part (``When and where did\dots?''). We wrote a \emph{multi-part}
+rule (``when and where'', ``\dots, and what'') \emph{after} the runs. It was not part of the
+validation that produced the seeds reported here; we applied it as a post-hoc filter to the
+selected seeds, removing 11, 16 and 12 of 200 together with all their failure cases and
+evaluation rows. Every drop is paired by parent, so removing a parent keeps comparisons matched.
+In the released code the rule runs with the other rules, but no run in this paper was generated
+that way.
 
 \subsection{Human audit (sampled quality assurance)}
 \label{sec:audit}
@@ -295,7 +302,7 @@ on one item.
 Item & Setting \\
 \midrule
 Corpus & 768 pages, 12,366 chunks (snapshot A, 2026-08-01) \\
-Seeds & 1,000 candidates $\to$ 200 seeds per run (configured), 184--189 after the multi-part filter \\
+Seeds & 1,000 candidates $\to$ 200 seeds per run (configured), 184--189 after the post-hoc multi-part filter \\
 Context budget & 8 passages for every clean and failure case \\
 Generator, validation judge & Qwen3-32B (\texttt{qwen.qwen3-32b-v1:0}) \\
 Evaluated models & nova-pro (\texttt{amazon.nova-pro-v1:0}); llama, Llama 3.3 70B (\texttt{us.meta.llama3-3-70b-instruct-v1:0}); gpt-oss, gpt-oss-120b (\texttt{openai.gpt-oss-120b-1:0}); all on Amazon Bedrock \\
@@ -324,7 +331,10 @@ or contains the gold value, \emph{alternate} if it contains only the alternate, 
 \emph{other} otherwise. An answer \emph{acknowledges} the conflict if it is \emph{both} or uses
 a contradiction cue (``conflict'', ``contradict'', ``inconsistent'', ``discrepancy'',
 ``differ''). The reported score is the \emph{handled} rate: gold, both, or an abstain/other
-answer that acknowledges the conflict. This rule is deliberately lenient: it credits surfacing
+answer that acknowledges the conflict. The handled rate is \emph{not} answer accuracy: an
+answer that names both values, or only says the sources disagree, is handled without committing
+to the correct value. The strict accuracy is the gold-only rate (Table~\ref{tab:conflict}). This
+rule is deliberately lenient: it credits surfacing
 the contradiction, the behavior a RAG system with a stale document should show, and it avoids
 penalizing two-value answers that a single-answer judge marks wrong. Because the rule changes
 the numbers, we also report two stricter rules, \emph{gold only} and \emph{answer correctness}
@@ -381,7 +391,7 @@ Candidates (configured) & 1,000 \\
 Schema success & 100.0\% $\pm$ 0.0\% \\
 QA acceptance & 74.8\% $\pm$ 1.0\% \\
 Seeds selected (configured) & 200 \\
-Seeds after multi-part filter & 187.0 $\pm$ 2.6 \\
+Seeds after post-hoc multi-part filter & 187.0 $\pm$ 2.6 \\
 Failure verification pass & 94.9\% $\pm$ 0.3\% \\
 Human acceptance (HAR), $n{=}50$ & 84.0\% [71.5, 91.7] \\
 Human failure validity, $n{=}54$ & 96.3\% [87.5, 99.0] \\
@@ -459,7 +469,7 @@ Gold only & 38.9 / .915 & 61.7 / .880 & 47.8 / .895 \\
 
 \begin{table}[t]
 \centering
-\caption{Score (mean $\pm$ std over runs) and paired drop in points with pooled 95\% cluster-bootstrap CI. Score is accuracy, correct-abstention rate (abstain-expected) or handled rate (conflict).}
+\caption{Score (mean $\pm$ std over runs) and paired drop in points with pooled 95\% cluster-bootstrap CI. Score is accuracy, correct-abstention rate (abstain-expected) or handled rate (conflict; not answer accuracy, see Table~\ref{tab:sensitivity}).}
 \label{tab:main}
 \footnotesize
 \setlength{\tabcolsep}{2.2pt}
@@ -555,7 +565,10 @@ FAIL when the score drops by more than 5 points with a 95\% bootstrap CI below z
 the benchmark is shared, unpaired when regenerated).
 \emph{Knowledge update} (A$\to$B, same system): all 21 cells pass (largest drop 1.5 points, all
 CIs include zero; FRS 0.935/0.945/0.924 on A, 0.938/0.955/0.928 on B). Decision: ship.
-\emph{Degraded retrieval depth} (B, top-$k$ 8$\to$4, paired): clean accuracy is unchanged
+\emph{Simulated retrieval depth} (B, top-$k$ 8$\to$4, paired): on the same benchmark, each case's
+eight passages are truncated to the first four, as a reader with a smaller top-$k$ would receive
+them. No retriever is re-run, so this tests the gate on a controlled context-assembly change, not
+on an online retrieval system. Clean accuracy is unchanged
 (+0.0 to +1.6 points), so a clean-only test would ship the change. The operators block it in 12
 of 21 cells: \op{evidence_position} drops 65--66 points, \op{context_noise} 46--47,
 \op{conflict} 8--14 and \op{chunk_boundary} 8--10, all with CIs below zero, because these
@@ -624,7 +637,7 @@ budget, and a per-operator regression gate. On a Wikipedia pilot it yields a sta
 (74.8\% acceptance), a human acceptance rate of 84\% on a 50-seed sample, and a finding that
 holds under every scoring rule we tried: conflicting evidence is the largest failure for all
 three models. On two real snapshots it ships a
-corpus update and blocks a retrieval-depth change that clean accuracy cannot see. Code,
+corpus update and blocks a simulated retrieval-depth change that clean accuracy cannot see. Code,
 configurations, all runs and the audit sheets are at
 \url{https://github.com/taixingbi/RAGFailBench}.
 
