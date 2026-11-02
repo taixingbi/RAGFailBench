@@ -1,0 +1,78 @@
+{
+  "rule": "multi_part",
+  "excluded_seed_ids": [
+    "seed_000020",
+    "seed_000032",
+    "seed_000033",
+    "seed_000036",
+    "seed_000037",
+    "seed_000050",
+    "seed_000054",
+    "seed_000074",
+    "seed_000078",
+    "seed_000108",
+    "seed_000112",
+    "seed_000154",
+    "seed_000155",
+    "seed_000158",
+    "seed_000170",
+    "seed_000189"
+  ],
+  "files": {
+    "clean_seeds.jsonl": {
+      "before": 200,
+      "after": 184,
+      "excluded": 16
+    },
+    "failure_cases.jsonl": {
+      "before": 3409,
+      "after": 3133,
+      "excluded": 276
+    },
+    "failures_rejected.jsonl": {
+      "before": 191,
+      "after": 179,
+      "excluded": 12
+    },
+    "conflict_alternates.jsonl": {
+      "before": 129,
+      "after": 120,
+      "excluded": 9
+    },
+    "evaluation_results.jsonl": {
+      "before": 13227,
+      "after": 12159,
+      "excluded": 1068
+    },
+    "failures/chunk_boundary.jsonl": {
+      "before": 494,
+      "after": 450,
+      "excluded": 44
+    },
+    "failures/conflict.jsonl": {
+      "before": 600,
+      "after": 552,
+      "excluded": 48
+    },
+    "failures/context_noise.jsonl": {
+      "before": 600,
+      "after": 552,
+      "excluded": 48
+    },
+    "failures/evidence_position.jsonl": {
+      "before": 600,
+      "after": 552,
+      "excluded": 48
+    },
+    "failures/hard_negative.jsonl": {
+      "before": 573,
+      "after": 531,
+      "excluded": 42
+    },
+    "failures/missing_evidence.jsonl": {
+      "before": 542,
+      "after": 496,
+      "excluded": 46
+    }
+  }
+}

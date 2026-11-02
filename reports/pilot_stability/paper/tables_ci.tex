@@ -1,31 +1,31 @@
 \begin{table}[t]
 \centering\small
-\caption{Paired drop (pp) and FRS with 95% CIs, pooled over three seeded runs; cluster bootstrap over 600 parent clean seeds, 2000 resamples.}
+\caption{Paired drop (pp) and FRS with 95% CIs, pooled over three seeded runs; cluster bootstrap over 561 parent clean seeds, 2000 resamples.}
 \begin{tabular}{lccc}
 \toprule
 Condition & nova-pro & llama & gpt-oss \\
 \midrule
-missing\_evidence & 7.6 [6.2, 9.0] & 6.7 [5.3, 8.1] & 6.9 [5.6, 8.3] \\
-hard\_negative & 2.2 [1.3, 3.2] & 2.0 [1.2, 3.0] & 2.5 [1.5, 3.7] \\
-conflict & 28.2 [25.3, 30.9] & 26.0 [23.3, 28.6] & 30.5 [27.8, 33.1] \\
-context\_noise & -0.1 [-0.9, 0.9] & -0.2 [-1.0, 0.6] & -0.2 [-1.0, 0.5] \\
-chunk\_boundary & 1.7 [0.7, 2.8] & 1.2 [0.1, 2.2] & 5.4 [3.8, 7.0] \\
-evidence\_position & -0.2 [-1.2, 0.8] & -0.2 [-0.9, 0.4] & 0.1 [-0.6, 0.8] \\
-FRS & 0.934 [0.927, 0.942] & 0.941 [0.934, 0.947] & 0.925 [0.918, 0.932] \\
+missing\_evidence & 8.0 [6.6, 9.6] & 6.8 [5.4, 8.3] & 7.2 [5.8, 8.7] \\
+hard\_negative & 2.3 [1.3, 3.4] & 2.1 [1.3, 3.1] & 2.6 [1.5, 3.8] \\
+conflict & 28.5 [25.6, 31.4] & 26.6 [24.1, 29.3] & 30.4 [27.6, 33.3] \\
+context\_noise & 0.1 [-0.9, 1.0] & -0.1 [-0.9, 0.7] & -0.3 [-1.0, 0.4] \\
+chunk\_boundary & 1.8 [0.7, 2.8] & 1.2 [0.2, 2.4] & 5.4 [3.8, 7.0] \\
+evidence\_position & -0.1 [-1.1, 0.8] & -0.1 [-0.7, 0.4] & 0.1 [-0.6, 0.8] \\
+FRS & 0.932 [0.925, 0.940] & 0.939 [0.933, 0.945] & 0.924 [0.917, 0.931] \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[t]
 \centering\small
-\caption{FRS difference between models with paired 95% CIs (same resampled seeds), pooled over three seeded runs; cluster bootstrap over 600 parent clean seeds, 2000 resamples.}
+\caption{FRS difference between models with paired 95% CIs (same resampled seeds), pooled over three seeded runs; cluster bootstrap over 561 parent clean seeds, 2000 resamples.}
 \begin{tabular}{lcc}
 \toprule
 Models & ΔFRS [95% CI] & CI excludes 0 \\
 \midrule
-nova-pro -- llama & -0.006 [-0.015, +0.001] & no \\
-nova-pro -- gpt-oss & +0.010 [+0.001, +0.018] & yes \\
-llama -- gpt-oss & +0.016 [+0.008, +0.024] & yes \\
+nova-pro -- llama & -0.006 [-0.015, +0.002] & no \\
+nova-pro -- gpt-oss & +0.008 [-0.000, +0.016] & no \\
+llama -- gpt-oss & +0.015 [+0.006, +0.022] & yes \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -37,27 +37,27 @@ llama -- gpt-oss & +0.016 [+0.008, +0.024] & yes \\
 \toprule
 Condition & Models & n & Δ pp & Discordant & p & p (Holm) \\
 \midrule
-clean & nova-pro vs llama & 600 & +0.0 & 7 / 7 & 1 & 1 \\
-clean & nova-pro vs gpt-oss & 600 & +0.2 & 7 / 6 & 1 & 1 \\
-clean & llama vs gpt-oss & 600 & +0.2 & 5 / 4 & 1 & 1 \\
-missing\_evidence & nova-pro vs llama & 1664 & -0.9 & 33 / 48 & 0.12 & 1 \\
-missing\_evidence & nova-pro vs gpt-oss & 1664 & -0.7 & 35 / 46 & 0.27 & 1 \\
-missing\_evidence & llama vs gpt-oss & 1664 & +0.2 & 37 / 33 & 0.72 & 1 \\
-hard\_negative & nova-pro vs llama & 1713 & -0.1 & 14 / 16 & 0.86 & 1 \\
-hard\_negative & nova-pro vs gpt-oss & 1713 & +0.4 & 17 / 11 & 0.34 & 1 \\
-hard\_negative & llama vs gpt-oss & 1713 & +0.5 & 21 / 13 & 0.23 & 1 \\
-conflict & nova-pro vs llama & 1800 & -2.2 & 207 / 246 & 0.074 & 1 \\
-conflict & nova-pro vs gpt-oss & 1800 & +2.5 & 261 / 216 & 0.044 & 0.79 \\
-conflict & llama vs gpt-oss & 1800 & +4.7 & 263 / 179 & 7.5e-05 & 0.0014 \\
-context\_noise & nova-pro vs llama & 1800 & -0.1 & 26 / 28 & 0.89 & 1 \\
-context\_noise & nova-pro vs gpt-oss & 1800 & +0.0 & 25 / 25 & 1 & 1 \\
-context\_noise & llama vs gpt-oss & 1800 & +0.1 & 21 / 19 & 0.87 & 1 \\
-chunk\_boundary & nova-pro vs llama & 1473 & -0.4 & 25 / 31 & 0.5 & 1 \\
-chunk\_boundary & nova-pro vs gpt-oss & 1473 & +4.0 & 83 / 24 & 8.6e-09 & 1.7e-07 \\
-chunk\_boundary & llama vs gpt-oss & 1473 & +4.4 & 82 / 17 & 2.2e-11 & 4.6e-10 \\
-evidence\_position & nova-pro vs llama & 1800 & -0.1 & 25 / 26 & 1 & 1 \\
-evidence\_position & nova-pro vs gpt-oss & 1800 & +0.4 & 30 / 22 & 0.33 & 1 \\
-evidence\_position & llama vs gpt-oss & 1800 & +0.5 & 22 / 13 & 0.18 & 1 \\
+clean & nova-pro vs llama & 561 & -0.4 & 4 / 6 & 0.75 & 1 \\
+clean & nova-pro vs gpt-oss & 561 & +0.0 & 5 / 5 & 1 & 1 \\
+clean & llama vs gpt-oss & 561 & +0.4 & 4 / 2 & 0.69 & 1 \\
+missing\_evidence & nova-pro vs llama & 1552 & -1.2 & 28 / 46 & 0.047 & 0.85 \\
+missing\_evidence & nova-pro vs gpt-oss & 1552 & -0.8 & 32 / 44 & 0.21 & 1 \\
+missing\_evidence & llama vs gpt-oss & 1552 & +0.4 & 37 / 31 & 0.54 & 1 \\
+hard\_negative & nova-pro vs llama & 1605 & -0.2 & 13 / 16 & 0.71 & 1 \\
+hard\_negative & nova-pro vs gpt-oss & 1605 & +0.3 & 16 / 11 & 0.44 & 1 \\
+hard\_negative & llama vs gpt-oss & 1605 & +0.5 & 21 / 13 & 0.23 & 1 \\
+conflict & nova-pro vs llama & 1683 & -2.3 & 188 / 226 & 0.069 & 1 \\
+conflict & nova-pro vs gpt-oss & 1683 & +1.8 & 235 / 204 & 0.15 & 1 \\
+conflict & llama vs gpt-oss & 1683 & +4.1 & 241 / 172 & 0.0008 & 0.015 \\
+context\_noise & nova-pro vs llama & 1683 & -0.5 & 17 / 25 & 0.28 & 1 \\
+context\_noise & nova-pro vs gpt-oss & 1683 & -0.4 & 15 / 21 & 0.41 & 1 \\
+context\_noise & llama vs gpt-oss & 1683 & +0.1 & 17 / 15 & 0.86 & 1 \\
+chunk\_boundary & nova-pro vs llama & 1368 & -0.8 & 15 / 26 & 0.12 & 1 \\
+chunk\_boundary & nova-pro vs gpt-oss & 1368 & +3.8 & 70 / 18 & 2.1e-08 & 4.2e-07 \\
+chunk\_boundary & llama vs gpt-oss & 1368 & +4.6 & 73 / 10 & 5.8e-13 & 1.2e-11 \\
+evidence\_position & nova-pro vs llama & 1683 & -0.4 & 15 / 21 & 0.41 & 1 \\
+evidence\_position & nova-pro vs gpt-oss & 1683 & +0.2 & 22 / 18 & 0.64 & 1 \\
+evidence\_position & llama vs gpt-oss & 1683 & +0.6 & 18 / 8 & 0.076 & 1 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -69,21 +69,21 @@ evidence\_position & llama vs gpt-oss & 1800 & +0.5 & 22 / 13 & 0.18 & 1 \\
 \toprule
 Condition & Model & Exact match & Token-F1 ≥ 0.6 & Judge & Union (reported) \\
 \midrule
-clean & nova-pro & 0.688 & 0.848 & 0.963 & 0.978 \\
-clean & llama & 0.698 & 0.857 & 0.958 & 0.978 \\
-clean & gpt-oss & 0.645 & 0.808 & 0.963 & 0.977 \\
-conflict & nova-pro & 0.407 & 0.584 & 0.595 & 0.692 \\
-conflict & llama & 0.204 & 0.480 & 0.440 & 0.613 \\
-conflict & gpt-oss & 0.277 & 0.495 & 0.502 & 0.638 \\
-context\_noise & nova-pro & 0.687 & 0.845 & 0.962 & 0.979 \\
-context\_noise & llama & 0.701 & 0.861 & 0.963 & 0.980 \\
-context\_noise & gpt-oss & 0.644 & 0.809 & 0.966 & 0.979 \\
-chunk\_boundary & nova-pro & 0.702 & 0.838 & 0.950 & 0.961 \\
-chunk\_boundary & llama & 0.720 & 0.864 & 0.953 & 0.965 \\
-chunk\_boundary & gpt-oss & 0.640 & 0.772 & 0.916 & 0.921 \\
-evidence\_position & nova-pro & 0.693 & 0.844 & 0.966 & 0.980 \\
-evidence\_position & llama & 0.700 & 0.863 & 0.964 & 0.981 \\
-evidence\_position & gpt-oss & 0.649 & 0.813 & 0.963 & 0.976 \\
+clean & nova-pro & 0.731 & 0.879 & 0.971 & 0.982 \\
+clean & llama & 0.745 & 0.884 & 0.975 & 0.986 \\
+clean & gpt-oss & 0.688 & 0.843 & 0.973 & 0.982 \\
+conflict & nova-pro & 0.434 & 0.603 & 0.595 & 0.692 \\
+conflict & llama & 0.219 & 0.497 & 0.442 & 0.621 \\
+conflict & gpt-oss & 0.295 & 0.516 & 0.504 & 0.642 \\
+context\_noise & nova-pro & 0.730 & 0.875 & 0.970 & 0.982 \\
+context\_noise & llama & 0.747 & 0.887 & 0.976 & 0.986 \\
+context\_noise & gpt-oss & 0.687 & 0.847 & 0.976 & 0.985 \\
+chunk\_boundary & nova-pro & 0.751 & 0.874 & 0.962 & 0.965 \\
+chunk\_boundary & llama & 0.773 & 0.902 & 0.969 & 0.973 \\
+chunk\_boundary & gpt-oss & 0.689 & 0.819 & 0.925 & 0.927 \\
+evidence\_position & nova-pro & 0.736 & 0.877 & 0.973 & 0.983 \\
+evidence\_position & llama & 0.747 & 0.891 & 0.977 & 0.987 \\
+evidence\_position & gpt-oss & 0.693 & 0.853 & 0.973 & 0.981 \\
 \bottomrule
 \end{tabular}
 \end{table}

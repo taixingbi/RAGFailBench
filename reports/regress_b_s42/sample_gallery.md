@@ -2,102 +2,105 @@
 
 ## Clean Seeds
 
-- **Q:** When did Robert Andrews Millikan die?
-  - **A:** December 19, 1953 (date, easy)
-  - **Evidence:** Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American experimental physicist who received the Nobel Prize in Physics in 1923 "for his work on the elementary charge of electricity and on the photoelectric effect."
-  - **Source:** Robert Millikan / Lead
+- **Q:** When did Bertram Brockhouse die?
+  - **A:** October 13, 2003 (date, easy)
+  - **Evidence:** Brockhouse died on October 13, 2003, in Hamilton, Ontario, aged 85.
+  - **Source:** Bertram Brockhouse / Career and research
 
-- **Q:** What was Constant's role at the National Institute of General Medical Sciences in 2017?
-  - **A:** chief of the Office of Scientific Review (other, easy)
-  - **Evidence:** In 2017, Constant joined the National Institute of General Medical Sciences (NIGMS) as chief of the Office of Scientific Review (OSR).
-  - **Source:** Stephanie Constant / Career
+- **Q:** When was Dean Lawrence Kamen born?
+  - **A:** April 5, 1951 (date, easy)
+  - **Evidence:** Dean Lawrence Kamen (; born April 5, 1951) is an American engineer, inventor, and businessman.
+  - **Source:** Dean Kamen / Lead
 
-- **Q:** Where was Charkowski born?
-  - **A:** Madison (location, easy)
-  - **Evidence:** Charkowski was born in Madison.
-  - **Source:** Amy Charkowski / Early life and education
+- **Q:** Where was Riccardo Giacconi born?
+  - **A:** Genoa (location, easy)
+  - **Evidence:** Born in Genoa, Italy, Giacconi received his Laurea from the Physics Department of University of Milan before moving to the US to pursue a career in astrophysics research.
+  - **Source:** Riccardo Giacconi / Biography
 
 ## missing_evidence
 
-- **[low]** When did Robert Andrews Millikan die?
+- **[low]** When did Bertram Brockhouse die?
   - expected: abstain (answer_available=False)
-  - contexts (3): His most recent research highlights are related to the search for transiting Ear | In 2025, Dwork was a recipient of the National Medal of Science. In 2026 she was | Rayleigh law
-Single domain (magnetic)
+  - contexts (8): Politzer, H.D. (1974). "Asymptotic Freedom: An Approach to Strong Interactions". | John Bardeen was born on May 23, 1908, in Madison, Wisconsin, the son of Althea  | Shortly after the discovery of the neutron by James Chadwick in 1932, Heisenberg
 
-- **[medium]** When did Robert Andrews Millikan die?
+- **[medium]** When did Bertram Brockhouse die?
   - expected: abstain (answer_available=False)
-  - contexts (1): Robert Andrews Millikan was born on March 22, 1868, in Morrison, Illinois, the s
+  - contexts (8): Brockhouse was born in Lethbridge, Alberta, to a family of English descent. He w | Brockhouse was elected a Fellow of the Royal Society (FRS) in 1965. In 1982, Bro | Medicine Lodge Indian Peace Treaty Pageant
+Medicine Lodge Peace Treaty - Kansas 
 
-- **[high]** When did Robert Andrews Millikan die?
+- **[high]** When did Bertram Brockhouse die?
   - expected: abstain (answer_available=False)
-  - contexts (2): As Chairman of the Executive Council of Caltech (the school's governing body at  | Robert Andrews Millikan was born on March 22, 1868, in Morrison, Illinois, the s
+  - contexts (8): From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | Brockhouse was born in Lethbridge, Alberta, to a family of English descent. He w | In resonance of a two dimensional surface or membrane, such as a drumhead or vib
 
 ## context_noise
 
-- **[low]** When did Robert Andrews Millikan die?
+- **[low]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (3): A reference manual for near-surface geophysics techniques and applications Archi | ISBN 978-0-8133-7672-1. Yang, Kuisong (2020a). "Sino-Soviet Diplomacy Under the  | Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American exp
+  - contexts (8): This article deals with programming languages used in the Amiga line of computer | Although Boyle was not the original discoverer, he is best known for Boyle's law | Berman began her professional career as assistant professor in the Computer Scie
 
-- **[medium]** When did Robert Andrews Millikan die?
+- **[medium]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (5): She was elected as a Fellow of the American Academy of Arts and Sciences (AAAS)  | Integrated Drug Discovery Technologies. Mei, H.-Y., Czarnik, A.W., Eds.; Marcel  | Their interrogation revealed that Otto Hahn was at his laboratory in Tailfingen,
+  - contexts (8): During the second half of the 18th century, the number of Anglo-European settler | In two-dimensional standing waves, nodes are curves (often straight lines or cir | where λ is the wavelength of the absorbed or emitted light and RH is the Rydberg
 
-- **[high]** When did Robert Andrews Millikan die?
+- **[high]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (7): Lowe did so and after two years, upon the professor's retirement, bought out the | This radio repairing was probably the first job Feynman had, and during this tim | "Der Durchgang sehr energiereicher Korpuskeln durch den Atomkern". Nuovo Cimento
+  - contexts (8): Arritt took his first academic position at the University of Kansas in 1988. He  | 2025: Elected to the Académie Française.
+2022: Commander of the Legion of Honour | For his undergraduate diploma work, Müller studied under G. Busch. He worked on 
 
 ## chunk_boundary
 
-- **[low]** When did Robert Andrews Millikan die?
+- **[low]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (2): Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American exp | Prize in Physics in 1923 "for his work on the elementary charge of electricity a
+  - contexts (8): From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | 2003, in Hamilton, Ontario, aged 85. | Lustick places the First Intifada in the context of the third wave of democratis
 
-- **[medium]** When did Robert Andrews Millikan die?
+- **[low]** When was Dean Lawrence Kamen born?
   - expected: answer (answer_available=True)
-  - contexts (3): Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American exp | Charles Jeffrey Brinker (known as C. Jeffrey Brinker) is an American materials s | Prize in Physics in 1923 "for his work on the elementary charge of electricity a
+  - contexts (8): Dean Lawrence Kamen (; born April 5, | 1951) is an American engineer, inventor, and businessman. He is known for his in | Jewish Virtual Library
+The Intifada in Palestine:Introduction (www.intifada.com)
 
-- **[high]** When did Robert Andrews Millikan die?
+- **[low]** Where was Riccardo Giacconi born?
   - expected: answer (answer_available=True)
-  - contexts (5): Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American exp | A member of the engineering staff, Bond worked for General Motors (GM) from July | Prize in Physics in 1923 "for his work on
+  - contexts (8): Born in Genoa, Italy, Giacconi received his Laurea from the Physics Department o | of Milan before moving to the US to pursue a career in astrophysics research. In | Theme: In The Realm of the Book
+Ljubljana, the capital of Slovenia, was selected
 
 ## evidence_position
 
-- **[low]** When did Robert Andrews Millikan die?
+- **[low]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (8): Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American exp | The Australian Institute of Sport (AIS) is located in the Canberra suburb of Bru | During the course of history, one theory has succeeded another, and some have su
+  - contexts (8): From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | Slack is a freemium product whose main paid features, limited to Pro and Busines | A Protestant labor organization, the Christelijk Werknemers Verbond Nieuw-Guinea
 
-- **[medium]** When did Robert Andrews Millikan die?
+- **[medium]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (8): Karlsruhe lies completely to the east of the Rhine, and almost completely on the | CleverTap is an American customer engagement and retention platform. Its platfor | The Islamabad Capital Territory (ICT) Administration, generally known as ICT Adm
+  - contexts (8): Data can be generated from user-behavior in multiplayer online games, such as Le | Microscopic analysis of the spatial distribution of points within DNA heterochro | After the outbreak of the Continuation War, the incident was described in detail
 
-- **[high]** When did Robert Andrews Millikan die?
+- **[high]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (8): Kuala Lumpur is the most populous city in Malaysia, with a population of 2.076 m | Without written credentials, Drax was not authorised to guarantee anything to th | The ergodic hypothesis is prevalent in modern portfolio theory, discounted cash 
+  - contexts (8): Moneron is just 7.2 kilometres (4.5 mi) long and 5.6 kilometres (3.5 mi) wide, l | The architecturally soothing arches and curves of the Port of Spain National Aca | From Ridgecrest, California State Route 178 leads northeast into Death Valley Na
 
 ## conflict
 
-- **[low]** When did Robert Andrews Millikan die?
+- **[low]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (2): Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American exp | Robert Andrews Millikan (March 22, 1868 – December 19, 1950) was an American exp
+  - contexts (8): From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | {\displaystyle F}
 
-- **[medium]** When did Robert Andrews Millikan die?
+- **[medium]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (4): Robert Andrews Millikan (March 22, 1868 – December 19, 1950) was an American exp | Robert Andrews Millikan (March 22, 1868 – December 19, 1953) was an American exp | In New England, counties have served mainly as dividing lines for the states' ju
+  - contexts (8): From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | Recent advances in investigations into properties of quantum non-equilibrium sta
 
-- **[high]** When did Robert Andrews Millikan die?
+- **[high]** When did Bertram Brockhouse die?
   - expected: answer (answer_available=True)
-  - contexts (8): Robert Andrews Millikan (March 22, 1868 – December 19, 1950) was an American exp | The locality in and around present-day Brzeg has been settled by people since th | Kaleva was a civilian Junkers Ju 52 passenger airplane belonging to the Finnish 
+  - contexts (8): From 1950 to 1962, Brockhouse carried out research at Atomic Energy of Canada's  | Thomson then released his rights the patent, which was granted late that year. C | A computer scientist is a scientist who specializes in the academic study of com
 
 ## hard_negative
 
-- **[low]** When did Robert Andrews Millikan die?
+- **[low]** When did Bertram Brockhouse die?
   - expected: abstain (answer_available=False)
-  - contexts (2): As a result of his Crookes tube investigations, he showed that the rays produced | Philipp Eduard Anton von Lenard (German: [ˈfɪlɪp ˈleːnaʁt] ; 7 June 1862 – 20 Ma
+  - contexts (8): On 6 April 1920, Schrödinger married Annemarie (Anny) Bertel (born 3 December 18 | In 1929, Pauli married Käthe Margarethe Deppner, a cabaret dancer. The marriage  | Colonel By set up military barracks on the site of today's Parliament Hill. He a
 
-- **[medium]** When did Robert Andrews Millikan die?
+- **[medium]** When did Bertram Brockhouse die?
   - expected: abstain (answer_available=False)
-  - contexts (4): As a result of his Crookes tube investigations, he showed that the rays produced | Philipp Eduard Anton von Lenard (German: [ˈfɪlɪp ˈleːnaʁt] ; 7 June 1862 – 20 Ma | Philip Warren Anderson (December 13, 1923 – March 29, 2020) was an American theo
+  - contexts (8): On 6 April 1920, Schrödinger married Annemarie (Anny) Bertel (born 3 December 18 | In 1929, Pauli married Käthe Margarethe Deppner, a cabaret dancer. The marriage  | In 1978, Feynman sought medical treatment for abdominal pains and was diagnosed 
 
-- **[high]** When did Robert Andrews Millikan die?
+- **[high]** When did Bertram Brockhouse die?
   - expected: abstain (answer_available=False)
-  - contexts (8): As a result of his Crookes tube investigations, he showed that the rays produced | Philipp Eduard Anton von Lenard (German: [ˈfɪlɪp ˈleːnaʁt] ; 7 June 1862 – 20 Ma | Philip Warren Anderson (December 13, 1923 – March 29, 2020) was an American theo
+  - contexts (8): On 6 April 1920, Schrödinger married Annemarie (Anny) Bertel (born 3 December 18 | In 1929, Pauli married Käthe Margarethe Deppner, a cabaret dancer. The marriage  | In 1978, Feynman sought medical treatment for abdominal pains and was diagnosed 

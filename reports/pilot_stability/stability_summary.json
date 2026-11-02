@@ -24,10 +24,10 @@
       "display": "74.8% ± 1.0%"
     },
     "clean_seed_yield": {
-      "mean": 0.2,
-      "std": 0.0,
+      "mean": 0.187,
+      "std": 0.002645751311064593,
       "n": 3,
-      "display": "20.0% ± 0.0%"
+      "display": "18.7% ± 0.3%"
     },
     "failure_verification_pass_rate": {
       "mean": 0.9490740740740741,
@@ -68,10 +68,10 @@
       "display": "747.7 ± 10.1"
     },
     "clean_seed_count": {
-      "mean": 200.0,
-      "std": 0.0,
+      "mean": 187.0,
+      "std": 2.6457513110645907,
       "n": 3,
-      "display": "200.0 ± 0.0"
+      "display": "187.0 ± 2.6"
     },
     "failure_valid_count": {
       "mean": 3416.6666666666665,
@@ -96,22 +96,22 @@
       "accepted_qa_count": 736,
       "rejected_qa_count": 264,
       "qa_acceptance_rate": 0.736,
-      "clean_seed_count": 200,
-      "clean_seed_yield": 0.2,
+      "clean_seed_count": 189,
+      "clean_seed_yield": 0.189,
       "failure_valid_count": 3413,
       "failure_rejected_count": 187,
       "failure_verification_pass_rate": 0.9480555555555555,
       "category_distribution": {
-        "person": 40,
-        "location": 40,
-        "science_technology": 40,
-        "historical_event": 40,
-        "organization_product": 40
+        "person": 37,
+        "location": 39,
+        "science_technology": 37,
+        "historical_event": 38,
+        "organization_product": 38
       },
       "difficulty_distribution": {
-        "easy": 80,
+        "easy": 79,
         "medium": 80,
-        "hard": 40
+        "hard": 30
       },
       "human_acceptance_rate": null,
       "human_failure_validity_rate": null,
@@ -129,22 +129,22 @@
       "accepted_qa_count": 754,
       "rejected_qa_count": 246,
       "qa_acceptance_rate": 0.754,
-      "clean_seed_count": 200,
-      "clean_seed_yield": 0.2,
+      "clean_seed_count": 184,
+      "clean_seed_yield": 0.184,
       "failure_valid_count": 3409,
       "failure_rejected_count": 191,
       "failure_verification_pass_rate": 0.9469444444444445,
       "category_distribution": {
-        "person": 40,
-        "location": 40,
-        "science_technology": 40,
-        "historical_event": 40,
-        "organization_product": 40
+        "person": 35,
+        "location": 36,
+        "science_technology": 38,
+        "historical_event": 37,
+        "organization_product": 38
       },
       "difficulty_distribution": {
-        "easy": 80,
-        "medium": 80,
-        "hard": 40
+        "easy": 77,
+        "medium": 77,
+        "hard": 30
       },
       "human_acceptance_rate": null,
       "human_failure_validity_rate": null,
@@ -162,22 +162,22 @@
       "accepted_qa_count": 753,
       "rejected_qa_count": 247,
       "qa_acceptance_rate": 0.753,
-      "clean_seed_count": 200,
-      "clean_seed_yield": 0.2,
+      "clean_seed_count": 188,
+      "clean_seed_yield": 0.188,
       "failure_valid_count": 3428,
       "failure_rejected_count": 172,
       "failure_verification_pass_rate": 0.9522222222222222,
       "category_distribution": {
-        "person": 40,
-        "location": 40,
+        "person": 36,
+        "location": 36,
         "science_technology": 40,
-        "historical_event": 40,
-        "organization_product": 40
+        "historical_event": 38,
+        "organization_product": 38
       },
       "difficulty_distribution": {
-        "easy": 80,
-        "medium": 80,
-        "hard": 40
+        "easy": 78,
+        "medium": 78,
+        "hard": 32
       },
       "human_acceptance_rate": null,
       "human_failure_validity_rate": null,
@@ -189,42 +189,42 @@
   ],
   "category_distribution_by_run": {
     "pilot_stability_s42": {
-      "person": 40,
-      "location": 40,
-      "science_technology": 40,
-      "historical_event": 40,
-      "organization_product": 40
+      "person": 37,
+      "location": 39,
+      "science_technology": 37,
+      "historical_event": 38,
+      "organization_product": 38
     },
     "pilot_stability_s123": {
-      "person": 40,
-      "location": 40,
-      "science_technology": 40,
-      "historical_event": 40,
-      "organization_product": 40
+      "person": 35,
+      "location": 36,
+      "science_technology": 38,
+      "historical_event": 37,
+      "organization_product": 38
     },
     "pilot_stability_s2026": {
-      "person": 40,
-      "location": 40,
+      "person": 36,
+      "location": 36,
       "science_technology": 40,
-      "historical_event": 40,
-      "organization_product": 40
+      "historical_event": 38,
+      "organization_product": 38
     }
   },
   "difficulty_distribution_by_run": {
     "pilot_stability_s42": {
-      "easy": 80,
+      "easy": 79,
       "medium": 80,
-      "hard": 40
+      "hard": 30
     },
     "pilot_stability_s123": {
-      "easy": 80,
-      "medium": 80,
-      "hard": 40
+      "easy": 77,
+      "medium": 77,
+      "hard": 30
     },
     "pilot_stability_s2026": {
-      "easy": 80,
-      "medium": 80,
-      "hard": 40
+      "easy": 78,
+      "medium": 78,
+      "hard": 32
     }
   }
 }

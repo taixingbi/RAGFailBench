@@ -462,6 +462,24 @@ def validate_cmd(
     )
 
 
+@app.command("filter-seeds")
+def filter_seeds_cmd(
+    config: Path = typer.Option(..., "--config", "-c"),
+    rule: str = typer.Option("multi_part", help="Seed rule to apply after the run"),
+) -> None:
+    """Drop clean seeds a later rule rejects, with their failure cases and eval rows.
+
+    No LLM calls. Removed rows move to 6_final/excluded_<rule>/ with a manifest.
+    """
+    from ragfailbench.validation.seed_filter import filter_seeds
+
+    cfg = _load(config)
+    manifest = filter_seeds(cfg.ensure_dirs()["final"], rule)
+    console.print(f"[green]{rule}: excluded {len(manifest['excluded_seed_ids'])} seeds[/green]")
+    for name, c in manifest["files"].items():
+        console.print(f"  {name}: {c['before']} → {c['after']}")
+
+
 @app.command("select-seeds")
 def select_seeds_cmd(
     config: Path = typer.Option(..., "--config", "-c"),

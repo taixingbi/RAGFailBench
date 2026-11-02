@@ -7,7 +7,7 @@
 | Candidate QA | 0 |
 | Accepted (post-dedup) | 0 |
 | Rejected | 0 |
-| Clean Seeds selected | 200 |
+| Clean Seeds selected | 188 |
 
 ### Rejection reasons
 
@@ -18,27 +18,27 @@
 
 | Key | Count |
 |-----|-------|
-| person | 45 |
-| historical_event | 41 |
-| location | 41 |
-| science_technology | 40 |
-| organization_product | 33 |
+| historical_event | 39 |
+| organization_product | 39 |
+| location | 37 |
+| science_technology | 37 |
+| person | 36 |
 
 ### Clean seeds by difficulty
 
 | Key | Count |
 |-----|-------|
-| easy | 82 |
-| medium | 77 |
-| hard | 41 |
+| easy | 78 |
+| medium | 76 |
+| hard | 34 |
 
 ### Clean seeds by answer type
 
 | Key | Count |
 |-----|-------|
-| other | 73 |
-| date | 41 |
-| location | 41 |
-| numeric | 17 |
-| organization | 14 |
-| person | 14 |
+| other | 59 |
+| location | 45 |
+| date | 43 |
+| numeric | 19 |
+| organization | 12 |
+| person | 10 |

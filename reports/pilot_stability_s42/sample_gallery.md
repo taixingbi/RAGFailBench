@@ -2,101 +2,101 @@
 
 ## Clean Seeds
 
-- **Q:** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
-  - **A:** 1940 (date, easy)
-  - **Evidence:** In 1940, he became professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm.
-  - **Source:** Hannes Alfvén / Early years
+- **Q:** When did Sir Edward Victor Appleton die?
+  - **A:** 21 April 1965 (date, easy)
+  - **Evidence:** Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British physicist who received the Nobel Prize in Physics in 1947 for his contributions to the knowledge of the ionosphere, which led to the development of radar and shortwave radio.
+  - **Source:** Edward Victor Appleton / Lead
 
-- **Q:** At which institution did Chang complete a fellowship in neuromuscular diseases and electrophysiology in 1991?
-  - **A:** UCLA (location, easy)
-  - **Evidence:** She completed a fellowship at UCLA in 1991 in neuromuscular diseases and electrophysiology with mentor Thomas L. Anderson.
-  - **Source:** Linda Chang / Education
+- **Q:** In which year was David Hall born?
+  - **A:** 1951 (date, easy)
+  - **Evidence:** David Hall (born 1951) is an American billionaire businessman, engineer, and inventor.
+  - **Source:** David Hall (American businessman) / Lead
 
-- **Q:** Where was Mössbauer born?
-  - **A:** Munich (location, easy)
-  - **Evidence:** Mössbauer was born in Munich, where he also studied physics at the Technical University of Munich.
-  - **Source:** Rudolf Mössbauer / Career
+- **Q:** When was Andre Konstantin Geim born?
+  - **A:** 21 October 1958 (date, easy)
+  - **Evidence:** Sir Andre Konstantin Geim (Russian: Андре́й Константи́нович Гейм; born 21 October 1958) is a Russian-born British physicist working in England in the School of Physics and Astronomy at the University of Manchester.
+  - **Source:** Andre Geim / Lead
 
 ## missing_evidence
 
-- **[low]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[low]** When did Sir Edward Victor Appleton die?
   - expected: abstain (answer_available=False)
-  - contexts (8): Cooper first married Martha Kennedy, with whom he had two daughters. In 1969, he | In 1955, Liston's backers, Albert Austin and Richard S. Becker, agreed to sell t | Chandrasekhar was the nephew of C. V. Raman, who was awarded the Nobel Prize for
+  - contexts (8): She lives in Durham with her husband, Towqir Aziz, and two dogs named Otis and N | Although the idea of becoming a professional musician himself was not on his min | Benedetto began posting "unnecessary inventions" in 2019, starting with a concep
 
-- **[medium]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[medium]** When did Sir Edward Victor Appleton die?
   - expected: abstain (answer_available=False)
-  - contexts (8): Alfvén received his PhD from the University of Uppsala in 1934. His thesis was t | In 1991, Alfvén retired as professor of electrical engineering at the University | The idea of there being two opposed justifications for truth has shown up throug
+  - contexts (8): He was also closely involved with the development of radar, an outgrowth of his  | The idea of there being two opposed justifications for truth has shown up throug | Software composition is the construction of software application components. Com
 
-- **[high]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[low]** In which year was David Hall born?
   - expected: abstain (answer_available=False)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | Alfvén received his PhD from the University of Uppsala in 1934. His thesis was t | KAL 007 had four redundant hydraulic systems of which systems one, two, and thre
+  - contexts (8): . Several other countries have also issued postage stamps depicting Bohr. In 199 | Prior to arriving at NIH in 2008, Bernard served as Donald W. Reynolds Chair in  | After a copyright performance in England, Sherlock Holmes debuted on October 23,
 
 ## context_noise
 
-- **[low]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[low]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): The main branch of the Trinity River is a designated a National Wild and Scenic  | Big Tech companies have faced political censorship. China banned Google in 2010  | The turning-point in Bragg's career came in 1904 when he gave the presidential a
+  - contexts (8): Similar in size and shape to the Shwedagon Pagoda in Yangon, Uppatasanti Pagoda  | Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | One of the major obstacles to executing the protocol was the Ivorian Civil War. 
 
-- **[medium]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[medium]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): After receiving his Bachelor of Science in 1942, Nambu was drafted into the Impe | The region around Niamey has seen increases in surface water levels following de | In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I
+  - contexts (8): Canberra Airport provides direct domestic services to Adelaide, Brisbane, Cairns | Victor Franz Hess was born on 24 June 1883 at Waldstein Castle in Deutschfeistri | . Such a wave, which later received the name matter wave, or de Broglie wave, in
 
-- **[high]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[high]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): Terri S. Armstrong is an American scientist and nurse practitioner. She is a sen | Born in Seattle on December 4, 1929, Sharla Perrine moved to Santa Monica three  | Applied physics is a general term for physics research and development that is i
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | "Theorie der Pigmente von größter Leuchtkraft", Annalen der Physik, (4), 62, (19 | Elders drew fire, as well as censure from the Clinton administration, when she s
 
 ## chunk_boundary
 
-- **[low]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[low]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | electrical measurements at the Royal Institute of Technology in Stockholm. In 19 | In 2025, Microsoft was one of the donors who funded the demolition of the East W
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | Physics in 1947 for his contributions to the knowledge of the ionosphere, which  | In 2025, Microsoft was one of the donors who funded the demolition of the East W
 
-- **[medium]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[medium]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | Boaz Barak (Hebrew: בועז ברק, born 1974) is an Israeli-American professor of com | electrical measurements at the Royal Institute of Technology in Stockholm. In 19
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | Charles Huron Kaman ( kə-MAHN; June 15, 1919 – January 31, 2011) was an American | Physics in 1947 for his contributions to the knowledge of the ionosphere, which 
 
-- **[high]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[high]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | Laue, as Chairman of the German Physical Society, gave the opening address at th | electrical measurements at the Royal
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | doi:10.1037/pmu0000033. Man K, Kaplan JT, Damasio H, Damasio A (28 October 2013) | Physics in 1947 for his contributions to the knowledge of the
 
 ## evidence_position
 
-- **[low]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[low]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | After the ANSI/ISO standardization process, the C language specification remaine | The royal sanctuary near Sant'Omobono at the foot of the Capitoline hill also wa
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | In international law, a depositary is a government or organization to which a mu | The internet communication satellites were expected to be smallsats, 100 to 500 
 
-- **[medium]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[medium]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): The hotels in the historical center of La Candelaria and its surrounding areas c | Israeli political scientist Yitzhak Reiter has argued that "the major cause of t | People had frequently speculated that gold might be present in the Great Sand Du
+  - contexts (8): On 21 July 2008, the LTTE announced that it would be declaring a unilateral ceas | The acquisition of the two-year-old stablecoin platform company is valued at $1. | AmiATLAS v.6 was a route planner tool. It provided worldwide interactive maps an
 
-- **[high]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[high]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In September 2024, the Federal Trade Commission (FTC) released a report summariz | In France, this resulted in the spread of the notion of human rights, finding ex | The current capital of Wales is Cardiff. Historically, Wales did not have a defi
+  - contexts (8): Flat-panel design with multiple high-throughput antennas and a single solar arra | RAIC Labs worked closely with CNN to provide detections of craters in geospatial | The many Indigenous peoples who have lived near Mount Rainier for millennia have
 
 ## conflict
 
-- **[low]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[low]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | "A crucial step was the adoption of a punched card system derived from the Jacqu
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | Sir Edward Victor Appleton (6 September 1892 – 21 April 1962) was a British phys | "A crucial step was the adoption of a punched card system derived from the Jacqu
 
-- **[medium]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[medium]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | Jelenia Góra witnessed many historical conflicts such as the Thirty Years' War a
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1962) was a British phys | Sir Edward Victor Appleton (6 September 1892 – 21 April 1965) was a British phys | Jakarta has a large retail sector, with modern shopping centres operating alongs
 
-- **[high]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[high]** When did Sir Edward Victor Appleton die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1934, Alfvén taught physics at both the University of Uppsala and the Nobel I | These two parties can be two nations, or two international organizations, or one | The Libyans tried to establish the exact location of the U.S. naval force. Thirt
+  - contexts (8): Sir Edward Victor Appleton (6 September 1892 – 21 April 1962) was a British phys | Virtually all the historically known plant and animal species, with the exceptio | There is a Fedayees museum in Yerevan named after General Andranik Ozanian. Arme
 
 ## hard_negative
 
-- **[low]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[low]** When did Sir Edward Victor Appleton die?
   - expected: abstain (answer_available=False)
-  - contexts (8): On the other hand, Geim writes in his Nobel lecture that "the situation was a bi | In 1960, he went back to the Bohr Institute for a summer visit, during which he  | This is a list of urban areas in the European Union with over 500,000 inhabitant
+  - contexts (8): Sir John Douglas Cockcroft (27 May 1897 – 18 September 1967) was a British exper | Max Theodor Felix von Laue (German: [maks fɔn ˈlaʊ̯ə] ; 9 October 1879 – 24 Apri | This is a list of urban areas in the European Union with over 500,000 inhabitant
 
-- **[medium]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[medium]** When did Sir Edward Victor Appleton die?
   - expected: abstain (answer_available=False)
-  - contexts (8): On the other hand, Geim writes in his Nobel lecture that "the situation was a bi | In 1960, he went back to the Bohr Institute for a summer visit, during which he  | While Cooper was a postdoc at Princeton, he was approached by John Bardeen, a pr
+  - contexts (8): Sir John Douglas Cockcroft (27 May 1897 – 18 September 1967) was a British exper | Max Theodor Felix von Laue (German: [maks fɔn ˈlaʊ̯ə] ; 9 October 1879 – 24 Apri | Arthur Holly Compton (September 10, 1892 – March 15, 1962) was an American physi
 
-- **[high]** In which year did Alfvén become a professor of electromagnetic theory and electrical measurements at the Royal Institute of Technology in Stockholm?
+- **[high]** When did Sir Edward Victor Appleton die?
   - expected: abstain (answer_available=False)
-  - contexts (8): On the other hand, Geim writes in his Nobel lecture that "the situation was a bi | In 1960, he went back to the Bohr Institute for a summer visit, during which he  | While Cooper was a postdoc at Princeton, he was approached by John Bardeen, a pr
+  - contexts (8): Sir John Douglas Cockcroft (27 May 1897 – 18 September 1967) was a British exper | Max Theodor Felix von Laue (German: [maks fɔn ˈlaʊ̯ə] ; 9 October 1879 – 24 Apri | Arthur Holly Compton (September 10, 1892 – March 15, 1962) was an American physi

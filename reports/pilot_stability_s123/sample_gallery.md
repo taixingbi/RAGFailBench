@@ -2,106 +2,103 @@
 
 ## Clean Seeds
 
-- **Q:** In what year was Einstein granted American citizenship?
-  - **A:** 1940 (date, easy)
-  - **Evidence:** Horrified by the Nazi persecution of his fellow Jews, he decided to remain in the US, and was granted American citizenship in 1940.
-  - **Source:** Albert Einstein / Lead
+- **Q:** When did Richard Phillips Feynman die?
+  - **A:** February 15, 1988 (date, easy)
+  - **Evidence:** Richard Phillips Feynman (; May 11, 1918 – February 15, 1988) was an American theoretical physicist.
+  - **Source:** Richard Feynman / Lead
 
-- **Q:** When was Philipp Eduard Anton von Lenard born?
-  - **A:** 7 June 1862 (date, easy)
-  - **Evidence:** Philipp Eduard Anton von Lenard (German: [ˈfɪlɪp ˈleːnaʁt] ; 7 June 1862 – 20 May 1947) was a Hungarian–German experimental physicist who received the Nobel Prize in Physics in 1905 for his work on cathode rays.
-  - **Source:** Philipp Lenard / Lead
+- **Q:** When was Cynthia Dwork born?
+  - **A:** June 27, 1958 (date, easy)
+  - **Evidence:** Cynthia Dwork (born June 27, 1958) is an American computer scientist renowned for her contributions to cryptography, distributed computing, and algorithmic fairness.
+  - **Source:** Cynthia Dwork / Lead
 
-- **Q:** When was Bohr born?
-  - **A:** 19 June 1922 (date, easy)
-  - **Evidence:** Bohr was born in Copenhagen on 19 June 1922, the fourth of six sons of the physicist Niels Bohr and his wife Margrethe Bohr (née Nørlund).
-  - **Source:** Aage Bohr / Early life and education
+- **Q:** What position was awarded to Katherine Louise Bouman at the California Institute of Technology in 2020?
+  - **A:** named professorship (other, easy)
+  - **Evidence:** The California Institute of Technology, which hired Bouman as an assistant professor in June 2019, awarded her a named professorship in 2020.
+  - **Source:** Katie Bouman / Lead
 
 ## missing_evidence
 
-- **[low]** In what year was Einstein granted American citizenship?
+- **[low]** When did Richard Phillips Feynman die?
   - expected: abstain (answer_available=False)
-  - contexts (8): In 1907, Collins political affiliation was reported to be Republican, and he als | 73Li + p → 242He + 17.2 MeV
-This feat was popularly known as "splitting the atom | Valerie Barr is an American computer scientist, and is the Margaret Hamilton Dis
+  - contexts (8): In 1994, the Museum of Modern Art added the Hoberman sphere into its permanent c | 2023 Inductee in the Alpha Omega Alpha Honor Medical Society
+2022 John A. Hartfo | In the early 1970s, Nambu independently discovered that the dual resonance model
 
-- **[medium]** In what year was Einstein granted American citizenship?
+- **[medium]** When did Richard Phillips Feynman die?
   - expected: abstain (answer_available=False)
-  - contexts (8): Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical ph | In 1917, Einstein wrote a paper which introduced the concepts of spontaneous emi | The idea of there being two opposed justifications for truth has shown up throug
+  - contexts (8): Feynman was a keen physics popularizer through books and lectures, including a t | The idea of there being two opposed justifications for truth has shown up throug | Software composition is the construction of software application components. Com
 
-- **[high]** In what year was Einstein granted American citizenship?
+- **[high]** When did Richard Phillips Feynman die?
   - expected: abstain (answer_available=False)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical ph | KAL 007 had four redundant hydraulic systems of which systems one, two, and thre
+  - contexts (8): He shared the 1965 Nobel Prize in Physics with Julian Schwinger and Shin'ichirō  | Feynman was a keen physics popularizer through books and lectures, including a t | KAL 007 had four redundant hydraulic systems of which systems one, two, and thre
 
 ## context_noise
 
-- **[low]** In what year was Einstein granted American citizenship?
+- **[low]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): "Embrace, extend, and extinguish" (EEE), also known as "embrace, extend, and ext | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | The City Council promotes Belmopan as "The Garden City." A Crime prevention Init
+  - contexts (8): Discrete & Computational Geometry. 48 (1): 19–38. Tsui, Alex; Fenton, Devin; Vuo | In spite of being technically located in a watershed of the Amazon basin, Palmas | Bob is HiBob’s cloud-based HCM and HRIS platform delivered as software-as-a-serv
 
-- **[medium]** In what year was Einstein granted American citizenship?
+- **[medium]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): Gillette was born in Nook Farm, Hartford, Connecticut, a literary and intellectu | The National Park Service maintains a number of hiker/biker campsites, about eve | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow
+  - contexts (8): Microsoft also confirmed that its Maia 200 AI accelerator, first revealed in Jan | Richard Phillips Feynman (; May 11, 1918 – February 15, 1988) was an American th | The town was repopulated by Poles, many of whom were displaced from former easte
 
-- **[high]** In what year was Einstein granted American citizenship?
+- **[high]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): The basic picture painted of the pre–Industrial Revolution is that the Industria | Sir William Henry Bragg (2 July 1862 – 12 March 1942) was a British X-ray crysta | Golf training device
-Electronuclear Reactor
-Optical range finder with variable a
+  - contexts (8): In a 1950 paper, James Rainwater of Columbia University suggested a variant of t | Richard Phillips Feynman (; May 11, 1918 – February 15, 1988) was an American th | The scientific method is an empirical method for acquiring knowledge through car
 
 ## chunk_boundary
 
-- **[low]** In what year was Einstein granted American citizenship?
+- **[low]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | to remain in the US, and was granted American citizenship in 1940. On the eve of | In 2025, Microsoft was one of the donors who funded the demolition of the East W
+  - contexts (8): Richard Phillips Feynman (; May 11, 1918 – | February 15, 1988) was an American theoretical physicist. He shared the 1965 Nob | In 2025, Microsoft was one of the donors who funded the demolition of the East W
 
-- **[medium]** In what year was Einstein granted American citizenship?
+- **[medium]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | Moses Sperry Beach (October 5, 1822 – July 25, 1892) was an American newspaper o | to remain in the US, and was granted American citizenship in 1940. On the eve of
+  - contexts (8): Richard Phillips Feynman (; May 11, 1918 – | From 1920 to 1923, he studied physics and mathematics at the Ludwig-Maximilians- | February 15, 1988) was an American theoretical physicist. He shared the 1965 Nob
 
-- **[high]** In what year was Einstein granted American citizenship?
+- **[high]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | 2001 E.L.R. Stockstad Award
-2023 Elected Fellow of the American Association for  | to remain in the US, and
+  - contexts (8): Richard Phillips Feynman (; May 11, 1918 – | In addition to ongoing investigations of Bose–Einstein condensates in ultracold  | February 15, 1988) was
 
 ## evidence_position
 
-- **[low]** In what year was Einstein granted American citizenship?
+- **[low]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In physics, a front is an interface between two different possible states (eithe | During the 1990s, Apple also branched out beyond computers, developing several c
+  - contexts (8): Richard Phillips Feynman (; May 11, 1918 – February 15, 1988) was an American th | James Hendler; Elena Simperl (eds.). "The Rise of Wikidata". IEEE Intelligent Sy | Michał Bajor (born 1957), actor and musician
+Kamil Bortniczuk (born 1983), polit
 
-- **[medium]** In what year was Einstein granted American citizenship?
+- **[medium]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): The original Brussels Pharmacopoeia Agreement, originally agreed on in Brussels  | Criticisms are well established regarding the implementation of the postcolonial | Riverbank Acoustical Laboratories (RAL), (often referred to as Riverbank or Rive
+  - contexts (8): Jelenia Góra has a wide range of cultural institutions, including theaters, a co | Brazil's first capital was Salvador; in 1763 Rio de Janeiro became Brazil's capi | In June 2014, CrowdOptic announced a partnership with the University of Californ
 
-- **[high]** In what year was Einstein granted American citizenship?
+- **[high]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): The mountain supports a wide variety of animal life, including several species p | Banff National Park is the most visited Alberta tourist destination and one of t | The celebration of World Book Day at the Círculo de Bellas Artes
-June Book Fair 
+  - contexts (8): Intelisys carries or has notably carried contracts with (but not limited to) the | The official name of the city is "Nuestra Señora de la Asunción" (Our Lady of th | Learning from the Briggs Plan, the Malaysian Government understood the importanc
 
 ## conflict
 
-- **[low]** In what year was Einstein granted American citizenship?
+- **[low]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | "A crucial step was the adoption of a punched card system derived from the Jacqu
+  - contexts (8): Richard Phillips Feynman (; May 11, 1918 – February 15, 1988) was an American th | Richard Phillips Feynman (; May 11, 1918 – February 15, 1985) was an American th | "A crucial step was the adoption of a punched card system derived from the Jacqu
 
-- **[medium]** In what year was Einstein granted American citizenship?
+- **[medium]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | Washington, D.C., was a planned city, and many of the city's street grids were d
+  - contexts (8): Richard Phillips Feynman (; May 11, 1918 – February 15, 1985) was an American th | Richard Phillips Feynman (; May 11, 1918 – February 15, 1988) was an American th | According to Popper,
 
-- **[high]** In what year was Einstein granted American citizenship?
+- **[high]** When did Richard Phillips Feynman die?
   - expected: answer (answer_available=True)
-  - contexts (8): In 1933, while Einstein was visiting the United States, Adolf Hitler came to pow | In September 2021, the Climate Action Tracker estimated that, with current polic | After the series of bombings that hit Italy in the 1970s, a terrorist act was th
+  - contexts (8): Richard Phillips Feynman (; May 11, 1918 – February 15, 1985) was an American th | On August 24, 1814, during the War of 1812, British forces occupied Washington a | Unlike their white counterparts, the black women were asked by NACA to re-do col
 
 ## hard_negative
 
-- **[low]** In what year was Einstein granted American citizenship?
+- **[low]** When did Richard Phillips Feynman die?
   - expected: abstain (answer_available=False)
-  - contexts (8): Lenard is remembered today as a strong German nationalist who despised "English  | Planck was therefore unsuccessful, since this reply "took from him every basis f | This is a list of urban areas in the European Union with over 500,000 inhabitant
+  - contexts (8): Julian Seymour Schwinger (; February 12, 1918 – July 16, 1994) was an American t | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f | This is a list of urban areas in the European Union with over 500,000 inhabitant
 
-- **[medium]** In what year was Einstein granted American citizenship?
+- **[medium]** When did Richard Phillips Feynman die?
   - expected: abstain (answer_available=False)
-  - contexts (8): Lenard is remembered today as a strong German nationalist who despised "English  | Planck was therefore unsuccessful, since this reply "took from him every basis f | He had the prospect of a position at the University of Edinburgh, but visa delay
+  - contexts (8): Julian Seymour Schwinger (; February 12, 1918 – July 16, 1994) was an American t | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f | David Jonathan Gross (; born February 19, 1941) is an American theoretical physi
 
-- **[high]** In what year was Einstein granted American citizenship?
+- **[high]** When did Richard Phillips Feynman die?
   - expected: abstain (answer_available=False)
-  - contexts (8): Lenard is remembered today as a strong German nationalist who despised "English  | Planck was therefore unsuccessful, since this reply "took from him every basis f | He had the prospect of a position at the University of Edinburgh, but visa delay
+  - contexts (8): Julian Seymour Schwinger (; February 12, 1918 – July 16, 1994) was an American t | Steven Chu (Chinese: 朱棣文; born February 28, 1948) is an American physicist and f | David Jonathan Gross (; born February 19, 1941) is an American theoretical physi
