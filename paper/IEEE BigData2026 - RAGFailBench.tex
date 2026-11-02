@@ -34,7 +34,8 @@ taixingbi@gmail.com}}
 
 \begin{abstract}
 Most RAG benchmarks are released once and go stale as the underlying knowledge base changes.
-RAGFailBench instead regenerates a failure-aware benchmark whenever the corpus changes. It
+RAGFailBench instead supports regenerating a failure-aware benchmark as the underlying corpus
+evolves, by re-running one pipeline on a new corpus snapshot. It
 builds provenance-preserving question-answering (QA) seeds from a document corpus, validates
 them with rule checks, an LLM judge and a baseline-model test, audits a sample by hand, and
 injects six parameterized failure operators under a fixed eight-passage context budget. Each
@@ -181,9 +182,9 @@ cases are evaluated and compared with a previous run.
 \foreach \a/\b in {corpus/gen, gen/val, val/inj, inj/eval, eval/gate, gate/dec} \draw[arr] (\a) -- (\b);
 \draw[arr, dashed] (val.south) -- (val.south |- audit.north);
 \draw[arr, dashed] (inj.south) -- (inj.south |- audit.north);
-\draw[arr, dashed] (dec.north) -- ++(0,4mm) -| node[pos=0.25, above, font=\scriptsize] {next knowledge-base update: regenerate and compare with the previous run} (corpus.north);
+\draw[arr, dashed] (dec.north) -- ++(0,4mm) -| node[pos=0.25, above, font=\scriptsize] {next knowledge-base update: re-run the pipeline and compare with the previous run} (corpus.north);
 \end{tikzpicture}
-\caption{The RAGFailBench loop. A knowledge-base update triggers re-ingestion, automatic regeneration of seeds and
+\caption{The RAGFailBench loop. After a knowledge-base update, the pipeline is re-run on the new snapshot: re-ingestion, automatic regeneration of seeds and
 failure cases, evaluation, and a gated decision. The human audit (dashed) is sampled quality assurance of accepted
 seeds and failure cases; it reports HAR and failure validity and does not approve every item.}
 \label{fig:loop}
@@ -631,7 +632,7 @@ design, which makes drops attributable to operators but leaves little room to se
 difficulty tiers.
 
 \section{Conclusion}
-RAGFailBench regenerates a failure-aware RAG benchmark whenever the corpus changes: validated,
+RAGFailBench supports regenerating a failure-aware RAG benchmark as the corpus evolves: validated,
 provenance-preserving seeds, a sampled human audit, six typed operators under a fixed context
 budget, and a per-operator regression gate. On a Wikipedia pilot it yields a stable funnel
 (74.8\% acceptance), a human acceptance rate of 84\% on a 50-seed sample, and a finding that

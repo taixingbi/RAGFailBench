@@ -217,7 +217,9 @@ def figure(runs: list[dict], out: Path) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    plt.rcParams.update({"font.size": 8, "axes.edgecolor": "#888888", "hatch.color": "white"})
+    # TrueType (42), not Type 3: IEEE PDF eXpress rejects Type 3 fonts.
+    plt.rcParams.update({"font.size": 8, "axes.edgecolor": "#888888", "hatch.color": "white",
+                         "pdf.fonttype": 42, "ps.fonttype": 42})
     fig, ax = plt.subplots(figsize=(7.0, 2.6))
     width = 0.26
     for i, (m, color, hatch) in enumerate(zip(MODELS, COLORS, HATCHES)):
