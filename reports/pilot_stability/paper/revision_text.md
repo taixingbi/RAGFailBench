@@ -137,12 +137,12 @@ candidates no rule catches". VI.A cites "9.7 ± 1.5" and "2.7 ± 1.5"; change th
 > 71.5–91.7%), against 66.0% before the referent, time-sensitivity, multi-part and
 > named-subject changes. Of the failure cases, 52 of 54 are judged valid injections
 > (96.3%, CI 87.5–99.0%), and the answer-availability label is correct on all 54
-> (100%, CI 93.4–100%). A second annotator labeled the same rows (HAR 86.0%, validity
-> 98.1%). This second pass is not independent: the second annotator had seen the first
-> annotator's labels and notes in an earlier attempt. Its agreement with the first (49 of
-> 50 decisions, κ = 0.92; 53 of 54 validity labels, κ = 0.66) is reported only as a
-> consistency check, not as inter-annotator reliability; all audit figures use the
-> primary annotator.
+> (100%, CI 93.4–100%). All audit figures are from this single primary annotator.
+
+*Not in the paper (research record only):* a second person also labeled the same rows,
+but had seen the primary annotator's labels and notes in an earlier attempt, so the pass is
+not independent and its agreement statistic is not reported. The sheets are kept in
+`reviews/audit_v2/*_annotator2.csv` and its agreement in `tables_audit.md`.
 >
 > **E. What the audit still catches (replaces Table IX).** Of the eight seeds the
 > primary annotator did not keep, two are present-tense facts that can go stale ("Where
@@ -478,12 +478,14 @@ token-F1 ≥ 0.6 84–88% and exact match 69–75%; the reported score is their 
 
 - **Benchmark quality (HAR 66%):** The rule set now covers referents, time-sensitive
   phrasing and multi-part questions, and generation must name the question's subject.
-  On a blind audit of 50 released seeds, HAR is 84.0% [71.5%, 91.7%] and failure-case
+  On an audit of 50 released seeds (automatic verdicts hidden), HAR is 84.0% [71.5%, 91.7%] and failure-case
   validity 96.3% [87.5%, 99.0%] (Section V.D).
-- **Single annotator:** A second annotator labeled the same 50 seeds and 54 failure
-  cases, but had seen the first annotator's labels in an earlier attempt, so the pass is
-  not independent. We report its agreement (κ = 0.92 on decisions) only as a consistency
-  check and state that inter-annotator reliability remains unmeasured.
+- **Single annotator:** The audit is by a single primary annotator; we do not claim an
+  independent second annotation. The paper states that inter-annotator reliability was
+  not established, that the acceptance and validity rates are sample-based estimates, and
+  that a blinded multi-annotator study remains future work. (A second person did label the
+  same rows, but had seen the primary annotator's labels, so that pass is not reported as
+  evidence of reliability; its sheets are kept in the repository.)
 - **Weak operators:** context_noise and evidence_position cause no drop on a correctly
   configured reader with eight passages, but they are the operators that block a
   top-k 8 → 4 regression that clean accuracy misses (Section V.H, 46–66-point drops).

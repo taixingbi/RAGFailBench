@@ -618,12 +618,10 @@ not something the reader can be relied on to adjudicate.
 The reader receives fixed contexts; no retriever or reranker is evaluated. The corpus is
 English, single-hop Wikipedia; the source adapter is designed for other stores (e.g.\ wikis or
 document repositories), but no enterprise connector is evaluated, and scaling claims rest on one
-768-page corpus and the throughput measured in Section~\ref{sec:regression}. The human audit
-covers 50 seeds and 54 failure cases from one primary annotator, so inter-annotator
-reliability remains unmeasured. A second annotator labeled the same rows but had seen the
-primary annotator's labels, so their agreement (49 of 50 decisions,
-$\kappa$\,=\,0.92 \cite{cohen1960}) does not answer this; an independent second annotation is
-future work. The conflict score and FRS
+768-page corpus and the throughput measured in Section~\ref{sec:regression}. The human audit covers 50 clean seeds and 54 failure cases assessed by a single primary
+annotator. Consequently, independent inter-annotator reliability was not established, and the
+reported acceptance and validity rates should be interpreted as sample-based estimates. A
+blinded multi-annotator study remains future work. The conflict score and FRS
 depend on the scoring rule (Table~\ref{tab:sensitivity}).
 Severity levels are configured, not human-validated; 11\% of medium \op{missing_evidence} cases
 keep no same-page passage. Context noise and evidence position may stress weaker models or
