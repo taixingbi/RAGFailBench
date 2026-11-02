@@ -1,14 +1,15 @@
-"""Draw the human-audit sample (audit_v1) from the three seeded runs.
+"""Draw the human-audit sample from the three seeded runs.
 
-Clean seeds: 100, allocated proportionally (largest remainder) over
-run × category × difficulty strata, then drawn at random within each stratum.
+Clean seeds (default 50): allocated proportionally (largest remainder) over
+run × difficulty strata; within a stratum the seeds are shuffled and taken
+round-robin over categories, so every category is represented evenly.
 Failures: 3 per operator × severity, one from each run.
 
 Sheets are blind: automatic verdicts (quality score, injection checks) are left
 out and kept in manifest.json. Every label column is blank; this script never
 fills a human judgment. Two copies per sheet, one per annotator.
 
-Usage: python scripts/make_audit_sample.py [--out reviews/audit_v1] [--seed audit_v1]
+Usage: python scripts/make_audit_sample.py [--n-clean 50] [--out reviews/audit_v2] [--seed audit_v2]
 """
 
 from __future__ import annotations
@@ -32,7 +33,6 @@ from ragfailbench.schemas.failure import FailureCase
 from ragfailbench.schemas.qa import CleanSeed
 
 RUNS = ["pilot_stability_s42", "pilot_stability_s123", "pilot_stability_s2026"]
-N_CLEAN = 100
 PER_CELL_PER_RUN = 1  # × 3 runs = 3 per operator × severity
 
 CLAIMS = {
@@ -66,11 +66,29 @@ def allocate(sizes: dict[tuple, int], total: int) -> dict[tuple, int]:
     return alloc
 
 
+def category_round_robin(pool: list[dict], rng: random.Random) -> list[dict]:
+    """Shuffle, then interleave by category (category order shuffled too)."""
+    by_cat: dict[str, list[dict]] = defaultdict(list)
+    for row in sorted(pool, key=lambda r: r["sample_id"]):
+        by_cat[row["category_group"]].append(row)
+    cats = sorted(by_cat)
+    rng.shuffle(cats)
+    for c in cats:
+        rng.shuffle(by_cat[c])
+    out = []
+    while any(by_cat.values()):
+        for c in cats:
+            if by_cat[c]:
+                out.append(by_cat[c].pop())
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", type=Path, default=Path("data/runs"))
-    ap.add_argument("--out", type=Path, default=Path("reviews/audit_v1"))
-    ap.add_argument("--seed", default="audit_v1")
+    ap.add_argument("--out", type=Path, default=Path("reviews/audit_v2"))
+    ap.add_argument("--seed", default="audit_v2")
+    ap.add_argument("--n-clean", type=int, default=50)
     args = ap.parse_args()
 
     strata: dict[tuple, list[dict]] = defaultdict(list)
@@ -79,16 +97,16 @@ def main() -> None:
         final = args.data / run / "6_final"
         for row in clean_seed_review_rows(read_jsonl_models(final / "clean_seeds.jsonl", CleanSeed)):
             row["run_id"] = run
-            strata[(run, row["category_group"], row["difficulty"])].append(row)
+            strata[(run, row["difficulty"])].append(row)
         for row in failure_review_rows(read_jsonl_models(final / "failure_cases.jsonl", FailureCase)):
             row["run_id"] = run
             cells[(run, row["operator"], row["severity"])].append(row)
 
-    alloc = allocate({k: len(v) for k, v in strata.items()}, N_CLEAN)
+    alloc = allocate({k: len(v) for k, v in strata.items()}, args.n_clean)
     clean = []
     for key in sorted(strata):
-        pool = sorted(strata[key], key=lambda r: r["sample_id"])
-        clean += random.Random(f"{args.seed}:clean:{key}").sample(pool, alloc[key])
+        rng = random.Random(f"{args.seed}:clean:{key}")
+        clean += category_round_robin(strata[key], rng)[: alloc[key]]
     failures = []
     for key in sorted(cells):
         pool = sorted(cells[key], key=lambda r: r["failure_id"])

@@ -10,10 +10,10 @@ filter, `ragfailbench filter-seeds`) and `reports/regression/`, and are regenera
 
 **Blocked on re-annotation:** Tables VI (HAR and failure-validity columns), VIII, IX and XI
 (human row), and every sentence that cites HAR ≈ 66%, 95.4–97.7% failure validity, or
-the 204 "fix" seeds. The human audit is `reviews/audit_v1/`: 100 clean seeds
-(stratified over run × category × difficulty) and 54 failure cases (3 per operator ×
+the 204 "fix" seeds. The human audit is `reviews/audit_v2/`: 50 clean seeds
+(proportional over run × difficulty, balanced over categories) and 54 failure cases (3 per operator ×
 severity), each for two independent annotators, drawn by
-`python scripts/make_audit_sample.py`; see `LABELING_GUIDE.md`. Older sheets are
+`python scripts/make_audit_sample.py`; see `LABELING_GUIDE.md`. Statistics: `python scripts/audit_stats.py`. Older sheets are
 archived in `reviews/_pre_rev2/` and `reviews/_pre_rev3/`. The judge-review labels are
 frozen in `reviews/judge_review_v1/`; see the last response bullet.
 

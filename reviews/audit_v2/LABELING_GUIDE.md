@@ -1,6 +1,6 @@
-# Labeling guide: human audit v1
+# Labeling guide: human audit v2
 
-**Files.** Annotator 1 fills `clean_audit_annotator1.csv` (100 rows) and
+**Files.** Annotator 1 fills `clean_audit_annotator1.csv` (50 rows) and
 `failure_audit_annotator1.csv` (54 rows); annotator 2 fills the `annotator2` copies.
 Label independently: do not look at the other annotator's file, the model outputs or
 any automatic verdict. Do not look anything up; judge only from the row. Label one row

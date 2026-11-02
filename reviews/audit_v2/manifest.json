@@ -1,0 +1,605 @@
+{
+  "seed": "audit_v2",
+  "runs": [
+    "pilot_stability_s42",
+    "pilot_stability_s123",
+    "pilot_stability_s2026"
+  ],
+  "clean": {
+    "n": 50,
+    "population": 561,
+    "allocation": {
+      "pilot_stability_s123|easy": 7,
+      "pilot_stability_s123|hard": 3,
+      "pilot_stability_s123|medium": 7,
+      "pilot_stability_s2026|easy": 7,
+      "pilot_stability_s2026|hard": 3,
+      "pilot_stability_s2026|medium": 7,
+      "pilot_stability_s42|easy": 7,
+      "pilot_stability_s42|hard": 2,
+      "pilot_stability_s42|medium": 7
+    },
+    "rows": {
+      "C001": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000191",
+        "quality_score": 1.0
+      },
+      "C002": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000108",
+        "quality_score": 1.0
+      },
+      "C003": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000093",
+        "quality_score": 1.0
+      },
+      "C004": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000090",
+        "quality_score": 1.0
+      },
+      "C005": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000084",
+        "quality_score": 1.0
+      },
+      "C006": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000195",
+        "quality_score": 1.0
+      },
+      "C007": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000168",
+        "quality_score": 1.0
+      },
+      "C008": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000023",
+        "quality_score": 1.0
+      },
+      "C009": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000133",
+        "quality_score": 1.0
+      },
+      "C010": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000159",
+        "quality_score": 1.0
+      },
+      "C011": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000113",
+        "quality_score": 1.0
+      },
+      "C012": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000057",
+        "quality_score": 1.0
+      },
+      "C013": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000098",
+        "quality_score": 1.0
+      },
+      "C014": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000091",
+        "quality_score": 1.0
+      },
+      "C015": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000144",
+        "quality_score": 1.0
+      },
+      "C016": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000052",
+        "quality_score": 1.0
+      },
+      "C017": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000190",
+        "quality_score": 1.0
+      },
+      "C018": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000123",
+        "quality_score": 1.0
+      },
+      "C019": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000034",
+        "quality_score": 1.0
+      },
+      "C020": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000199",
+        "quality_score": 1.0
+      },
+      "C021": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000002",
+        "quality_score": 1.0
+      },
+      "C022": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000175",
+        "quality_score": 1.0
+      },
+      "C023": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000044",
+        "quality_score": 1.0
+      },
+      "C024": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000011",
+        "quality_score": 1.0
+      },
+      "C025": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000171",
+        "quality_score": 1.0
+      },
+      "C026": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000067",
+        "quality_score": 1.0
+      },
+      "C027": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000170",
+        "quality_score": 1.0
+      },
+      "C028": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000046",
+        "quality_score": 1.0
+      },
+      "C029": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000145",
+        "quality_score": 1.0
+      },
+      "C030": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000012",
+        "quality_score": 1.0
+      },
+      "C031": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000041",
+        "quality_score": 1.0
+      },
+      "C032": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000052",
+        "quality_score": 1.0
+      },
+      "C033": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000029",
+        "quality_score": 1.0
+      },
+      "C034": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000032",
+        "quality_score": 1.0
+      },
+      "C035": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000184",
+        "quality_score": 1.0
+      },
+      "C036": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000057",
+        "quality_score": 1.0
+      },
+      "C037": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000099",
+        "quality_score": 1.0
+      },
+      "C038": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000022",
+        "quality_score": 1.0
+      },
+      "C039": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000134",
+        "quality_score": 1.0
+      },
+      "C040": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000120",
+        "quality_score": 1.0
+      },
+      "C041": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000144",
+        "quality_score": 1.0
+      },
+      "C042": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000161",
+        "quality_score": 1.0
+      },
+      "C043": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000070",
+        "quality_score": 1.0
+      },
+      "C044": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000067",
+        "quality_score": 1.0
+      },
+      "C045": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000183",
+        "quality_score": 1.0
+      },
+      "C046": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000030",
+        "quality_score": 1.0
+      },
+      "C047": {
+        "run_id": "pilot_stability_s2026",
+        "sample_id": "seed_000159",
+        "quality_score": 1.0
+      },
+      "C048": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000077",
+        "quality_score": 1.0
+      },
+      "C049": {
+        "run_id": "pilot_stability_s42",
+        "sample_id": "seed_000102",
+        "quality_score": 1.0
+      },
+      "C050": {
+        "run_id": "pilot_stability_s123",
+        "sample_id": "seed_000057",
+        "quality_score": 1.0
+      }
+    }
+  },
+  "failures": {
+    "n": 54,
+    "population": 9574,
+    "rows": {
+      "F001": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000135__context_noise__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F002": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000058__conflict__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F003": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000063__missing_evidence__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F004": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000006__evidence_position__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F005": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000171__hard_negative__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F006": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000175__conflict__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F007": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000020__chunk_boundary__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F008": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000020__chunk_boundary__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F009": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000198__hard_negative__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F010": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000172__chunk_boundary__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F011": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000174__chunk_boundary__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F012": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000141__evidence_position__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F013": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000021__evidence_position__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F014": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000085__hard_negative__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F015": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000103__conflict__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F016": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000130__context_noise__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F017": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000006__conflict__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F018": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000166__evidence_position__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F019": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000176__evidence_position__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F020": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000026__conflict__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F021": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000185__chunk_boundary__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F022": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000171__context_noise__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F023": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000000__missing_evidence__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F024": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000101__conflict__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F025": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000017__chunk_boundary__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F026": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000048__conflict__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F027": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000002__evidence_position__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F028": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000016__hard_negative__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F029": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000075__hard_negative__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F030": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000149__chunk_boundary__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F031": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000057__evidence_position__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F032": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000158__evidence_position__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F033": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000195__conflict__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F034": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000018__missing_evidence__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F035": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000134__missing_evidence__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F036": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000041__missing_evidence__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F037": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000190__context_noise__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F038": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000151__hard_negative__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F039": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000141__context_noise__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F040": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000168__missing_evidence__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F041": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000027__context_noise__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F042": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000009__missing_evidence__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F043": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000129__hard_negative__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F044": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000073__chunk_boundary__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F045": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000101__context_noise__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F046": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000190__evidence_position__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F047": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000117__missing_evidence__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F048": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000175__chunk_boundary__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F049": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000034__context_noise__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F050": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000140__context_noise__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F051": {
+        "run_id": "pilot_stability_s123",
+        "failure_id": "seed_000145__missing_evidence__low",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F052": {
+        "run_id": "pilot_stability_s2026",
+        "failure_id": "seed_000039__conflict__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F053": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000031__hard_negative__high",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      },
+      "F054": {
+        "run_id": "pilot_stability_s42",
+        "failure_id": "seed_000042__hard_negative__medium",
+        "injection_valid_auto": true,
+        "gold_answer_leaked_auto": false
+      }
+    }
+  }
+}
