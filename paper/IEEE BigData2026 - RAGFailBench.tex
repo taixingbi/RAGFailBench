@@ -335,8 +335,12 @@ seed's correctness minus its own (each 0 or 1), so a drop is not confounded by w
 operator could be built from. For an abstain-expected item, whose parent expects an answer, the
 drop is simply 1 if the model fails to abstain and 0 otherwise. An operator's drop is the mean
 over its cases (all three severities), and the Failure Robustness Score is
-$\mathrm{FRS} = 1 - \frac{1}{6}\sum_{o} \overline{\Delta}_o$, an unweighted mean over the six
-operators. FRS is a summary of one benchmark configuration (operator set, severity mix, context
+\begin{equation}
+\mathrm{FRS} = 1 - \frac{1}{6}\sum_{o=1}^{6} \Delta_o ,
+\label{eq:frs}
+\end{equation}
+where $\Delta_o \in [-1, 1]$ is operator $o$'s mean drop as a proportion (tables report it in
+percentage points), so the six operators are weighted equally. FRS is a summary of one benchmark configuration (operator set, severity mix, context
 budget, conflict rule) and is meaningful for comparing runs under the same configuration, as the
 regression gate does; it is not an absolute measure of a model's robustness, and model rankings
 on it should be read together with the per-operator drops. We report mean\,$\pm$\,std over the three runs and 95\% cluster-bootstrap CIs pooled over runs
@@ -399,40 +403,31 @@ occur. Failure cases are valid in 52 of 54; the two exceptions are \op{conflict}
 alternate is compatible with gold (``convection'' as a heat-transfer mechanism). The
 answer-availability label is correct in all 54.
 
-A second annotator then labeled the same rows (HAR 86.0\%, validity 98.1\%). This second pass
-is \emph{not independent}: the second annotator had seen the first annotator's labels and notes
-in an earlier attempt. We therefore report its agreement with the first (49 of 50 decisions,
-Cohen's $\kappa$ = 0.92 \cite{cohen1960}; 53 of 54 validity labels, $\kappa$ = 0.66) only as a
-consistency check, not as an estimate of inter-annotator reliability, and all audit figures in
-this paper use the primary annotator. Even this non-independent pass agrees only weakly on
-whether a case matches its severity (74\%, $\kappa$ = 0.14), mostly over how many
-\op{context_noise} distractors count as topically similar; we therefore treat severity as a
-configured property, not a human-validated one.
+All audit figures are from this single primary annotator. Whether a case matches its severity
+level was hard to judge, mostly over how many \op{context_noise} distractors count as topically
+similar, so we treat severity as a configured property, not a human-validated one.
 
 \begin{table}[t]
 \centering
-\caption{Human audit with 95\% Wilson CIs. A1 is the primary annotator. A2 had seen A1's labels, so the last two rows are a consistency check, not inter-annotator reliability.}
+\caption{Human audit by the primary annotator, with 95\% Wilson CIs.}
 \label{tab:audit}
 \footnotesize
 \begin{tabular}{@{}lll@{}}
 \toprule
- & A1 & A2 \\
+ & Rate [95\% CI] & Count \\
 \midrule
-HAR (50 seeds) & 84.0\% [71.5, 91.7] & 86.0\% [73.8, 93.0] \\
-Valid injection (54) & 96.3\% [87.5, 99.0] & 98.1\% [90.2, 99.7] \\
-\quad \op{conflict} & 7/9 & 8/9 \\
-\quad other operators & 45/45 & 45/45 \\
-Label correct (54) & 100\% [93.4, 100] & 100\% [93.4, 100] \\
-\midrule
-A1--A2, decision & \multicolumn{2}{l}{98.0\% agreement, $\kappa$ = 0.92} \\
-A1--A2, validity & \multicolumn{2}{l}{98.1\% agreement, $\kappa$ = 0.66} \\
+HAR (clean seeds) & 84.0\% [71.5, 91.7] & 42/50 \\
+Valid injection (failure cases) & 96.3\% [87.5, 99.0] & 52/54 \\
+\quad \op{conflict} & & 7/9 \\
+\quad other five operators & & 45/45 \\
+Answer-availability label correct & 100\% [93.4, 100] & 54/54 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \textbf{Judge validation.} On a sheet of 270 model answers with the judge's verdicts hidden (15 per model\,$\times$\,condition),
 the 255 whose seeds survive the multi-part filter agree with a human label in 91.0\% of cases
-($\kappa$ = 0.72); the judge accepts 17 answers the human rejects and rejects 6 the human
+(Cohen's $\kappa$ = 0.72 \cite{cohen1960}); the judge accepts 17 answers the human rejects and rejects 6 the human
 accepts.
 
 \subsection{Model $\times$ operator performance}
@@ -609,8 +604,11 @@ The reader receives fixed contexts; no retriever or reranker is evaluated. The c
 English, single-hop Wikipedia; the source adapter is designed for other stores (e.g.\ wikis or
 document repositories), but no enterprise connector is evaluated, and scaling claims rest on one
 768-page corpus and the throughput measured in Section~\ref{sec:regression}. The human audit
-covers 50 seeds and 54 failure cases from one primary annotator; the second pass was not
-independent, so inter-annotator reliability remains unmeasured. The conflict score and FRS
+covers 50 seeds and 54 failure cases from one primary annotator, so inter-annotator
+reliability remains unmeasured. A second annotator labeled the same rows but had seen the
+primary annotator's labels, so their agreement (49 of 50 decisions,
+$\kappa$\,=\,0.92 \cite{cohen1960}) does not answer this; an independent second annotation is
+future work. The conflict score and FRS
 depend on the scoring rule (Table~\ref{tab:sensitivity}).
 Severity levels are configured, not human-validated; 11\% of medium \op{missing_evidence} cases
 keep no same-page passage. Context noise and evidence position may stress weaker models or
