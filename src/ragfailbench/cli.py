@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 import typer
@@ -434,8 +435,21 @@ def validate_cmd(
     )
 
     raw_path = dirs["validated"] / "llm_raw.jsonl"
+    started = time.time()
     with LLMClient.from_config(cfg.llm, raw_log_path=raw_path) as client:
         accepted, results = validate_candidates(candidates, chunks_by_id, cfg, client)
+
+    # Judge and baseline errors count as rejections, so an outage would silently
+    # reject everything. Refuse to overwrite the previous outputs instead.
+    calls = [r for r in read_jsonl(raw_path) if r.get("ts", 0) >= started]
+    failed = sum(1 for r in calls if not r.get("ok"))
+    if calls and failed / len(calls) > 0.10:
+        console.print(
+            f"[red]{failed}/{len(calls)} LLM calls failed "
+            f"(e.g. {next(r.get('error', '') for r in calls if not r.get('ok'))[:120]}); "
+            "outputs not written.[/red]"
+        )
+        raise typer.Exit(1)
 
     accepted_ids = {c.candidate_id for c in accepted}
     rejected = [r for r in results if r.candidate_id not in accepted_ids]
