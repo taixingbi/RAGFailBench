@@ -1,0 +1,109 @@
+{
+  "labels": {
+    "yes": 207,
+    "no": 63
+  },
+  "rows_not_in_results": 15,
+  "judge_verdict": {
+    "all": {
+      "n": 255,
+      "agreement": 0.9098,
+      "kappa": 0.7249,
+      "system_says_correct_human_no": 17,
+      "system_says_wrong_human_yes": 6
+    },
+    "evidence_position": {
+      "n": 42,
+      "agreement": 0.9286,
+      "kappa": 0.0,
+      "system_says_correct_human_no": 3,
+      "system_says_wrong_human_yes": 0
+    },
+    "clean": {
+      "n": 42,
+      "agreement": 0.9286,
+      "kappa": 0.3762,
+      "system_says_correct_human_no": 3,
+      "system_says_wrong_human_yes": 0
+    },
+    "closed_book": {
+      "n": 44,
+      "agreement": 0.8182,
+      "kappa": 0.6415,
+      "system_says_correct_human_no": 8,
+      "system_says_wrong_human_yes": 0
+    },
+    "conflict": {
+      "n": 42,
+      "agreement": 0.9048,
+      "kappa": 0.8108,
+      "system_says_correct_human_no": 0,
+      "system_says_wrong_human_yes": 4
+    },
+    "context_noise": {
+      "n": 41,
+      "agreement": 1.0,
+      "kappa": null,
+      "system_says_correct_human_no": 0,
+      "system_says_wrong_human_yes": 0
+    },
+    "chunk_boundary": {
+      "n": 44,
+      "agreement": 0.8864,
+      "kappa": 0.2254,
+      "system_says_correct_human_no": 3,
+      "system_says_wrong_human_yes": 2
+    }
+  },
+  "answer_correct": {
+    "all": {
+      "n": 255,
+      "agreement": 0.9137,
+      "kappa": 0.7243,
+      "system_says_correct_human_no": 20,
+      "system_says_wrong_human_yes": 2
+    },
+    "evidence_position": {
+      "n": 42,
+      "agreement": 0.9286,
+      "kappa": 0.0,
+      "system_says_correct_human_no": 3,
+      "system_says_wrong_human_yes": 0
+    },
+    "clean": {
+      "n": 42,
+      "agreement": 0.9286,
+      "kappa": 0.3762,
+      "system_says_correct_human_no": 3,
+      "system_says_wrong_human_yes": 0
+    },
+    "closed_book": {
+      "n": 44,
+      "agreement": 0.7955,
+      "kappa": 0.6024,
+      "system_says_correct_human_no": 9,
+      "system_says_wrong_human_yes": 0
+    },
+    "conflict": {
+      "n": 42,
+      "agreement": 0.9048,
+      "kappa": 0.8056,
+      "system_says_correct_human_no": 2,
+      "system_says_wrong_human_yes": 2
+    },
+    "context_noise": {
+      "n": 41,
+      "agreement": 1.0,
+      "kappa": null,
+      "system_says_correct_human_no": 0,
+      "system_says_wrong_human_yes": 0
+    },
+    "chunk_boundary": {
+      "n": 44,
+      "agreement": 0.9318,
+      "kappa": 0.3774,
+      "system_says_correct_human_no": 3,
+      "system_says_wrong_human_yes": 0
+    }
+  }
+}
